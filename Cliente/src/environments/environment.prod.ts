@@ -1,3 +1,4 @@
 export const environment = {
-  production: true
+  production: true,
+  urlHost:"https://localhost:7281/"
 };
