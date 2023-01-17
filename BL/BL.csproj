@@ -20,11 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="DTO\" />
-    <Folder Include="Helpers\" />
-    <Folder Include="Common\" />
     <Folder Include="ValidationCustom\" />
-    <Folder Include="ViewModels\" />
   </ItemGroup>
 
 </Project>
