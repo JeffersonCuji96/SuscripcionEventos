@@ -1,0 +1,36 @@
+<div class="container">
+    <div class="m-4 d-flex justify-content-center align-items-center">
+        <form class="border h-auto p-4 wrap" [formGroup]="form" (ngSubmit)="login()">
+            <div class="logo">
+                <img src="assets/img/login.png" alt="">
+            </div>
+            <div class="text-center mt-3 mb-3 fs-4">
+                Inicio de sesión
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input type="email" formControlName="Email" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Contraseña</label>
+                <input type="password" formControlName="Clave" class="form-control" required>
+            </div>
+            <div class="mb-3 form-check">
+                <input id="checkRemember" type="checkbox" [(ngModel)]="isChecked" class="form-check-input" [ngModelOptions]="{standalone: true}">
+                <label class="form-check-label">Recordar contraseña</label>
+            </div>
+            <div class="mb-3 text-center">
+                <a [class.disabledLink]="isEnableLink" class="small" routerLink="/auth/recovery">Olvidé la contraseña</a>
+            </div>
+
+            <div class="d-grid gap-2 col-11 mx-auto">
+                <input id="btnLogin" type="submit" class="btn btn-success"
+                    [disabled]="this.form.invalid" value="Acceder"/>
+            </div>
+            <div class="text-end mt-3">
+                <a [class.disabledLink]="isEnableLink" class="small" routerLink="/auth/register">Registrarse</a>
+            </div>
+
+        </form>
+    </div>
+</div>
