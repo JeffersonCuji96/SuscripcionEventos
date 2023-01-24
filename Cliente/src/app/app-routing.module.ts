@@ -7,12 +7,16 @@ const routes: Routes = [
   {
     path: '',
     component:HomePageComponent,
-    loadChildren: () => import(`./modules/home/home.module`).then(m => m.HomeModule),
-    canActivate: [SessionGuard],
+    loadChildren: () => import(`./modules/home/home.module`).then(m => m.HomeModule)//,
+    //canActivate: [SessionGuard],
   },
   {
     path: 'auth', 
     loadChildren: () => import(`./modules/auth/auth.module`).then(m => m.AuthModule)
+  },
+  {
+    path:'user',
+    loadChildren:()=>import(`./modules/user/user.module`).then(m=>m.UserModule)
   }
 ];
 

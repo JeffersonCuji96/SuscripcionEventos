@@ -1,7 +1,9 @@
+import * as moment from 'moment';
+import { Observable, ReplaySubject } from 'rxjs';
 import Swal from 'sweetalert2';
 
 export class Helpers {
-    
+
     disableInputElement(id: any, value: boolean) {
         (<HTMLInputElement>document.getElementById(id)).disabled = value;
     }
@@ -68,5 +70,17 @@ export class Helpers {
         if (!this.isEmpty(error.error)) {
             this.verifyStatusError(error);
         }
+    }
+    convertFileBase64(file: File): Observable<string> {
+        const result = new ReplaySubject<string>(1);
+        const reader = new FileReader();
+        reader.readAsBinaryString(file);
+        reader.onload = (event) => result.next(btoa(event.target.result.toString()));
+        return result;
+    }
+    static getAgeBirthDate(date: string): number {
+        var birthDate = moment(date);
+        var currentDate = moment();
+        return currentDate.diff(birthDate, "years");
     }
 }

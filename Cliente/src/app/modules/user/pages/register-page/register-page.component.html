@@ -1,0 +1,152 @@
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card shadow-lg border-0 rounded-lg">
+                <div class="card-header">
+                    <h4 class="text-center font-weight-light my-4">Registro de Usuario</h4>
+                </div>
+                <div class="card-body">
+                    <form [formGroup]="serviceBuilder.form">
+                        <div formGroupName="Persona">
+                            <div class="row">
+                                <div class="mb-2 col-md-6">
+                                    <label class="small px-1 text-muted">Nombre</label>
+                                    <input class="form-control"
+                                        [ngClass]="fNested('Persona.Nombre').invalid 
+                                    && (fNested('Persona.Nombre').dirty || fNested('Persona.Nombre').touched) ? 'is-invalid' : 'form-control'"
+                                        formControlName="Nombre" type="text" placeholder="Ingrese su nombre " />
+                                    <span class="px-1 error"
+                                        *ngIf="fNested('Persona.Nombre').touched && fNested('Persona.Nombre').errors?.required">
+                                        El nombre es requerido
+                                    </span>
+                                    <span class="px-1 error" *ngIf="fNested('Persona.Nombre').errors?.pattern">
+                                        Debe tener solo letras
+                                    </span>
+                                </div>
+                                <div class="mb-2 col-md-6">
+                                    <label class="small px-1 text-muted">Apellido</label>
+                                    <input class="form-control"
+                                        [ngClass]="fNested('Persona.Apellido').invalid 
+                                    && (fNested('Persona.Apellido').dirty || fNested('Persona.Apellido').touched) ? 'is-invalid' : 'form-control'"
+                                        formControlName="Apellido" type="text" placeholder="Ingrese su apellido " />
+                                    <span class="px-1 error"
+                                        *ngIf="fNested('Persona.Apellido').touched && fNested('Persona.Apellido').errors?.required">
+                                        El apellido es requerido
+                                    </span>
+                                    <span class="px-1 error" *ngIf="fNested('Persona.Apellido').errors?.pattern">
+                                        Se permiten solo letras (a-z)
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="mb-2 col-md-6">
+                                    <label class="small px-1 text-muted">Celular</label>
+                                    <input class="form-control"
+                                        [ngClass]="fNested('Persona.Telefono').invalid 
+                                    && (fNested('Persona.Telefono').dirty || fNested('Persona.Telefono').touched) ? 'is-invalid' : 'form-control'"
+                                        formControlName="Telefono" (blur)="availablePhone()" type="text"
+                                        placeholder="Ingrese su número " />
+
+                                    <span class="px-1 error" *ngIf="fNested('Persona.Telefono').errors?.numDigits">
+                                        Debe tener 10 digitos
+                                    </span>
+                                    <span class="px-1 error" *ngIf="fNested('Persona.Telefono').errors?.pattern">
+                                        Se permiten solo números (0-9)
+                                    </span>
+                                    <span class="px-1 error"
+                                        *ngIf="fNested('Persona.Telefono').errors?.notPhone===false">
+                                        Teléfono en uso, ingrese otro
+                                    </span>
+                                </div>
+                                <div class="mb-2 col-md-6">
+                                    <label class="small px-1 text-muted">Fecha de Nacimiento</label>
+                                    <input class="form-control" (blur)="availableDateBirth()" formControlName="FechaNacimiento" type="date" />
+                                    <span class="px-1 error"
+                                        *ngIf="fNested('Persona.FechaNacimiento').touched && fNested('Persona.FechaNacimiento').errors?.required">
+                                        Fecha de nacimiento requerida
+                                    </span>
+                                    <span class="px-1 error"
+                                        *ngIf="fNested('Persona.FechaNacimiento').errors?.notDateBirth">
+                                        La fecha no es válida
+                                    </span>
+                                    <span class="px-1 error"
+                                        *ngIf="fNested('Persona.FechaNacimiento').errors?.notAdult">
+                                        Debe ser mayor de edad
+                                    </span>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="mb-3">
+                            <label class="small px-1 text-muted">Foto</label>
+                            <input class="form-control" type="file"
+                                placeholder="Ingrese su nombre" formControlName="FileTemporal" accept=".jpg, .png" (change)="onFileChanged($event)" />
+                                <span class="px-1 error" *ngIf="f.FileTemporal.errors?.notFormat">
+                                    Se permiten sólo formatos png y jpg
+                                </span>
+                                <span class="px-1 error" *ngIf="f.FileTemporal.dirty && f.FileTemporal.errors?.notSize">
+                                    El peso de la imagen no debe ser superior a 1 MB
+                                </span>
+                        </div>
+                        <div class="form-group mb-2">
+                            <label class="small px-1 text-muted">Email</label>
+                            <input class="form-control" [ngClass]="f.Email.invalid 
+                            && (f.Email.dirty || f.Email.touched) ? 'is-invalid' : 'form-control'" formControlName="Email" (blur)="availableEmail()" type="text"
+                                placeholder="Ingrese un email" />
+                            <span class="px-1 error" *ngIf="f.Email.touched && f.Email.errors?.required">
+                                El email es requerido
+                            </span>
+                            <span class="px-1 error" *ngIf="f.Email.errors?.isEmail">
+                                Formato de email inválido
+                            </span>
+                            <span class="px-1 error" *ngIf="f.Email.errors?.pattern">
+                                Se permiten letras (a-z), números (0-9) y puntos (.)
+                            </span>
+                            <span class="px-1 error" *ngIf="f.Email.errors?.notEmail===false">
+                                Email no disponible, ingrese otro
+                            </span>
+                        </div>
+                        <div class="row">
+                            <div class="mb-2 col-md-6">
+                                <label class="small px-1 text-muted">Clave</label>
+                                <input class="form-control" [ngClass]="f.Clave.invalid 
+                                && (f.Clave.dirty || f.Clave.touched) ? 'is-invalid' : 'form-control'" formControlName="Clave" type="text"
+                                    placeholder="Ingresar una clave " />
+                                <span class="px-1 error" *ngIf="f.Clave.touched && f.Clave.errors?.required">La clave es
+                                    requerida</span>
+                                <span class="px-1 error" *ngIf="f.Clave.errors?.number">Mínimo un número</span>
+                                <span class="px-1 error" *ngIf="f.Clave.errors?.uppercase">Mínimo una letra
+                                    mayúscula</span>
+                                <span class="px-1 error" *ngIf="f.Clave.errors?.lowercase">Mínimo una letra
+                                    minúscula</span>
+                                <span class="px-1 error" *ngIf="f.Clave.errors?.special">Mínimo una caracter especial:
+                                    *@.%#</span>
+                                <span class="px-1 error" *ngIf="f.Clave.errors?.space">No debe contener espacios</span>
+                                <span class="px-1 error" *ngIf="f.Clave.errors?.min">Mínimo 8 caracteres</span>
+                                <span class="px-1 error" *ngIf="f.Clave.errors?.max">Máximo 15 caracteres</span>
+                            </div>
+                            <div class="mb-2 col-md-6">
+                                <label class="small px-1 text-muted">Confirmar clave</label>
+                                <input class="form-control" [ngClass]="f.ConfirmClave.invalid 
+                                && (f.ConfirmClave.dirty || f.ConfirmClave.touched) ? 'is-invalid' : 'form-control'" formControlName="ConfirmClave" type="text"
+                                    placeholder="Reingresar la clave " />
+                                <span class="px-1 error"
+                                    *ngIf="f.ConfirmClave.touched && f.ConfirmClave.errors?.required">Confirmar clave
+                                    requerida</span>
+                            </div>
+                        </div>
+                        <div class="error m-0">
+                            <span *ngIf="f.ConfirmClave.errors?.matching">
+                                No coinciden las claves
+                            </span>
+                        </div>
+                        <div class="d-grid col-6 mx-auto mb-3">
+                            <input id="btnPago" class="btn btn-primary mt-3 align-items-center"
+                                [disabled]="serviceBuilder.form.invalid" type="submit" value="Registrarse" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
