@@ -65,6 +65,16 @@ namespace BL.Repositories.Implements
             testContext.Usuarios.Add(usuario);
             testContext.SaveChanges();
         }
+        public bool CheckPassword(string password, long id)
+        {
+            string ePass = Crypto.GetSHA256(password);
+            return testContext.Usuarios.Any(x => x.Id == id && x.Clave == ePass);
+        }
+        public bool CheckEmail(string email)
+        {
+            string eEmail = Crypto.GetSHA256(email);
+            return testContext.Usuarios.Any(x => x.Email == eEmail);
+        }
 
     }
 }

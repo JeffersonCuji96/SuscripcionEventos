@@ -8,5 +8,7 @@ namespace BL.Services
         AccessViewModel Login(Usuario usuario);
         Usuario? GetUserPersonById(long id);
         void InsertUserPerson(Usuario usuario);
+        bool CheckPassword(string password, long id);
+        bool CheckEmail(string email);
     }
 }

@@ -23,5 +23,13 @@ namespace BL.Services.Implements
         {
             usuarioRepository.InsertUserPerson(usuario);
         }
+        public bool CheckPassword(string password, long id)
+        {
+            return usuarioRepository.CheckPassword(password, id);
+        }
+        public bool CheckEmail(string email)
+        {
+            return usuarioRepository.CheckEmail(email);
+        }
     }
 }
