@@ -10,6 +10,9 @@ namespace SuscripcionEventosApi.MapperConfig
         {
             CreateMap<Usuario, AccesoDTO>();
             CreateMap<AccesoDTO, Usuario>();
+
+            CreateMap<Persona, PersonaDTO>();
+            CreateMap<PersonaDTO, PersonaDTO>();
         }
 
     }

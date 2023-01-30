@@ -36,6 +36,8 @@ builder.Services.AddCors(options =>
 builder.Services.AddDbContext<DbSuscripcionEventosContext>(options => options.UseSqlServer(configuration.GetConnectionString("connectionString")));
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
+builder.Services.AddScoped<IPersonaRepository, PersonaRepository>();
+builder.Services.AddScoped<IPersonaService, PersonaService>();
 builder.Services.Configure<AppSettings>(appSettingsSection);
 
 //Configuración para el filtro de entidades no procesadas y deshabilitar el comportamiento 400 automático
