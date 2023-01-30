@@ -10,5 +10,13 @@ namespace BL.Services.Implements
         {
             this.personaRepository = personaRepository;
         }
+        public void UpdatePerson(Persona persona)
+        {
+            personaRepository.UpdatePerson(persona);
+        }
+        public void UpdatePhoto(string foto, long id)
+        {
+            personaRepository.UpdatePhoto(foto, id);
+        }
     }
 }
