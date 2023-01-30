@@ -31,5 +31,14 @@ namespace BL.Services.Implements
         {
             return usuarioRepository.CheckEmail(email);
         }
+        public void UpdateEmail(string email, long id)
+        {
+            usuarioRepository.UpdateEmail(email, id);
+        }
+        public void UpdateClave(string password, long id)
+        {
+            usuarioRepository.UpdateClave(password, id);
+        }
+
     }
 }

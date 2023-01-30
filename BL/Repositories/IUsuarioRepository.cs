@@ -10,5 +10,7 @@ namespace BL.Repositories
         void InsertUserPerson(Usuario usuario);
         bool CheckPassword(string password, long id);
         bool CheckEmail(string email);
+        void UpdateEmail(string email, long id);
+        void UpdateClave(string password, long id);
     }
 }

@@ -2,6 +2,7 @@
 using BL.Helpers;
 using BL.Models;
 using BL.ViewModels;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -75,6 +76,19 @@ namespace BL.Repositories.Implements
             string eEmail = Crypto.GetSHA256(email);
             return testContext.Usuarios.Any(x => x.Email == eEmail);
         }
-
+        public void UpdateEmail(string email, long id)
+        {
+            var eEmail = Crypto.GetSHA256(email);
+            testContext.Database.ExecuteSqlRaw("UPDATE Usuario SET Email = @email WHERE Id = @id",
+                new SqlParameter("@id", id),
+                new SqlParameter("@email", eEmail));
+        }
+        public void UpdateClave(string password, long id)
+        {
+            var ePass = Crypto.GetSHA256(password);
+            testContext.Database.ExecuteSqlRaw("UPDATE Usuario SET Clave = @pass WHERE Id = @id",
+                new SqlParameter("@id", id),
+                new SqlParameter("@pass", ePass));
+        }
     }
 }
