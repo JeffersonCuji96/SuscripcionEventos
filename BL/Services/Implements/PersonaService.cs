@@ -18,5 +18,13 @@ namespace BL.Services.Implements
         {
             personaRepository.UpdatePhoto(foto, id);
         }
+        public string GetPathPhoto(long id)
+        {
+            return personaRepository.GetPathPhoto(id);
+        }
+        public bool CheckPhone(string phone)
+        {
+            return personaRepository.CheckPhone(phone);
+        }
     }
 }

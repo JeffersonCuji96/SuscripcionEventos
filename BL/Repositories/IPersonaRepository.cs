@@ -6,5 +6,7 @@ namespace BL.Repositories
     {
         void UpdatePerson(Persona persona);
         void UpdatePhoto(string foto, long id);
+        string GetPathPhoto(long id);
+        bool CheckPhone(string phone);
     }
 }

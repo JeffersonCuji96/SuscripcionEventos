@@ -24,5 +24,25 @@ namespace BL.Repositories.Implements
                 new SqlParameter("@id", id),
                 new SqlParameter("@foto", foto));
         }
+
+        /*
+            Se usa un procedimiento almacenado para obtener el path de la foto del usuario, se envía
+            como parámetro de entrada el id y un parámetro de salida para retornar el resultado.
+        */
+        public string GetPathPhoto(long id)
+        {
+            SqlParameter[] parameters = {
+                new SqlParameter{ ParameterName = "@id", SqlDbType=SqlDbType.BigInt, Value = id },
+                new SqlParameter{ ParameterName = "@path",SqlDbType=SqlDbType.VarChar,Size=200, Direction = ParameterDirection.Output }
+            };
+            testContext.Database.ExecuteSqlRaw("exec SPGetPathPhoto @id, @path OUTPUT", parameters);
+            string? path = parameters[1].Value.ToString();
+            return path ?? string.Empty;
+        }
+
+        public bool CheckPhone(string phone)
+        {
+            return testContext.Personas.Any(x => x.Telefono == phone);
+        }
     }
 }
