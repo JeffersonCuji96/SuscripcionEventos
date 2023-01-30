@@ -6,5 +6,7 @@ namespace BL.Repositories
     public interface IUsuarioRepository:IGenericRepository<Usuario>
     {
         AccessViewModel Login(Usuario usuario);
+        Usuario? GetUserPersonById(long id);
+        void InsertUserPerson(Usuario usuario);
     }
 }

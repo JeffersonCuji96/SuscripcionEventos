@@ -2,6 +2,7 @@
 using BL.Helpers;
 using BL.Models;
 using BL.ViewModels;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -50,6 +51,19 @@ namespace BL.Repositories.Implements
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
+        }
+        public Usuario? GetUserPersonById(long id)
+        {
+            return testContext.Usuarios.Include(x => x.Persona).FirstOrDefault(x => x.Id == id);
+        }
+        public void InsertUserPerson(Usuario usuario)
+        {
+            usuario.Clave = Crypto.GetSHA256(usuario.Clave);
+            usuario.Email = Crypto.GetSHA256(usuario.Email);
+            testContext.Personas.Add(usuario.Persona);
+            usuario.Id = usuario.Persona.Id;
+            testContext.Usuarios.Add(usuario);
+            testContext.SaveChanges();
         }
 
     }
