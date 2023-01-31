@@ -77,5 +77,35 @@ namespace Api.Controllers
             personService.UpdatePhoto(foto, id);
             return Ok(new { Message = "Foto actualizada con éxito!" });
         }
+
+        [HttpPost]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
+        [Route("CheckPassword")]
+        public IActionResult CheckPassword(UserPasswordViewModel data)
+        {
+            if(data.Id==0 || data.Id==null)
+                return BadRequest("El código del usuario no es válido");
+            return Ok(userService.CheckPassword(data.Clave, data.Id.Value));
+        }
+
+        [HttpGet]
+        [Route("CheckEmail/{email}")]
+        public IActionResult CheckEmail(string email)
+        {
+            if (string.IsNullOrEmpty(email))
+                return BadRequest("El email del usuario no es válido");
+            bool available = !userService.CheckEmail(email);
+            return Ok(available);
+        }
+
+        [HttpGet]
+        [Route("CheckPhone/{phone}")]
+        public IActionResult CheckPhone(string phone)
+        {
+            if (string.IsNullOrEmpty(phone))
+                return BadRequest("El teléfono del usuario no es válido");
+            bool available = !personService.CheckPhone(phone);
+            return Ok(available);
+        }
     }
 }
