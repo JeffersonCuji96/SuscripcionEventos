@@ -1,0 +1,42 @@
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-5">
+            <div class="card shadow-lg border-0 rounded-lg mt-5">
+                <div class="card-header">
+                    <h3 class="text-center my-4 fw-lighter">Recuperación de contraseña</h3>
+                </div>
+                <div class="card-body">
+                    <form [formGroup]="form">
+                        <div class="small mb-3 text-muted">Ingrese su dirección de correo electrónico y le
+                            enviaremos un enlace para que pueda restablecer su contraseña.
+                        </div>
+                        <div class="mb-4">
+                            <label class="small px-1 py-2">Email</label>
+                            <input class="form-control" [ngClass]="f.Email.invalid 
+                            && (f.Email.dirty || f.Email.touched) ? 'is-invalid' : 'form-control'" formControlName="Email" (blur)="availableEmail()" type="text" placeholder="Ingrese un email" />
+                            <span class="px-1 error" *ngIf="f.Email.touched && f.Email.errors?.required">
+                                El email es requerido
+                            </span>
+                            <span class="px-1 error" *ngIf="f.Email.errors?.isEmail">
+                                Formato de email inválido
+                            </span>
+                            <span class="px-1 error" *ngIf="f.Email.errors?.pattern">
+                                Se permiten letras (a-z), números (0-9) y puntos (.)
+                            </span>
+                            <span class="px-1 error" *ngIf="f.Email.errors?.notEmail===false">
+                                Email no disponible, ingrese otro
+                            </span>
+                        </div>
+                        <div class="mt-5 mb-3 d-flex justify-content-between">
+                            <a class="small px-1" routerLink="/auth/login">Volver al login</a>
+                            <button id="btnForgot" [disabled]="form.invalid" type="submit" class="btn btn-primary">Enviar</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer text-center">
+                    <div class="small"><a routerLink="#" class="enlaceFooter">Recuerde que una vez generado el enlace caduca en 5 minutos</a></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
