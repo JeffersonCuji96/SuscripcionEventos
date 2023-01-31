@@ -8,6 +8,7 @@ using BL.Services.Implements;
 using BL.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using BL.Helpers;
 
 namespace Api.Controllers
 {
@@ -106,6 +107,46 @@ namespace Api.Controllers
                 return BadRequest("El teléfono del usuario no es válido");
             bool available = !personService.CheckPhone(phone);
             return Ok(available);
+        }
+
+        [HttpPost]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
+        [Route("UpdateEmail")]
+        public IActionResult UpdateEmail(UserEmailViewModel data)
+        {
+            if (data.Id == 0 || data.Id == null)
+                return BadRequest("El código del usuario no es válido");
+            userService.UpdateEmail(data.Email, data.Id.Value);
+            return Ok(new { Message = "Email actualizado con éxito!" });
+        }
+
+        [HttpPost]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
+        [Route("UpdatePassword")]
+        public IActionResult UpdateClave(UserPasswordViewModel data)
+        {
+            if (data.Id == 0 || data.Id == null)
+                return BadRequest("El código del usuario no es válido");
+            userService.UpdateClave(data.Clave, data.Id.Value);
+            return Ok(new { Message = "Clave actualizada con éxito!" });
+        }
+
+        [HttpGet]
+        [Route("GetPathPhoto/{id}")]
+        public IActionResult GetPathPhoto(long? id)
+        {
+            if (id == 0 || id==null)
+                return BadRequest("El código del usuario no es válido");
+            var path = personService.GetPathPhoto(id.Value);
+            return Ok(path);
+        }
+
+        [HttpGet]
+        [Route("GetCurrentDate")]
+        public IActionResult GetCurrentDate()
+        {
+            var currentDate = DateHelper.GetCurrentDate();
+            return Ok(currentDate);
         }
     }
 }
