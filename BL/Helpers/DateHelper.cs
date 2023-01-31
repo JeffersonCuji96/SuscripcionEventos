@@ -1,16 +1,11 @@
 ﻿using BL.Models;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BL.Helpers
 {
-    internal class DateHelper
+    public class DateHelper
     {
         public static int GetAgeBirthDate(DateTime birthDate)
         {
