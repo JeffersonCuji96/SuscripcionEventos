@@ -9,6 +9,7 @@ using BL.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using BL.Helpers;
+using System.Net;
 
 namespace Api.Controllers
 {
@@ -147,6 +148,20 @@ namespace Api.Controllers
         {
             var currentDate = DateHelper.GetCurrentDate();
             return Ok(currentDate);
+        }
+
+        [HttpPost]
+        [Route("RecoveryAccess")]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
+        public IActionResult RecoveryAccess(UserEmailViewModel data)
+        {
+            if (data.Id == 0 || data.Id == null)
+                return BadRequest("El código del usuario no es válido");
+            if (!userService.CheckEmail(data.Email))
+                return BadRequest("El email del usuario no es válido");
+
+            userService.RecoveryAccess(data, DateHelper.GetCurrentDate());
+            return Ok(new { Message = "Enlace generado revise su correo!" });
         }
     }
 }

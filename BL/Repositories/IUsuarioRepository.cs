@@ -12,5 +12,6 @@ namespace BL.Repositories
         bool CheckEmail(string email);
         void UpdateEmail(string email, long id);
         void UpdateClave(string password, long id);
+        void RecoveryAccess(UserEmailViewModel userEmailViewModel, DateTime date);
     }
 }

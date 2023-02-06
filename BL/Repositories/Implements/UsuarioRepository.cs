@@ -90,5 +90,32 @@ namespace BL.Repositories.Implements
                 new SqlParameter("@id", id),
                 new SqlParameter("@pass", ePass));
         }
+
+        /*
+            Se genera un número pseudoaleatorio encriptado para actualizar el campo del token 
+            en la entidad usuario. También se actualiza la fecha de expiración que se agregando 
+            5 minutos a la fecha actual, que será el tiempo que dure el enlace de 
+            recuperación que se envía al correo del usuario.
+         */
+        public void RecoveryAccess(UserEmailViewModel userEmailViewModel, DateTime date)
+        {
+            string token = Crypto.GetSHA256(Guid.NewGuid().ToString());
+            var query = testContext.Database.ExecuteSqlRaw("UPDATE Usuario SET TokenRecuperacion = @tokenRecuperacion,FechaTokenExpiracion=@fechaTokenExpiracion WHERE Id = @id",
+                new SqlParameter("@id", userEmailViewModel.Id),
+                new SqlParameter("@tokenRecuperacion", token),
+                new SqlParameter("@fechaTokenExpiracion", date.AddMinutes(5)));
+
+            if (query == 1)
+            {
+                var oMailSetting = new MailSettings()
+                {
+                    Path = "/auth/recovery/",
+                    Subject = "Cambio de contraseña",
+                    Body = "<p>Recupere el acceso a su cuenta</p><br>",
+                    LinkDescription = "Click para restablecer"
+                };
+                MailHelper.SendEmail(userEmailViewModel.Email, token, appSettings, oMailSetting);
+            }
+        }
     }
 }

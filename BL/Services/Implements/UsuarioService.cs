@@ -39,6 +39,9 @@ namespace BL.Services.Implements
         {
             usuarioRepository.UpdateClave(password, id);
         }
-
+        public void RecoveryAccess(UserEmailViewModel userEmailViewModel, DateTime date)
+        {
+            usuarioRepository.RecoveryAccess(userEmailViewModel, date);
+        }
     }
 }
