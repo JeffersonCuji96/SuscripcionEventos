@@ -4,11 +4,13 @@ import { AuthRoutingModule } from './auth-routing.module';
 import { LoginPageComponent } from './pages/login-page/login-page.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ForgotPageComponent } from './pages/forgot-page/forgot-page.component';
+import { ChangePasswordPageComponent } from './pages/change-password-page/change-password-page.component';
 
 @NgModule({
   declarations: [
     LoginPageComponent,
-    ForgotPageComponent
+    ForgotPageComponent,
+    ChangePasswordPageComponent
   ],
   imports: [
     CommonModule,
