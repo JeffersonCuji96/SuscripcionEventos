@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { UsuarioDto } from 'src/app/core/models/usuarioDto';
+import { UserEmailViewModel } from 'src/app/core/models/view-models/userEmailViewModel';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -23,5 +24,8 @@ export class UserService {
   }
   register(user: UsuarioDto): Observable<any> {
     return this.http.post<any>(this.urlApi + "api/User", user);
+  }
+  recoveryAccess(userEmail:UserEmailViewModel){
+    return this.http.post<any>(this.urlApi + "api/User/RecoveryAccess", userEmail);
   }
 }

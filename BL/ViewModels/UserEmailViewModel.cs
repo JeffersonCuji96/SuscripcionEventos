@@ -5,7 +5,7 @@ namespace BL.ViewModels
 {
     public class UserEmailViewModel
     {
-        [Required(ErrorMessage = "El código del usuario es requerido")]
+        [IsAvailableId]
         public long? Id { get; set; }
 
         [Required(ErrorMessage = "El email es requerido")]
