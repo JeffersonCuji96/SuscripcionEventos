@@ -24,7 +24,8 @@ namespace BL.ValidationCustom
                     new SqlParameter{ ParameterName = "@id",SqlDbType=SqlDbType.BigInt, Direction = ParameterDirection.Output }
                 };
                 db.Database.ExecuteSqlRaw("exec SPGetIdUserByEmail @email, @id OUTPUT", parameters);
-                instance.GetType().GetProperty("Id")?.SetValue(instance, Convert.ToInt64(parameters[1].Value));
+                if(!string.IsNullOrEmpty(parameters[1].Value.ToString()))
+                    instance.GetType().GetProperty("Id")?.SetValue(instance, Convert.ToInt64(parameters[1].Value));
             }
             return ValidationResult.Success;
         }

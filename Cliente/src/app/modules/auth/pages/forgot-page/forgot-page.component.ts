@@ -54,6 +54,7 @@ export class ForgotPageComponent implements OnInit, OnDestroy {
         this.form.reset();
         this.helper.disableInputElement("btnForgot", false);
         this.helper.swalShowSuccess(response.Message);
+        this.form.enable();
       },
         error => {
           this.helper.manageErrors(error);

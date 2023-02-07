@@ -58,6 +58,12 @@ export class Helpers {
                     "La conexión ha fallado!. Revise su acceso a internet o intentelo más tarde",
                     "error"
                 ); break;
+            case 400:
+                this.swalShow(
+                    "<h4>Operación no realizada</h4>",
+                    error.error,
+                    "warning"
+                ); break;
             default:
                 this.swalShow(
                     "<h4>Operación no realizada</h4>",
@@ -83,8 +89,8 @@ export class Helpers {
         var currentDate = moment();
         return currentDate.diff(birthDate, "years");
     }
-    swalShowSuccess(message:string){
-        this.swalShow("<h4>Operación realizada</h4>",message,"success")
+    swalShowSuccess(message: string) {
+        this.swalShow("<h4>Operación realizada</h4>", message, "success")
     }
 
 }
