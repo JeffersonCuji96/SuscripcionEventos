@@ -38,17 +38,4 @@ export class ForgotPageComponent implements OnInit,OnDestroy {
   get f(): { [key: string]: AbstractControl } {
     return this.form.controls;
   }
-
-  availableEmail(): void {
-    this.availableInfo(
-      this.f.Email,
-      ValidationCustom.isAvailableEmail(this.userService)
-    );
-  }
-
-  availableInfo(ctrl: AbstractControl,fnValidator:AsyncValidatorFn): void {
-    ctrl.setAsyncValidators(fnValidator);
-    ctrl.updateValueAndValidity();
-    ctrl.clearAsyncValidators();
-  } 
 }

@@ -13,7 +13,7 @@
                         <div class="mb-4">
                             <label class="small px-1 py-2">Email</label>
                             <input class="form-control" [ngClass]="f.Email.invalid 
-                            && (f.Email.dirty || f.Email.touched) ? 'is-invalid' : 'form-control'" formControlName="Email" (blur)="availableEmail()" type="text" placeholder="Ingrese un email" />
+                            && (f.Email.dirty || f.Email.touched) ? 'is-invalid' : 'form-control'" formControlName="Email" type="text" placeholder="Ingrese un email" />
                             <span class="px-1 error" *ngIf="f.Email.touched && f.Email.errors?.required">
                                 El email es requerido
                             </span>
@@ -22,9 +22,6 @@
                             </span>
                             <span class="px-1 error" *ngIf="f.Email.errors?.pattern">
                                 Se permiten letras (a-z), números (0-9) y puntos (.)
-                            </span>
-                            <span class="px-1 error" *ngIf="f.Email.errors?.notEmail===false">
-                                Email no disponible, ingrese otro
                             </span>
                         </div>
                         <div class="mt-5 mb-3 d-flex justify-content-between">
