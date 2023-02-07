@@ -110,7 +110,7 @@
                             <div class="mb-2 col-md-6">
                                 <label class="small px-1 text-muted">Clave</label>
                                 <input class="form-control" [ngClass]="f.Clave.invalid 
-                                && (f.Clave.dirty || f.Clave.touched) ? 'is-invalid' : 'form-control'" formControlName="Clave" type="text"
+                                && (f.Clave.dirty || f.Clave.touched) ? 'is-invalid' : 'form-control'" formControlName="Clave" type="password"
                                     placeholder="Ingresar una clave " />
                                 <span class="px-1 error" *ngIf="f.Clave.touched && f.Clave.errors?.required">La clave es
                                     requerida</span>
@@ -128,7 +128,7 @@
                             <div class="mb-2 col-md-6">
                                 <label class="small px-1 text-muted">Confirmar clave</label>
                                 <input class="form-control" [ngClass]="f.ConfirmClave.invalid 
-                                && (f.ConfirmClave.dirty || f.ConfirmClave.touched) ? 'is-invalid' : 'form-control'" formControlName="ConfirmClave" type="text"
+                                && (f.ConfirmClave.dirty || f.ConfirmClave.touched) ? 'is-invalid' : 'form-control'" formControlName="ConfirmClave" type="password"
                                     placeholder="Reingresar la clave " />
                                 <span class="px-1 error"
                                     *ngIf="f.ConfirmClave.touched && f.ConfirmClave.errors?.required">Confirmar clave
