@@ -16,7 +16,7 @@ export class UserService {
     return this.http.get<boolean>(this.urlApi+"api/User/CheckEmail/"+email);
   }
   getCurrentDate():Observable<any>{
-    return this.http.get<any>(this.urlApi+"/api/User/GetCurrentDate");
+    return this.http.get<any>(this.urlApi+"api/User/GetCurrentDate");
   }
   checkPhone(phone: string): Observable<boolean> {
     return this.http.get<boolean>(this.urlApi+"api/User/CheckPhone/"+phone);

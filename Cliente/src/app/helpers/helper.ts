@@ -83,4 +83,8 @@ export class Helpers {
         var currentDate = moment();
         return currentDate.diff(birthDate, "years");
     }
+    swalShowSuccess(message:string){
+        this.swalShow("<h4>Operación realizada</h4>",message,"success")
+    }
+
 }

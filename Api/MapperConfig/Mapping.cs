@@ -12,7 +12,7 @@ namespace SuscripcionEventosApi.MapperConfig
             CreateMap<AccesoDTO, Usuario>();
 
             CreateMap<Persona, PersonaDTO>();
-            CreateMap<PersonaDTO, PersonaDTO>();
+            CreateMap<PersonaDTO, Persona>();
 
             CreateMap<Usuario, UsuarioDTO>()
                 .ForMember(x => x.Email, opt => opt.Ignore())
