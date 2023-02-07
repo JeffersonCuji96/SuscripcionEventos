@@ -6,7 +6,7 @@
                     <h4 class="text-center fw-lighter my-4">Registro de Usuario</h4>
                 </div>
                 <div class="card-body">
-                    <form [formGroup]="serviceBuilder.form">
+                    <form [formGroup]="serviceBuilder.form" (ngSubmit)="register()">
                         <div formGroupName="Persona">
                             <div class="row">
                                 <div class="mb-2 col-md-6">

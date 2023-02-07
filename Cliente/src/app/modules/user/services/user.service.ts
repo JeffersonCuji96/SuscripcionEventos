@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { UsuarioDto } from 'src/app/core/models/usuarioDto';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -19,5 +20,8 @@ export class UserService {
   }
   checkPhone(phone: string): Observable<boolean> {
     return this.http.get<boolean>(this.urlApi+"api/User/CheckPhone/"+phone);
+  }
+  register(user: UsuarioDto): Observable<any> {
+    return this.http.post<any>(this.urlApi + "api/User", user);
   }
 }

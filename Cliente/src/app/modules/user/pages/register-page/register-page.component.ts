@@ -1,6 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormControl } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { UsuarioDto } from 'src/app/core/models/usuarioDto';
 import { Helpers } from 'src/app/helpers/helper';
 import { BuilderService } from '../../services/builder.service';
 import { UserService } from '../../services/user.service';
@@ -15,14 +18,19 @@ export class RegisterPageComponent implements OnInit, OnDestroy {
 
   private stop$ = new Subject<void>();
 
-  constructor(public serviceBuilder: BuilderService,
-    private userService: UserService, private helper: Helpers) {
+  constructor(
+    public serviceBuilder: BuilderService,
+    private userService: UserService,
+    private router: Router,
+    private helper: Helpers) {
 
   }
   ngOnInit(): void {
+    this.serviceBuilder.form.enable();
   }
 
   ngOnDestroy() {
+    this.serviceBuilder.form.reset();
     this.stop$.next();
     this.stop$.complete();
   }
@@ -68,6 +76,23 @@ export class RegisterPageComponent implements OnInit, OnDestroy {
         });
       }
     }
+  }
+
+  register() {
+    this.serviceBuilder.form.disable();
+    this.helper.disableInputElement("btnRegister", true);
+    var usuario: UsuarioDto = this.serviceBuilder.form.value;
+    this.userService.register(usuario)
+      .pipe(takeUntil(this.stop$))
+      .subscribe(response => {
+        this.helper.swalShowSuccess(response.Message);
+        this.router.navigate(['/auth']);
+      },
+        error => {
+          this.helper.manageErrors(error);
+          this.helper.disableInputElement("btnRegister", false);
+          this.serviceBuilder.form.enable();
+        });
   }
 
 }
