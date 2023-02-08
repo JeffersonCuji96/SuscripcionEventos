@@ -163,5 +163,15 @@ namespace Api.Controllers
             userService.RecoveryAccess(data, DateHelper.GetCurrentDate());
             return Ok(new { Message = "Enlace generado revise su correo!" });
         }
+
+        [HttpPost]
+        [Route("CheckToken")]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
+        public IActionResult CheckToken(TokenValidViewModel data)
+        {
+            var currentDate = DateHelper.GetCurrentDate();
+            var checkToken = userService.CheckToken(currentDate,data.Token);
+            return Ok(checkToken);
+        }
     }
 }

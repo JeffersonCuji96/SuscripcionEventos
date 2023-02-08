@@ -43,5 +43,9 @@ namespace BL.Services.Implements
         {
             usuarioRepository.RecoveryAccess(userEmailViewModel, date);
         }
+        public bool CheckToken(DateTime currentDate,string token)
+        {
+            return usuarioRepository.CheckToken(currentDate, token);
+        }
     }
 }

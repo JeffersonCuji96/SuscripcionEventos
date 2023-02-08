@@ -6,6 +6,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -116,6 +117,25 @@ namespace BL.Repositories.Implements
                 };
                 MailHelper.SendEmail(userEmailViewModel.Email, token, appSettings, oMailSetting);
             }
+        }
+        /*
+            Se obtiene la fecha de caducidad del token para compararlo con la fecha actual del servidor.
+         */
+        public bool CheckToken(DateTime currentDate,string token)
+        {
+            SqlParameter[] parameters = {
+                    new SqlParameter{ ParameterName = "@token", SqlDbType=SqlDbType.VarChar,Size=100, Value = token },
+                    new SqlParameter{ ParameterName = "@tokenExpiracion",SqlDbType=SqlDbType.DateTime, Direction = ParameterDirection.Output }
+                };
+            testContext.Database.ExecuteSqlRaw("exec SPGetTokenExpiration @token, @tokenExpiracion OUTPUT", parameters);
+            if (!string.IsNullOrEmpty(parameters[1].Value.ToString()))
+            {
+                DateTime fechaExpiracion = Convert.ToDateTime(parameters[1].Value);
+                if (currentDate > fechaExpiracion)
+                    return false;
+                return true;
+            }
+            return false;
         }
     }
 }

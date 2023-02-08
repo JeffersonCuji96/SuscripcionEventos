@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { AuthenticationJwt } from 'src/app/core/models/authenticationJwt';
 import { CookieService } from 'ngx-cookie-service';
+import { TokenValidViewModel } from 'src/app/core/models/view-models/tokenValidViewModel';
 
 @Injectable({
   providedIn: 'root'
@@ -36,5 +37,7 @@ export class AuthService {
     }
     return userId;
   }
-
+  checkToken(token:TokenValidViewModel):Observable<boolean>{
+    return this.http.post<boolean>(this.urlApi + "api/User/CheckToken", token);
+  }
 }

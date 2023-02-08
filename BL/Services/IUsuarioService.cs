@@ -13,5 +13,6 @@ namespace BL.Services
         void UpdateEmail(string email, long id);
         void UpdateClave(string password, long id);
         void RecoveryAccess(UserEmailViewModel userEmailViewModel, DateTime date);
+        bool CheckToken(DateTime currentDate,string token);
     }
 }
