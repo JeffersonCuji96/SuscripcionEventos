@@ -110,7 +110,7 @@ namespace BL.Repositories.Implements
             {
                 var oMailSetting = new MailSettings()
                 {
-                    Path = "/auth/recovery/",
+                    Path = "/auth/change-password/",
                     Subject = "Cambio de contraseña",
                     Body = "<p>Recupere el acceso a su cuenta</p><br>",
                     LinkDescription = "Click para restablecer"

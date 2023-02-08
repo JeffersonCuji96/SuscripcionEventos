@@ -15,7 +15,7 @@ namespace BL.Helpers
                 emailOrigin,
                 emailReceiving,
                 mailSettings.Subject,
-                $"{mailSettings.Body}{"<a href='" +url + "'>'"}{mailSettings.LinkDescription}{"</a>"}")
+                $"{mailSettings.Body}{"<a href='" +url + "'>"}{mailSettings.LinkDescription}{"</a>"}")
             {
                 IsBodyHtml = true
             };
