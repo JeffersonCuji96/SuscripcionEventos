@@ -9,3 +9,6 @@
     pointer-events: none;
    cursor: default;
 }
+.img-error {
+    max-width: 20rem;
+}

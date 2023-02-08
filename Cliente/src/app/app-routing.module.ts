@@ -17,6 +17,10 @@ const routes: Routes = [
   {
     path:'user',
     loadChildren:()=>import(`./modules/user/user.module`).then(m=>m.UserModule)
+  },
+  {
+    path:'error',
+    loadChildren:()=>import(`./modules/error/error.module`).then(m=>m.ErrorModule)
   }
 ];
 
