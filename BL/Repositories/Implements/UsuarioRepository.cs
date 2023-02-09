@@ -6,6 +6,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json.Linq;
 using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -133,6 +134,19 @@ namespace BL.Repositories.Implements
                 DateTime fechaExpiracion = Convert.ToDateTime(parameters[1].Value);
                 if (currentDate > fechaExpiracion)
                     return false;
+                return true;
+            }
+            return false;
+        }
+        public bool ChangeClave(TokenPasswordViewModel tokenPassViewModel)
+        {
+            var oUser = testContext.Usuarios.FirstOrDefault(x => x.TokenRecuperacion == tokenPassViewModel.Token);
+            if (oUser != null)
+            {
+                oUser.Clave = Crypto.GetSHA256(tokenPassViewModel.Clave);
+                oUser.TokenRecuperacion = null;
+                oUser.FechaTokenExpiracion = null;
+                testContext.SaveChanges();
                 return true;
             }
             return false;

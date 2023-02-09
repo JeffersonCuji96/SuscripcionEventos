@@ -171,5 +171,19 @@ namespace Api.Controllers
             var checkToken = userService.CheckToken(tokenValidViewModel,currentDate);
             return Ok(checkToken);
         }
+
+        [HttpPost]
+        [Route("ChangePassword")]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
+        public IActionResult ChangePassword(TokenPasswordViewModel tokenPassViewModel)
+        {
+            var currentDate = DateHelper.GetCurrentDate();
+            var tokenValidViewModel = new TokenValidViewModel() { Token = tokenPassViewModel.Token };
+            if (!userService.CheckToken(tokenValidViewModel, currentDate))
+                return BadRequest("Enlace de recuperación caducado");
+            if (userService.ChangeClave(tokenPassViewModel))
+                return Ok(new { Message = "Clave cambiada con éxito!" });
+            return BadRequest("Operación no realizada token inválido");
+        }
     }
 }

@@ -47,5 +47,9 @@ namespace BL.Services.Implements
         {
             return usuarioRepository.CheckToken(tokenValidViewModel, currentDate);
         }
+        public bool ChangeClave(TokenPasswordViewModel tokenPassViewModel)
+        {
+            return usuarioRepository.ChangeClave(tokenPassViewModel);
+        }
     }
 }
