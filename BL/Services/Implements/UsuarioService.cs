@@ -23,29 +23,29 @@ namespace BL.Services.Implements
         {
             usuarioRepository.InsertUserPerson(usuario);
         }
-        public bool CheckPassword(string password, long id)
+        public bool CheckPassword(UserPasswordViewModel userPassViewModel)
         {
-            return usuarioRepository.CheckPassword(password, id);
+            return usuarioRepository.CheckPassword(userPassViewModel);
         }
         public bool CheckEmail(string email)
         {
             return usuarioRepository.CheckEmail(email);
         }
-        public void UpdateEmail(string email, long id)
+        public void UpdateEmail(UserEmailViewModel userEmailViewModel)
         {
-            usuarioRepository.UpdateEmail(email, id);
+            usuarioRepository.UpdateEmail(userEmailViewModel);
         }
-        public void UpdateClave(string password, long id)
+        public void UpdateClave(UserPasswordViewModel userPassViewModel)
         {
-            usuarioRepository.UpdateClave(password, id);
+            usuarioRepository.UpdateClave(userPassViewModel);
         }
         public void RecoveryAccess(UserEmailViewModel userEmailViewModel, DateTime date)
         {
             usuarioRepository.RecoveryAccess(userEmailViewModel, date);
         }
-        public bool CheckToken(DateTime currentDate,string token)
+        public bool CheckToken(TokenValidViewModel tokenValidViewModel, DateTime currentDate)
         {
-            return usuarioRepository.CheckToken(currentDate, token);
+            return usuarioRepository.CheckToken(tokenValidViewModel, currentDate);
         }
     }
 }

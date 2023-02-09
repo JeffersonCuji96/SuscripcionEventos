@@ -67,28 +67,28 @@ namespace BL.Repositories.Implements
             testContext.Usuarios.Add(usuario);
             testContext.SaveChanges();
         }
-        public bool CheckPassword(string password, long id)
+        public bool CheckPassword(UserPasswordViewModel userPassViewModel)
         {
-            string ePass = Crypto.GetSHA256(password);
-            return testContext.Usuarios.Any(x => x.Id == id && x.Clave == ePass);
+            string ePass = Crypto.GetSHA256(userPassViewModel.Clave);
+            return testContext.Usuarios.Any(x => x.Id == userPassViewModel.Id && x.Clave == ePass);
         }
         public bool CheckEmail(string email)
         {
             string eEmail = Crypto.GetSHA256(email);
             return testContext.Usuarios.Any(x => x.Email == eEmail);
         }
-        public void UpdateEmail(string email, long id)
+        public void UpdateEmail(UserEmailViewModel userEmailViewModel)
         {
-            var eEmail = Crypto.GetSHA256(email);
+            var eEmail = Crypto.GetSHA256(userEmailViewModel.Email);
             testContext.Database.ExecuteSqlRaw("UPDATE Usuario SET Email = @email WHERE Id = @id",
-                new SqlParameter("@id", id),
+                new SqlParameter("@id", userEmailViewModel.Id),
                 new SqlParameter("@email", eEmail));
         }
-        public void UpdateClave(string password, long id)
+        public void UpdateClave(UserPasswordViewModel userPassViewModel)
         {
-            var ePass = Crypto.GetSHA256(password);
+            var ePass = Crypto.GetSHA256(userPassViewModel.Clave);
             testContext.Database.ExecuteSqlRaw("UPDATE Usuario SET Clave = @pass WHERE Id = @id",
-                new SqlParameter("@id", id),
+                new SqlParameter("@id", userPassViewModel.Id),
                 new SqlParameter("@pass", ePass));
         }
 
@@ -121,10 +121,10 @@ namespace BL.Repositories.Implements
         /*
             Se obtiene la fecha de caducidad del token para compararlo con la fecha actual del servidor.
          */
-        public bool CheckToken(DateTime currentDate,string token)
+        public bool CheckToken(TokenValidViewModel tokenValidViewModel, DateTime currentDate)
         {
             SqlParameter[] parameters = {
-                    new SqlParameter{ ParameterName = "@token", SqlDbType=SqlDbType.VarChar,Size=100, Value = token },
+                    new SqlParameter{ ParameterName = "@token", SqlDbType=SqlDbType.VarChar,Size=100, Value = tokenValidViewModel.Token },
                     new SqlParameter{ ParameterName = "@tokenExpiracion",SqlDbType=SqlDbType.DateTime, Direction = ParameterDirection.Output }
                 };
             testContext.Database.ExecuteSqlRaw("exec SPGetTokenExpiration @token, @tokenExpiracion OUTPUT", parameters);

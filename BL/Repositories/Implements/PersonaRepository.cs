@@ -1,4 +1,5 @@
 ﻿using BL.Models;
+using BL.ViewModels;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
@@ -18,11 +19,11 @@ namespace BL.Repositories.Implements
             testContext.Entry(persona).Property(x => x.Foto).IsModified = false;
             testContext.SaveChanges();
         }
-        public void UpdatePhoto(string foto, long id)
+        public void UpdatePhoto(FilePhotoViewModel filePhotoViewModel)
         {
             testContext.Database.ExecuteSqlRaw("UPDATE Persona SET Foto = @foto WHERE Id = @id",
-                new SqlParameter("@id", id),
-                new SqlParameter("@foto", foto));
+                new SqlParameter("@id", filePhotoViewModel.Id),
+                new SqlParameter("@foto", filePhotoViewModel.Photo));
         }
 
         /*

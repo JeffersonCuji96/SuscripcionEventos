@@ -8,11 +8,11 @@ namespace BL.Services
         AccessViewModel Login(Usuario usuario);
         Usuario? GetUserPersonById(long id);
         void InsertUserPerson(Usuario usuario);
-        bool CheckPassword(string password, long id);
+        bool CheckPassword(UserPasswordViewModel userPassViewModel);
         bool CheckEmail(string email);
-        void UpdateEmail(string email, long id);
-        void UpdateClave(string password, long id);
+        void UpdateEmail(UserEmailViewModel userEmailViewModel);
+        void UpdateClave(UserPasswordViewModel userPassViewModel);
         void RecoveryAccess(UserEmailViewModel userEmailViewModel, DateTime date);
-        bool CheckToken(DateTime currentDate,string token);
+        bool CheckToken(TokenValidViewModel tokenValidViewModel, DateTime currentDate);
     }
 }

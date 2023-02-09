@@ -61,33 +61,31 @@ namespace Api.Controllers
         {
             var oUsuario = userService.GetUserPersonById(id);
             var usuarioDTO = mapper.Map<UsuarioDTO>(oUsuario);
-            if (usuarioDTO == null)
-                return NotFound();
             return Ok(usuarioDTO);
         }
 
         [HttpPost]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         [Route("UpdatePhoto")]
-        public IActionResult UpdatePhoto(FilePhotoViewModel fileData)
+        public IActionResult UpdatePhoto(FilePhotoViewModel filePhotoViewModel)
         {
-            if (fileData.Id == 0)
+            if (filePhotoViewModel.Id == 0)
                 return BadRequest("El código del usuario no es válido");
-            long id = Convert.ToInt64(fileData.Id);
-            string foto = hostingEnviroment.ContentRootPath + FileHelper.UploadImage(fileData.Photo);
+            long id = Convert.ToInt64(filePhotoViewModel.Id);
+            filePhotoViewModel.Photo = hostingEnviroment.ContentRootPath + FileHelper.UploadImage(filePhotoViewModel.Photo);
             FileHelper.RemoveImage(personService.GetPathPhoto(id));
-            personService.UpdatePhoto(foto, id);
+            personService.UpdatePhoto(filePhotoViewModel);
             return Ok(new { Message = "Foto actualizada con éxito!" });
         }
 
         [HttpPost]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         [Route("CheckPassword")]
-        public IActionResult CheckPassword(UserPasswordViewModel data)
+        public IActionResult CheckPassword(UserPasswordViewModel userPassViewModel)
         {
-            if(data.Id==0 || data.Id==null)
+            if(userPassViewModel.Id==0 || userPassViewModel.Id==null)
                 return BadRequest("El código del usuario no es válido");
-            return Ok(userService.CheckPassword(data.Clave, data.Id.Value));
+            return Ok(userService.CheckPassword(userPassViewModel));
         }
 
         [HttpGet]
@@ -113,22 +111,22 @@ namespace Api.Controllers
         [HttpPost]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         [Route("UpdateEmail")]
-        public IActionResult UpdateEmail(UserEmailViewModel data)
+        public IActionResult UpdateEmail(UserEmailViewModel userEmailViewModel)
         {
-            if (data.Id == 0 || data.Id == null)
+            if (userEmailViewModel.Id == 0 || userEmailViewModel.Id == null)
                 return BadRequest("El código del usuario no es válido");
-            userService.UpdateEmail(data.Email, data.Id.Value);
+            userService.UpdateEmail(userEmailViewModel);
             return Ok(new { Message = "Email actualizado con éxito!" });
         }
 
         [HttpPost]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         [Route("UpdatePassword")]
-        public IActionResult UpdateClave(UserPasswordViewModel data)
+        public IActionResult UpdateClave(UserPasswordViewModel userPassViewModel)
         {
-            if (data.Id == 0 || data.Id == null)
+            if (userPassViewModel.Id == 0 || userPassViewModel.Id == null)
                 return BadRequest("El código del usuario no es válido");
-            userService.UpdateClave(data.Clave, data.Id.Value);
+            userService.UpdateClave(userPassViewModel);
             return Ok(new { Message = "Clave actualizada con éxito!" });
         }
 
@@ -153,24 +151,24 @@ namespace Api.Controllers
         [HttpPost]
         [Route("RecoveryAccess")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
-        public IActionResult RecoveryAccess(UserEmailViewModel data)
+        public IActionResult RecoveryAccess(UserEmailViewModel userEmailViewModel)
         {
-            if (data.Id == 0 || data.Id == null)
+            if (userEmailViewModel.Id == 0 || userEmailViewModel.Id == null)
                 return BadRequest("El código del usuario no es válido");
-            if (!userService.CheckEmail(data.Email))
+            if (!userService.CheckEmail(userEmailViewModel.Email))
                 return BadRequest("El email del usuario no es válido");
 
-            userService.RecoveryAccess(data, DateHelper.GetCurrentDate());
+            userService.RecoveryAccess(userEmailViewModel, DateHelper.GetCurrentDate());
             return Ok(new { Message = "Enlace generado revise su correo!" });
         }
 
         [HttpPost]
         [Route("CheckToken")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
-        public IActionResult CheckToken(TokenValidViewModel data)
+        public IActionResult CheckToken(TokenValidViewModel tokenValidViewModel)
         {
             var currentDate = DateHelper.GetCurrentDate();
-            var checkToken = userService.CheckToken(currentDate,data.Token);
+            var checkToken = userService.CheckToken(tokenValidViewModel,currentDate);
             return Ok(checkToken);
         }
     }

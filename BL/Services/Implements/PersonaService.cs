@@ -1,5 +1,6 @@
 ﻿using BL.Models;
 using BL.Repositories;
+using BL.ViewModels;
 
 namespace BL.Services.Implements
 {
@@ -14,9 +15,9 @@ namespace BL.Services.Implements
         {
             personaRepository.UpdatePerson(persona);
         }
-        public void UpdatePhoto(string foto, long id)
+        public void UpdatePhoto(FilePhotoViewModel filePhotoViewModel)
         {
-            personaRepository.UpdatePhoto(foto, id);
+            personaRepository.UpdatePhoto(filePhotoViewModel);
         }
         public string GetPathPhoto(long id)
         {
