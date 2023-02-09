@@ -23,7 +23,21 @@ export class HttpConfigInterceptor implements HttpInterceptor {
         }
         return next.handle(req).pipe(
             catchError(e => {
-                return throwError(e)
+                switch (e.status) {
+                    case 0:
+                        this.router.navigate(['/error/failed-error']);
+                        break;
+                    case 401:
+                        this.router.navigate(['/error/401']);
+                        break;
+                    case 404:
+                        this.router.navigate(['/error/404']);
+                        break;
+                    case 500:
+                        this.router.navigate(['/error/500']);
+                        break;
+                }
+                return throwError("");
             }));
     }
 

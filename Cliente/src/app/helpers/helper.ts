@@ -52,23 +52,11 @@ export class Helpers {
                     error.error,
                     "warning"
                 ); break;
-            case 0:
-                this.swalShow(
-                    "<h4>Operación no realizada</h4>",
-                    "La conexión ha fallado!. Revise su acceso a internet o intentelo más tarde",
-                    "error"
-                ); break;
             case 400:
                 this.swalShow(
                     "<h4>Operación no realizada</h4>",
                     error.error,
                     "warning"
-                ); break;
-            default:
-                this.swalShow(
-                    "<h4>Operación no realizada</h4>",
-                    "Internal server error",
-                    "error"
                 ); break;
         }
     }
