@@ -6,6 +6,7 @@ import { environment } from 'src/environments/environment';
 import { AuthenticationJwt } from 'src/app/core/models/authenticationJwt';
 import { CookieService } from 'ngx-cookie-service';
 import { TokenValidViewModel } from 'src/app/core/models/view-models/tokenValidViewModel';
+import { TokenPasswordViewModel } from 'src/app/core/models/view-models/tokenPasswordViewModel';
 
 @Injectable({
   providedIn: 'root'
@@ -39,5 +40,8 @@ export class AuthService {
   }
   checkToken(token:TokenValidViewModel):Observable<boolean>{
     return this.http.post<boolean>(this.urlApi + "api/User/CheckToken", token);
+  }
+  changePassword(tokenPassViewModel:TokenPasswordViewModel):Observable<any>{
+    return this.http.post<any>(this.urlApi + "api/User/ChangePassword", tokenPassViewModel);
   }
 }
