@@ -65,6 +65,7 @@ namespace BL.Repositories.Implements
             usuario.Email = Crypto.GetSHA256(usuario.Email);
             testContext.Personas.Add(usuario.Persona);
             usuario.Id = usuario.Persona.Id;
+            usuario.IdEstado = 3;
             testContext.Usuarios.Add(usuario);
             testContext.SaveChanges();
         }
@@ -102,10 +103,10 @@ namespace BL.Repositories.Implements
         public void RecoveryAccess(UserEmailViewModel userEmailViewModel, DateTime date)
         {
             string token = Crypto.GetSHA256(Guid.NewGuid().ToString());
-            var query = testContext.Database.ExecuteSqlRaw("UPDATE Usuario SET TokenRecuperacion = @tokenRecuperacion,FechaTokenExpiracion=@fechaTokenExpiracion WHERE Id = @id",
+            var query = testContext.Database.ExecuteSqlRaw("UPDATE Usuario SET Token = @token,FechaTokenExpiracion=@fechaExpiracion WHERE Id = @id",
                 new SqlParameter("@id", userEmailViewModel.Id),
-                new SqlParameter("@tokenRecuperacion", token),
-                new SqlParameter("@fechaTokenExpiracion", date.AddMinutes(5)));
+                new SqlParameter("@token", token),
+                new SqlParameter("@fechaExpiracion", date.AddMinutes(5)));
 
             if (query == 1)
             {
@@ -126,9 +127,9 @@ namespace BL.Repositories.Implements
         {
             SqlParameter[] parameters = {
                     new SqlParameter{ ParameterName = "@token", SqlDbType=SqlDbType.VarChar,Size=100, Value = tokenValidViewModel.Token },
-                    new SqlParameter{ ParameterName = "@tokenExpiracion",SqlDbType=SqlDbType.DateTime, Direction = ParameterDirection.Output }
+                    new SqlParameter{ ParameterName = "@fechaExpiracion",SqlDbType=SqlDbType.DateTime, Direction = ParameterDirection.Output }
                 };
-            testContext.Database.ExecuteSqlRaw("exec SPGetTokenExpiration @token, @tokenExpiracion OUTPUT", parameters);
+            testContext.Database.ExecuteSqlRaw("exec SPGetTokenExpiration @token, @fechaExpiracion OUTPUT", parameters);
             if (!string.IsNullOrEmpty(parameters[1].Value.ToString()))
             {
                 DateTime fechaExpiracion = Convert.ToDateTime(parameters[1].Value);
@@ -140,11 +141,11 @@ namespace BL.Repositories.Implements
         }
         public bool ChangeClave(TokenPasswordViewModel tokenPassViewModel)
         {
-            var oUser = testContext.Usuarios.FirstOrDefault(x => x.TokenRecuperacion == tokenPassViewModel.Token);
+            var oUser = testContext.Usuarios.FirstOrDefault(x => x.Token == tokenPassViewModel.Token);
             if (oUser != null)
             {
                 oUser.Clave = Crypto.GetSHA256(tokenPassViewModel.Clave);
-                oUser.TokenRecuperacion = null;
+                oUser.Token = null;
                 oUser.FechaTokenExpiracion = null;
                 testContext.SaveChanges();
                 return true;

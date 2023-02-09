@@ -12,4 +12,5 @@ public partial class Estado
     public virtual ICollection<Evento> Eventos { get; } = new List<Evento>();
 
     public virtual ICollection<Suscripcion> Suscripciones { get; } = new List<Suscripcion>();
+    public virtual ICollection<Usuario> Usuarios { get; } = new List<Usuario>();
 }

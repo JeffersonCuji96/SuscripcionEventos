@@ -141,9 +141,14 @@ public partial class DbSuscripcionEventosContext : DbContext
                 .HasMaxLength(100)
                 .IsUnicode(false);
             entity.Property(e => e.FechaTokenExpiracion).HasColumnType("datetime");
-            entity.Property(e => e.TokenRecuperacion)
+            entity.Property(e => e.Token)
                 .HasMaxLength(100)
                 .IsUnicode(false);
+
+            entity.HasOne(d => d.Estado).WithMany(p => p.Usuarios)
+                .HasForeignKey(d => d.IdEstado)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Usuario_Estado");
 
             entity.HasOne(d => d.Persona).WithOne(p => p.Usuario)
                 .HasForeignKey<Usuario>(d => d.Id)
