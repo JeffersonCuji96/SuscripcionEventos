@@ -45,20 +45,21 @@ export class ForgotPageComponent implements OnInit, OnDestroy {
   }
 
   recoveryAccess() {
+    const btnId="btnForgot";
     this.form.disable();
-    this.helper.disableInputElement("btnForgot", true);
+    this.helper.disableInputElement(btnId, true);
     var userEmail: UserEmailViewModel = this.form.value;
     this.userService.recoveryAccess(userEmail)
       .pipe(takeUntil(this.stop$))
       .subscribe(response => {
         this.form.reset();
-        this.helper.disableInputElement("btnForgot", false);
+        this.helper.disableInputElement(btnId, false);
         this.helper.swalShowSuccess(response.Message);
         this.form.enable();
       },
         error => {
           this.helper.manageErrors(error);
-          this.helper.disableInputElement("btnForgot", false);
+          this.helper.disableInputElement(btnId, false);
           this.form.enable();
         });
   }

@@ -37,7 +37,7 @@ export class HttpConfigInterceptor implements HttpInterceptor {
                         this.router.navigate(['/error/500']);
                         break;
                 }
-                return throwError("");
+                return throwError(e);
             }));
     }
 

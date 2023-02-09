@@ -58,19 +58,20 @@ export class ChangePasswordPageComponent implements OnInit {
   }
 
   changePassword() {
+    const btnId="btnChangePassword";
     this.form.disable();
-    this.helper.disableInputElement("btnChangePassword", true);
+    this.helper.disableInputElement(btnId, true);
     var tokenPassViewModel: TokenPasswordViewModel = this.form.value;
     this.authService.changePassword(tokenPassViewModel)
       .pipe(takeUntil(this.stop$))
       .subscribe(response => {
-        this.helper.disableInputElement("btnChangePassword", false);
+        this.helper.disableInputElement(btnId, false);
         this.helper.swalShowSuccess(response.Message);
         this.router.navigate(['/auth']);
       },
         error => {
           this.helper.manageErrors(error);
-          this.helper.disableInputElement("btnChangePassword", false);
+          this.helper.disableInputElement(btnId, false);
           this.form.enable();
         });
   }

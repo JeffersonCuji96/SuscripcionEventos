@@ -79,8 +79,9 @@ export class RegisterPageComponent implements OnInit, OnDestroy {
   }
 
   register() {
+    const btnId="btnRegister";
     this.serviceBuilder.form.disable();
-    this.helper.disableInputElement("btnRegister", true);
+    this.helper.disableInputElement(btnId, true);
     var usuario: UsuarioDto = this.serviceBuilder.form.value;
     this.userService.register(usuario)
       .pipe(takeUntil(this.stop$))
@@ -90,7 +91,7 @@ export class RegisterPageComponent implements OnInit, OnDestroy {
       },
         error => {
           this.helper.manageErrors(error);
-          this.helper.disableInputElement("btnRegister", false);
+          this.helper.disableInputElement(btnId, false);
           this.serviceBuilder.form.enable();
         });
   }

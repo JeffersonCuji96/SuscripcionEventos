@@ -41,8 +41,9 @@ export class LoginPageComponent implements OnInit, OnDestroy {
   }
 
   login(): void {
+    const btnId="btnLogin";
     this.form.disable();
-    this.helper.disableInputElement("btnLogin", true);
+    this.helper.disableInputElement(btnId, true);
     this.isEnableLink=true;
     var usuario: AccessDto = this.form.value;
     this.authService.login(usuario)
@@ -54,7 +55,7 @@ export class LoginPageComponent implements OnInit, OnDestroy {
       },
         error => {
           this.helper.manageErrors(error);
-          this.helper.disableInputElement("btnLogin", false);
+          this.helper.disableInputElement(btnId, false);
           this.isEnableLink=false;
           this.form.enable();
         });
