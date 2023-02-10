@@ -41,7 +41,7 @@ namespace Api.Controllers
             if (!string.IsNullOrEmpty(usuarioDTO.ImageBase64))
                 oUsuario.Persona.Foto = hostingEnviroment.ContentRootPath + FileHelper.UploadImage(usuarioDTO.ImageBase64);
             userService.InsertUserPerson(oUsuario);
-            return Ok(new { Message = "Usuario registrado con éxito!" });
+            return Ok(new { Message = "Usuario registrado con éxito! Revise su correo y confirme su cuenta para poder acceder" });
         }
 
         [HttpPut]

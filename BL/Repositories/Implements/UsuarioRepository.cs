@@ -61,13 +61,26 @@ namespace BL.Repositories.Implements
         }
         public void InsertUserPerson(Usuario usuario)
         {
+            string token = Crypto.GetSHA256(Guid.NewGuid().ToString());
+            string emailOrigin = usuario.Email;
             usuario.Clave = Crypto.GetSHA256(usuario.Clave);
             usuario.Email = Crypto.GetSHA256(usuario.Email);
+
             testContext.Personas.Add(usuario.Persona);
             usuario.Id = usuario.Persona.Id;
             usuario.IdEstado = 3;
+            usuario.Token = token;
             testContext.Usuarios.Add(usuario);
             testContext.SaveChanges();
+
+            var oMailSetting = new MailSettings()
+            {
+                Path = "/auth/confirm-email/",
+                Subject = "Habilitación de cuenta",
+                Body = "<p>Confirme su email para acceder a su cuenta</p><br>",
+                LinkDescription = "Click aquí para confirmar"
+            };
+            MailHelper.SendEmail(emailOrigin, token, appSettings, oMailSetting);
         }
         public bool CheckPassword(UserPasswordViewModel userPassViewModel)
         {
