@@ -28,8 +28,18 @@ namespace Api.Controllers
         {
             var oUsuario = mapper.Map<Usuario>(accesoDTO);
             var oAccessViewModel = userService.Login(oUsuario);
-            if (oAccessViewModel.IdUsuario == 0)
-                return StatusCode(StatusCodes.Status403Forbidden, "Usuario o Clave incorrecta");
+
+            switch (oAccessViewModel.Item2)
+            {
+                case 0:
+                    return StatusCode(403, "Usuario o Clave incorrecta");
+                case 2:
+                    return StatusCode(202, "Cuenta inactiva");
+                case 3:
+                    return StatusCode(201,"Cuenta no confirmada");
+                default:
+                    break;
+            }
             return Ok(oAccessViewModel);
         }
     }

@@ -5,7 +5,7 @@ namespace BL.Repositories
 {
     public interface IUsuarioRepository:IGenericRepository<Usuario>
     {
-        AccessViewModel Login(Usuario usuario);
+        Tuple<AccessViewModel,int> Login(Usuario usuario);
         Usuario? GetUserPersonById(long id);
         void InsertUserPerson(Usuario usuario);
         bool CheckPassword(UserPasswordViewModel userPassViewModel);

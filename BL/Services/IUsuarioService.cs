@@ -5,7 +5,7 @@ namespace BL.Services
 {
     public interface IUsuarioService:IGenericService<Usuario>
     {
-        AccessViewModel Login(Usuario usuario);
+        Tuple<AccessViewModel, int> Login(Usuario usuario);
         Usuario? GetUserPersonById(long id);
         void InsertUserPerson(Usuario usuario);
         bool CheckPassword(UserPasswordViewModel userPassViewModel);

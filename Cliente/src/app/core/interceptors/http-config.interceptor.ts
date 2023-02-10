@@ -27,6 +27,9 @@ export class HttpConfigInterceptor implements HttpInterceptor {
                     case 0:
                         this.router.navigate(['/error/failed-error']);
                         break;
+                    case 201:
+                        this.router.navigate(['/error/confirm-error']);
+                        break;
                     case 401:
                         this.router.navigate(['/error/401']);
                         break;

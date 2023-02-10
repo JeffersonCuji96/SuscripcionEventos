@@ -11,7 +11,7 @@ namespace BL.Services.Implements
         {
             this.usuarioRepository = usuarioRepository;
         }
-        public AccessViewModel Login(Usuario usuario)
+        public Tuple<AccessViewModel, int> Login(Usuario usuario)
         {
             return this.usuarioRepository.Login(usuario);
         }

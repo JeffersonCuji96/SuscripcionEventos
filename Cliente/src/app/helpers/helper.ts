@@ -1,9 +1,10 @@
+import { Router } from '@angular/router';
 import * as moment from 'moment';
 import { Observable, ReplaySubject } from 'rxjs';
 import Swal from 'sweetalert2';
 
 export class Helpers {
-
+    
     disableInputElement(id: any, value: boolean) {
         (<HTMLInputElement>document.getElementById(id)).disabled = value;
     }
@@ -40,22 +41,22 @@ export class Helpers {
     }
     verifyStatusError(error: any) {
         switch (error.status) {
-            case 422:
+            case 400:
                 this.swalShow(
-                    "<h4>La solicitud no es válida</h4>",
-                    this.parseErrorsHtml(this.verifyErrorsModel(error.error)),
+                    "<h4>Operación no realizada</h4>",
+                    error.error,
                     "warning"
                 ); break;
-            case 403:
+            case 403 || 202:
                 this.swalShow(
                     "<h4>Se ha denegado el acceso</h4>",
                     error.error,
                     "warning"
                 ); break;
-            case 400:
+            case 422:
                 this.swalShow(
-                    "<h4>Operación no realizada</h4>",
-                    error.error,
+                    "<h4>La solicitud no es válida</h4>",
+                    this.parseErrorsHtml(this.verifyErrorsModel(error.error)),
                     "warning"
                 ); break;
         }

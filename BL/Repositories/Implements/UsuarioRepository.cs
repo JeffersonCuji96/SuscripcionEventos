@@ -23,19 +23,25 @@ namespace BL.Repositories.Implements
             this.testContext = testContext;
             this.appSettings = appSettings.Value;
         }
-        public AccessViewModel Login(Usuario usuario)
+        public Tuple<AccessViewModel, int> Login(Usuario usuario)
         {
+            int state = 0;
             var oAccessViewModel = new AccessViewModel();
             var oUsuario = testContext.Usuarios.FirstOrDefault(
                 x => x.Email == Crypto.GetSHA256(usuario.Email) &&
                 x.Clave == Crypto.GetSHA256(usuario.Clave));
-            if (oUsuario != null)
+
+            if (oUsuario!=null)
             {
-                oAccessViewModel.IdUsuario = oUsuario.Id;
-                oAccessViewModel.JwtToken = GenerateJwt(oUsuario.Id);
-                oAccessViewModel.DaysExpireToken = appSettings.DaysExpireToken;
+                state = oUsuario.IdEstado;
+                if (oUsuario.IdEstado == 1)
+                {
+                    oAccessViewModel.IdUsuario = oUsuario.Id;
+                    oAccessViewModel.JwtToken = GenerateJwt(oUsuario.Id);
+                    oAccessViewModel.DaysExpireToken = appSettings.DaysExpireToken;
+                }
             }
-            return oAccessViewModel;
+            return Tuple.Create(oAccessViewModel,state);
         }
         private string GenerateJwt(long id)
         {
