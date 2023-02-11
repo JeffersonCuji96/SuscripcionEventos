@@ -16,5 +16,6 @@ namespace BL.Services
         bool CheckToken(TokenValidViewModel tokenValidViewModel, DateTime currentDate);
         bool ChangeClave(TokenPasswordViewModel tokenPassViewModel);
         bool ConfirmEmail(TokenValidViewModel tokenValidViewModel);
+        bool VerifyStatusUser(long id);
     }
 }

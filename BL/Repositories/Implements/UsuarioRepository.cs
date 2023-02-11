@@ -184,5 +184,9 @@ namespace BL.Repositories.Implements
             }
             return false;
         }
+        public bool VerifyStatusUser(long id)
+        {
+            return testContext.Usuarios.Any(x=>x.Id==id && x.IdEstado==1);
+        }
     }
 }

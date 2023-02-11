@@ -55,5 +55,9 @@ namespace BL.Services.Implements
         {
             return usuarioRepository.ConfirmEmail(tokenValidViewModel);
         }
+        public bool VerifyStatusUser(long id)
+        {
+            return usuarioRepository.VerifyStatusUser(id);
+        }
     }
 }

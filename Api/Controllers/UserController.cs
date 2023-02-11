@@ -157,6 +157,8 @@ namespace Api.Controllers
                 return BadRequest("El código del usuario no es válido");
             if (!userService.CheckEmail(userEmailViewModel.Email))
                 return BadRequest("El email del usuario no es válido");
+            if (!userService.VerifyStatusUser(userEmailViewModel.Id.Value))
+                return BadRequest("Su cuenta no está confirmada o está inactiva");
 
             userService.RecoveryAccess(userEmailViewModel, DateHelper.GetCurrentDate());
             return Ok(new { Message = "Enlace generado revise su correo!" });
