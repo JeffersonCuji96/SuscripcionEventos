@@ -185,5 +185,14 @@ namespace Api.Controllers
                 return Ok(new { Message = "Clave cambiada con éxito!" });
             return BadRequest("Operación no realizada token inválido");
         }
+
+        [HttpPost]
+        [Route("ConfirmEmail")]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
+        public IActionResult ConfirmEmail(TokenValidViewModel tokenValidViewModel)
+        {
+            bool confirm = userService.ConfirmEmail(tokenValidViewModel);
+            return Ok(confirm);
+        }
     }
 }

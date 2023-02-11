@@ -51,5 +51,9 @@ namespace BL.Services.Implements
         {
             return usuarioRepository.ChangeClave(tokenPassViewModel);
         }
+        public bool ConfirmEmail(TokenValidViewModel tokenValidViewModel)
+        {
+            return usuarioRepository.ConfirmEmail(tokenValidViewModel);
+        }
     }
 }

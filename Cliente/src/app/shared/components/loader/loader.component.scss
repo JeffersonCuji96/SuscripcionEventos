@@ -1,0 +1,49 @@
+$charade: #535461;
+$bluebell: #979fd0;
+
+.fancy-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 6rem;
+  height: 6rem;
+
+  div {
+    position: absolute;
+    width: 5rem;
+    height: 5rem;
+    border-radius: 50%;
+
+    &.ring {
+      border-width: 0.7rem;
+      border-style: solid;
+      border-color: transparent;
+      animation: 2s fancy infinite alternate;
+      
+      &:nth-child(1) {
+        border-left-color: $charade;
+        border-right-color: $charade;
+      }
+      &:nth-child(2) {
+        border-top-color: $bluebell;
+        border-bottom-color: $bluebell;
+        animation-delay: 1s;
+      }
+    }
+
+    &.dot {
+      width: 1.5rem;
+      height: 1.5rem;
+      background: $charade;
+    }
+  }
+}
+
+@keyframes fancy {
+  to {
+    transform: rotate(360deg) scale(0.5);
+  }
+}
+.vh-90{
+    height: 90vh;
+}

@@ -44,4 +44,7 @@ export class AuthService {
   changePassword(tokenPassViewModel:TokenPasswordViewModel):Observable<any>{
     return this.http.post<any>(this.urlApi + "api/User/ChangePassword", tokenPassViewModel);
   }
+  confirmEmail(token:TokenValidViewModel):Observable<boolean>{
+    return this.http.post<boolean>(this.urlApi + "api/User/ConfirmEmail",token);
+  }
 }

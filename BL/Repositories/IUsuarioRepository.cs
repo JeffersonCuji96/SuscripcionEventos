@@ -15,5 +15,6 @@ namespace BL.Repositories
         void RecoveryAccess(UserEmailViewModel userEmailViewModel, DateTime date);
         bool CheckToken(TokenValidViewModel tokenValidViewModel, DateTime currentDate);
         bool ChangeClave(TokenPasswordViewModel tokenPassViewModel);
+        bool ConfirmEmail(TokenValidViewModel tokenValidViewModel);
     }
 }

@@ -171,5 +171,18 @@ namespace BL.Repositories.Implements
             }
             return false;
         }
+
+        public bool ConfirmEmail(TokenValidViewModel tokenValidViewModel)
+        {
+            var oUser = testContext.Usuarios.FirstOrDefault(x => x.Token == tokenValidViewModel.Token && x.IdEstado==3);
+            if (oUser != null)
+            {
+                oUser.Token = null;
+                oUser.IdEstado = 1;
+                testContext.SaveChanges();
+                return true;
+            }
+            return false;
+        }
     }
 }
