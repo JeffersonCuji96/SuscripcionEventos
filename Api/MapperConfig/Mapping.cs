@@ -18,6 +18,9 @@ namespace SuscripcionEventosApi.MapperConfig
                 .ForMember(x => x.Email, opt => opt.Ignore())
                 .ForMember(x => x.Clave, opt => opt.Ignore());
             CreateMap<UsuarioDTO, Usuario>();
+
+            CreateMap<Evento,EventoDTO>();
+            CreateMap<EventoDTO, Evento>();
         }
 
     }

@@ -10,6 +10,9 @@ using Api.Filters;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Api.Helpers;
+using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,6 +41,8 @@ builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<IPersonaRepository, PersonaRepository>();
 builder.Services.AddScoped<IPersonaService, PersonaService>();
+builder.Services.AddScoped<IEventoRepository, EventoRepository>();
+builder.Services.AddScoped<IEventoService, EventoService>();
 builder.Services.Configure<AppSettings>(appSettingsSection);
 
 //Configuración para el filtro de entidades no procesadas y deshabilitar el comportamiento 400 automático
@@ -69,7 +74,11 @@ builder.Services.AddControllers().AddJsonOptions(options =>
     options.JsonSerializerOptions.PropertyNamingPolicy = null;
 });
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c=> c.MapType<TimeSpan>(() => new OpenApiSchema
+{
+    Type = "string",
+    Example = new OpenApiString("00:00:00")
+}));
 
 var app = builder.Build();
 
