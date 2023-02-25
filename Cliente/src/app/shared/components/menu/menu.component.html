@@ -1,16 +1,36 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg navbar-dark bg-blue-nav">
     <div class="container">
-        <a class="navbar-brand" href="#">
-            Eventos</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-            aria-label="Toggle navigation">
+        <a class="navbar-brand p-3" href="#"><img src="assets/img/evento.png" id="img-app"> EVENTOS</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">Home</a>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle link-white" href="#" role="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        <i class="fas fa-duotone fa-gears"></i> Mis Eventos
+                    </a>
+                    <ul class="dropdown-menu bg-blue-ul p-3" aria-labelledby="navbarDropdownMenuLink">
+                        <li><a class="dropdown-item white-custom rounded-pill" href="#"><i class="fa-solid fa-eye"></i> Revisar</a></li>
+                        <li><a class="dropdown-item white-custom rounded-pill" href="/evento/register"><i class="fas fa-users"></i> Organizar</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle link-white" href="#" data-bs-toggle="dropdown"><i class="fas fa-user-circle"></i> Cuenta</a>
+                    <ul class="dropdown-menu dropdown-menu-end bg-blue-ul p-3">
+                        <h6 class="dropdown-header">
+                            <div class="dropdown-user-details">
+                                <div class="dropdown-user-details-name text-center text-white text-uppercase">Jefferson Cuji</div>
+                            </div>
+                        </h6>
+                        <li><hr class="dropdown-divider border-light border-2"></li>
+                        <li><a class="dropdown-item white-custom rounded-pill" href="#"><i class="fas fa-user-edit"></i> Perfil</a></li>
+                        <li><a class="dropdown-item white-custom rounded-pill" href="#"><i class="fas fa-sign-out-alt"></i> Salir</a></li>
+                    </ul>
                 </li>
             </ul>
         </div>
