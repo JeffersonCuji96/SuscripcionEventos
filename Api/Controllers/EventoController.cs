@@ -15,15 +15,18 @@ namespace Api.Controllers
     {
         private readonly IMapper mapper;
         private readonly IEventoService eventService;
+        private readonly ICategoriaService categoriaService;
         private readonly IWebHostEnvironment hostingEnviroment;
 
         public EventoController(
            IMapper _mapper,
            IEventoService eventService,
+           ICategoriaService categoriaService,
            IWebHostEnvironment hostingEnviroment)
         {
             mapper = _mapper;
             this.eventService = eventService;
+            this.categoriaService = categoriaService;
             this.hostingEnviroment = hostingEnviroment;
         }
 
@@ -36,6 +39,15 @@ namespace Api.Controllers
                 oEvento.Foto = hostingEnviroment.ContentRootPath + FileHelper.UploadImage(eventoDTO.ImageBase64);
             eventService.Insert(oEvento);
             return Ok(new { Message = "Evento registrado con éxito!" });
+        }
+
+        [HttpGet]
+        [Route("GetCategorias")]
+        public IActionResult GetCategorias()
+        {
+            var categorias = categoriaService.GetAll();
+            var categoriasDTO = categorias.Select(x => mapper.Map<CategoriaDTO>(x));
+            return Ok(categoriasDTO);
         }
     }
 }

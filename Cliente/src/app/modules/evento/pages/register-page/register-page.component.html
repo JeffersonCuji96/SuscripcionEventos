@@ -6,10 +6,11 @@
                     <h4 class="text-center fw-lighter my-4">Crear evento</h4>
                 </div>
                 <div class="card-body">
-                    <form [formGroup]="serviceBuilder.form">
+                    <form [formGroup]="serviceBuilder.form" (ngSubmit)="register()">
                         <div class="mb-2">
                             <label class="small px-1 text-muted">Título</label>
-                            <input class="form-control" type="text" placeholder="Ingrese el título"
+                            <input class="form-control" [ngClass]="f.Titulo.invalid 
+                            && (f.Titulo.dirty || f.Titulo.touched) ? 'is-invalid' : 'form-control'" type="text" placeholder="Ingrese el título"
                                 formControlName="Titulo" />
                             <span class="px-1 error" *ngIf="f.Titulo.touched && f.Titulo.errors?.required">
                                 El título es requerido
@@ -21,7 +22,8 @@
                         <div class="row">
                             <div class="mb-2 col-md-6">
                                 <label class="small px-1 text-muted">Fecha de Inicio</label>
-                                <input class="form-control" (blur)="availableDateStart()" type="date" formControlName="FechaInicio" />
+                                <input class="form-control" [ngClass]="f.FechaInicio.invalid 
+                                && (f.FechaInicio.dirty || f.FechaInicio.touched) ? 'is-invalid' : 'form-control'" (blur)="availableDateStart()" type="date" formControlName="FechaInicio" />
                                 <span class="px-1 error"
                                     *ngIf="f.FechaInicio.touched && f.FechaInicio.errors?.required">
                                     El fecha de inicio es requerido
@@ -29,10 +31,14 @@
                                 <span class="px-1 error" *ngIf="f.FechaInicio.errors?.notDateStart">
                                     La fecha de inicio no puede ser menor a la fecha actual
                                 </span>
+                                <span class="px-1 error" *ngIf="f.FechaInicio.errors?.notDateStartEnd">
+                                    La fecha de inicio no puede ser mayor a la fecha de fin
+                                </span>
                             </div>
                             <div class="mb-2 col-md-6">
                                 <label class="small px-1 text-muted">Hora de Inicio</label>
-                                <input class="form-control" type="time" formControlName="HoraInicio" />
+                                <input class="form-control" formatTime type="time" [ngClass]="f.HoraInicio.invalid 
+                                && (f.HoraInicio.dirty || f.HoraInicio.touched) ? 'is-invalid' : 'form-control'" (blur)="availableTimeStart()" formControlName="HoraInicio" />
                                 <span class="px-1 error" *ngIf="f.HoraInicio.touched && f.HoraInicio.errors?.required">
                                     La hora de inicio es requerido
                                 </span>
@@ -42,11 +48,11 @@
                                 <span class="px-1 error" *ngIf="f.HoraInicio.errors?.notTimeStartMinor">
                                     La hora de inicio no puede ser menor a la hora actual
                                 </span>
-                                <span class="px-1 error" *ngIf="f.HoraInicio.errors?.notTimeStartMinimum">
+                                <span class="px-1 error" *ngIf="f.HoraInicio.errors?.notTimeStartMinimum || f.HoraInicio.errors?.notTimeStartEndMinimum">
                                     La hora de inicio debe tener mínimo 30 minutos de anticipación
                                 </span>
-                                <span class="px-1 error" *ngIf="f.HoraInicio.errors?.notTimeStartPast">
-                                    No se puede establecer una hora de inicio en el pasado
+                                <span class="px-1 error" *ngIf="f.HoraInicio.errors?.notTimeStartEnd">
+                                    La hora de inicio no puede ser mayor o igual a la hora final
                                 </span>
                             </div>
                         </div>
@@ -56,19 +62,27 @@
                         <div class="row" *ngIf="isShowBoxDateTime">
                             <div class="mb-2 col-md-6">
                                 <label class="small px-1 text-muted">Fecha de Fin</label>
-                                <input class="form-control" type="date" formControlName="FechaFin" />
+                                <input class="form-control" type="date" [ngClass]="f.FechaFin.invalid 
+                                && (f.FechaFin.dirty || f.FechaFin.touched) ? 'is-invalid' : 'form-control'" (blur)="availableDateEnd()" formControlName="FechaFin" />
                                 <span class="px-1 error" *ngIf="f.FechaFin.touched && f.FechaFin.errors?.required">
                                     El fecha de fin es requerido
                                 </span>
                                 <span class="px-1 error" *ngIf="f.FechaFin.errors?.notDateEnd">
                                     La fecha de fin no pueder ser menor a la fecha de inicio
                                 </span>
+                                <span class="px-1 error" *ngIf="f.FechaFin.errors?.notDateCurrent">
+                                    La fecha de fin no pueder ser menor a la fecha actual
+                                </span>
                             </div>
                             <div class="mb-2 col-md-6">
                                 <label class="small px-1 text-muted">Hora de Fin</label>
-                                <input class="form-control" type="time" formControlName="HoraFin" />
+                                <input class="form-control" formatTime type="time" [ngClass]="f.HoraFin.invalid 
+                                && (f.HoraFin.dirty || f.HoraFin.touched) ? 'is-invalid' : 'form-control'" (blur)="availableTimeEnd()" formControlName="HoraFin" />
                                 <span class="px-1 error" *ngIf="f.HoraFin.touched && f.HoraFin.errors?.required">
                                     El hora de fin es requerido
+                                </span>
+                                <span class="px-1 error" *ngIf="f.HoraFin.errors?.notTimeEndActual">
+                                    La hora de fin no puede ser menor o igual a la hora actual
                                 </span>
                                 <span class="px-1 error" *ngIf="f.HoraFin.errors?.notTimeEndStart">
                                     La hora de fin no puede ser igual a la hora de inicio
@@ -89,12 +103,13 @@
                                 Se permiten sólo formatos png y jpg
                             </span>
                             <span class="px-1 error" *ngIf="f.FileTemporal.dirty && f.FileTemporal.errors?.notSize">
-                                El peso de la imagen no debe ser superior a 1 MB
+                                El peso de la imagen no debe ser superior a 3 MB
                             </span>
                         </div>
                         <div class="mb-2">
                             <label class="small px-1 text-muted">Dirección</label>
-                            <input class="form-control" type="text" placeholder="Ingrese la dirección"
+                            <input class="form-control" [ngClass]="f.Ubicacion.invalid 
+                            && (f.Ubicacion.dirty || f.Ubicacion.touched) ? 'is-invalid' : 'form-control'" type="text" placeholder="Ingrese la dirección"
                                 formControlName="Ubicacion" />
                             <span class="px-1 error" *ngIf="f.Ubicacion.touched && f.Ubicacion.errors?.required">
                                 La ubicación es requerida
@@ -105,7 +120,8 @@
                         </div>
                         <div class="mb-2">
                             <label class="small px-1 text-muted">Información adicional</label>
-                            <textarea class="form-control" type="text"
+                            <textarea class="form-control" [ngClass]="f.InformacionAdicional.invalid 
+                            && (f.InformacionAdicional.dirty || f.InformacionAdicional.touched) ? 'is-invalid' : 'form-control'" type="text"
                                 placeholder="Ingrese información adicional sobre el evento"
                                 formControlName="InformacionAdicional"></textarea>
                             <span class="px-1 error" *ngIf="f.InformacionAdicional.errors?.maxlength">
@@ -115,9 +131,10 @@
                         <div class="row">
                             <div class="mb-3 col-md-6">
                                 <label class="small px-1 text-muted">Categoría</label>
-                                <select class="form-select" formControlName="IdCategoria">
+                                <select class="form-select" [ngClass]="f.IdCategoria.invalid 
+                                && (f.IdCategoria.dirty || f.IdCategoria.touched) ? 'is-invalid' : 'form-control'" formControlName="IdCategoria">
                                     <option value="">Seleccionar</option>
-                                    <option>Opción</option>
+                                    <option value="{{categoria.Id}}" *ngFor="let categoria of lstCategorias">{{categoria.Descripcion}}</option>
                                 </select>
                                 <span class="px-1 error"
                                     *ngIf="f.IdCategoria.touched && f.IdCategoria.errors?.required">
@@ -126,8 +143,7 @@
                             </div>
                             <div class="mb-3 col-md-6">
                                 <span>&nbsp;</span>
-                                <input id="btnRegEvento" class="form-control btn btn-primary" 
-                                [disabled]="serviceBuilder.form.invalid" type="submit" value="Crear un evento" />
+                                <input id="btnRegEvento" [disabled]="serviceBuilder.form.invalid" class="form-control btn btn-primary" type="submit" value="Crear un evento" />
                             </div>
                         </div>
                     </form>

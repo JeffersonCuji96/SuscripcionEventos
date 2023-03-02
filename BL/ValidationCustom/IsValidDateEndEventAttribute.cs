@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using BL.Helpers;
+using System.ComponentModel.DataAnnotations;
 
 namespace BL.ValidationCustom
 {
@@ -24,6 +25,12 @@ namespace BL.ValidationCustom
                 var fechaInicio = Convert.ToDateTime(proprtyfInicio);
                 var strHoraFin = Convert.ToString(proprtyHFin);
                 var fechaFin = Convert.ToDateTime(value);
+                var currentDate = DateHelper.GetCurrentDate().Date;
+                if (fechaFin < currentDate)
+                {
+                    ErrorMessage = "La fecha de fin no pueder ser menor a la fecha actual";
+                    return new ValidationResult(ErrorMessage);
+                }
                 if (fechaFin < fechaInicio)
                 {
                     ErrorMessage = "La fecha de fin no pueder ser menor a la fecha de inicio";

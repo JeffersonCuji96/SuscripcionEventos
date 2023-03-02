@@ -40,20 +40,23 @@ namespace BL.ValidationCustom
                     return new ValidationResult(ErrorMessage);
                 }
                 var fechaFin = Convert.ToDateTime(proprtyfFin);
-                if (horaFin == horaInicio)
+                if (fechaFin == fechaInicio)
                 {
-                    ErrorMessage = "La hora de fin no puede ser igual a la hora de inicio";
-                    return new ValidationResult(ErrorMessage);
-                }
-                if (horaFin < horaInicio && fechaFin == fechaInicio)
-                {
-                    ErrorMessage = "La hora de fin no puede ser menor a la hora de inicio";
-                    return new ValidationResult(ErrorMessage);
-                }
-                if (horaFin < horaMinima && fechaFin==fechaInicio)
-                {
-                    ErrorMessage = "La hora de fin debe durar mínimo 30 minutos partiendo de la hora inicial";
-                    return new ValidationResult(ErrorMessage);
+                    if (horaFin == horaInicio)
+                    {
+                        ErrorMessage = "La hora de fin no puede ser igual a la hora de inicio";
+                        return new ValidationResult(ErrorMessage);
+                    }
+                    if (horaFin < horaInicio)
+                    {
+                        ErrorMessage = "La hora de fin no puede ser menor a la hora de inicio";
+                        return new ValidationResult(ErrorMessage);
+                    }
+                    if (horaFin < horaMinima)
+                    {
+                        ErrorMessage = "La hora de fin debe durar mínimo 30 minutos partiendo de la hora inicial";
+                        return new ValidationResult(ErrorMessage);
+                    }
                 }
             }
             return ValidationResult.Success;

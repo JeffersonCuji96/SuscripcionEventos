@@ -144,7 +144,7 @@ namespace Api.Controllers
         [Route("GetCurrentDate")]
         public IActionResult GetCurrentDate()
         {
-            var currentDate = DateHelper.GetCurrentDate().Date;
+            var currentDate = DateHelper.GetCurrentDate();
             return Ok(currentDate);
         }
 

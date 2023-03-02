@@ -1,6 +1,6 @@
 import { AbstractControl, ValidatorFn } from '@angular/forms';
 import { of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, takeUntil } from 'rxjs/operators';
 import { UserService } from '../services/user.service';
 import { Helpers } from 'src/app/helpers/helper';
 import { Injectable } from '@angular/core';
@@ -25,7 +25,7 @@ export class ValidationCustom {
         return null;
     }
 
-    static isAvailableEmail(api: UserService) {
+    static isAvailableEmail(stop:any,api: UserService) {
         return (ctrl: AbstractControl) => {
             const value = ctrl.value;
             if (!ctrl.value) {
@@ -33,6 +33,7 @@ export class ValidationCustom {
             } else {
                 return api.checkEmail(value)
                     .pipe(
+                        takeUntil(stop),
                         map(res => {
                             return res ? null : { notEmail: false };
                         })
@@ -41,7 +42,7 @@ export class ValidationCustom {
         };
     }
 
-    static isAvailablePhone(api: UserService) {
+    static isAvailablePhone(stop:any,api: UserService) {
         return (ctrl: AbstractControl) => {
             const value = ctrl.value;
             if (!ctrl.value) {
@@ -49,6 +50,7 @@ export class ValidationCustom {
             } else {
                 return api.checkPhone(value)
                     .pipe(
+                        takeUntil(stop),
                         map(res => {
                             return res ? null : { notPhone: false };
                         })
@@ -56,7 +58,7 @@ export class ValidationCustom {
             }
         };
     }
-    static isAvailableDateBirth(api: UserService) {
+    static isAvailableDateBirth(stop:any,api: UserService) {
 
         return (ctrl: AbstractControl) => {
             const value = ctrl.value;
@@ -66,6 +68,7 @@ export class ValidationCustom {
                 let dateValue = Date.parse(value);
                 return api.getCurrentDate()
                     .pipe(
+                        takeUntil(stop),
                         map(res => {
                             let dateRes = Date.parse(res.substring(0, 10));
                             if (dateValue >= dateRes) {
@@ -136,7 +139,8 @@ export class ValidationCustom {
         return null;
     }
 
-    static isAvailableFormatAndSize(file: any, ctrl: AbstractControl) {
+    static isAvailableFormatAndSize(file: any, ctrl: AbstractControl,tipo?:string) {
+        const sizeImage:number = tipo === "evento" ? 3000000 : 1000000;
         const typeJPG: boolean = file.type === "image/jpeg" ? true : false;
         const typePNG: boolean = file.type === "image/png" ? true : false;
         
@@ -144,7 +148,7 @@ export class ValidationCustom {
             ctrl.setErrors({ notFormat: true });
             return { notFormat: true };
         }
-        if(file.size>1000000){
+        if(file.size>sizeImage){
             ctrl.setErrors({ notSize: true });
             return { notSize: true };
         }

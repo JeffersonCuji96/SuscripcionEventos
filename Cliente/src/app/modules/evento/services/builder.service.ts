@@ -1,14 +1,12 @@
 import { Injectable } from '@angular/core';
-import { AbstractControl, AsyncValidatorFn, FormBuilder, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
-import { UserService } from '../../user/services/user.service';
-import { ValidationEventoCustom } from '../utils/validation-custom';
+import { AbstractControl, AsyncValidatorFn, FormBuilder, Validators } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BuilderService {
 
-  constructor(private fb: FormBuilder,private userService:UserService) { }
+  constructor(private fb: FormBuilder) { }
 
   form = this.fb.group({
     Titulo: ['', {
@@ -17,18 +15,10 @@ export class BuilderService {
         Validators.maxLength(100)
       ])],
     }],
-    FechaInicio: ['', {
-      validators: [Validators.compose([
-        Validators.required
-      ])],
-    }],
-    HoraInicio: ['', {
-      validators: [Validators.compose([
-        Validators.required
-      ])],
-    }],
-    FechaFin: [''],
-    HoraFin: [''],
+    FechaInicio: ['', Validators.required],
+    HoraInicio: ['',Validators.required],
+    FechaFin: [null],
+    HoraFin: [null],
     Ubicacion: ['', {
       validators: [Validators.compose([
         Validators.required,
@@ -39,16 +29,8 @@ export class BuilderService {
     FileTemporal: [''],
     ImageBase64: [''],
     IdCategoria: ['', Validators.required],
-    IdUsuario: ['', Validators.required]
-  },
-    {
-      validators: [Validators.compose([
-        ValidationEventoCustom.isAvailableTimeStart("FechaInicio", "HoraInicio",this.userService),
-        ValidationEventoCustom.isAvailableDateEnd("FechaInicio", "FechaFin"),
-        ValidationEventoCustom.isAvailableTimeEnd("FechaInicio", "FechaFin","HoraInicio","HoraFin")
-      ])]
-    },
-  );
+    IdUsuario: ['13', Validators.required]
+  });
 
   availableInfo(ctrl: AbstractControl, fnValidator: AsyncValidatorFn): void {
     ctrl.setAsyncValidators(fnValidator);

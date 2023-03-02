@@ -17,7 +17,7 @@ import { ValidationCustom } from '../../utils/validation-custom';
 export class RegisterPageComponent implements OnInit, OnDestroy {
 
   private stop$ = new Subject<void>();
-
+  public btnId="btnRegister";
   constructor(
     public serviceBuilder: BuilderService,
     private userService: UserService,
@@ -38,21 +38,21 @@ export class RegisterPageComponent implements OnInit, OnDestroy {
   availableEmail(): void {
     this.serviceBuilder.availableInfo(
       this.f.Email,
-      ValidationCustom.isAvailableEmail(this.userService)
+      ValidationCustom.isAvailableEmail(this.stop$,this.userService)
     );
   }
 
   availableDateBirth() {
     this.serviceBuilder.availableInfo(
       this.fNested('Persona.FechaNacimiento'),
-      ValidationCustom.isAvailableDateBirth(this.userService)
+      ValidationCustom.isAvailableDateBirth(this.stop$,this.userService)
     );
   }
 
   availablePhone(): void {
     this.serviceBuilder.availableInfo(
       this.fNested('Persona.Telefono'),
-      ValidationCustom.isAvailablePhone(this.userService)
+      ValidationCustom.isAvailablePhone(this.stop$,this.userService)
     );
   }
 
@@ -79,9 +79,8 @@ export class RegisterPageComponent implements OnInit, OnDestroy {
   }
 
   register() {
-    const btnId="btnRegister";
     this.serviceBuilder.form.disable();
-    this.helper.disableInputElement(btnId, true);
+    this.helper.disableInputElement(this.btnId, true);
     var usuario: UsuarioDto = this.serviceBuilder.form.value;
     this.userService.register(usuario)
       .pipe(takeUntil(this.stop$))
@@ -91,7 +90,7 @@ export class RegisterPageComponent implements OnInit, OnDestroy {
       },
         error => {
           this.helper.manageErrors(error);
-          this.helper.disableInputElement(btnId, false);
+          this.helper.disableInputElement(this.btnId, false);
           this.serviceBuilder.form.enable();
         });
   }
