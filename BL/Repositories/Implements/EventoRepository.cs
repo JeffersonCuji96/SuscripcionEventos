@@ -1,17 +1,22 @@
-﻿using BL.Common;
-using BL.Models;
-using Microsoft.Extensions.Options;
+﻿using BL.Models;
 
 namespace BL.Repositories.Implements
 {
     public class EventoRepository : GenericRepository<Evento>, IEventoRepository
     {
         private readonly DbSuscripcionEventosContext testContext;
-        private readonly AppSettings appSettings;
-        public EventoRepository(DbSuscripcionEventosContext testContext, IOptions<AppSettings> appSettings) : base(testContext)
+        public EventoRepository(DbSuscripcionEventosContext testContext) : base(testContext)
         {
             this.testContext = testContext;
-            this.appSettings = appSettings.Value;
+        }
+        public bool CheckDailyEvent(DateTime fechaInicio, long idUsuario)
+        {
+            var oEventoLast = testContext.Eventos.OrderBy(x=>x.Id).LastOrDefault(x=>x.IdUsuario==idUsuario);
+            if (oEventoLast == null)
+                return true;
+            if (oEventoLast.FechaFin != null)
+                return fechaInicio > oEventoLast.FechaFin;
+            return fechaInicio > oEventoLast.FechaInicio;
         }
     }
 }

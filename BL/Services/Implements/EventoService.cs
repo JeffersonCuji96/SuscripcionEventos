@@ -10,5 +10,9 @@ namespace BL.Services.Implements
         {
             this.eventoRepository = eventoRepository;
         }
+        public bool CheckDailyEvent(DateTime fechaInicio, long idUsuario)
+        {
+            return eventoRepository.CheckDailyEvent(fechaInicio, idUsuario);
+        }
     }
 }

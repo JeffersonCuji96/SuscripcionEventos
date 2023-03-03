@@ -34,6 +34,13 @@ namespace Api.Controllers
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public IActionResult Save(EventoDTO eventoDTO)
         {
+            var fInicio = eventoDTO.FechaInicio;
+            var idUsuario = eventoDTO.IdUsuario;
+            if (fInicio != null && idUsuario != null)
+            {
+                if(!eventService.CheckDailyEvent(fInicio.Value, idUsuario.Value))
+                    return BadRequest("Sólo se permite crear un evento al día");
+            }
             var oEvento = mapper.Map<Evento>(eventoDTO);
             if (!string.IsNullOrEmpty(eventoDTO.ImageBase64))
                 oEvento.Foto = hostingEnviroment.ContentRootPath + FileHelper.UploadImage(eventoDTO.ImageBase64);
