@@ -33,6 +33,9 @@ export class LoginPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    if(this.authService.checkAutentication()){
+      this.router.navigate(['/'])
+    }
   }
 
   ngOnDestroy() {
@@ -48,9 +51,10 @@ export class LoginPageComponent implements OnInit, OnDestroy {
     var usuario: AccessDto = this.form.value;
     this.authService.login(usuario)
       .pipe(takeUntil(this.stop$))
-      .subscribe(response => {
-        this.authService.setCookieService(response);
-        this.authService.setIdUserLocalStorage(response.IdUsuario);
+      .subscribe((response:any) => {
+        this.authService.setCookieService(response.Item1,this.isChecked);
+        this.authService.setIdUserLocalStorage(response.Item1.IdUsuario);
+        this.authService.setFullNameLocalStorage(response.Item1.FullName);
         this.router.navigate(['/']);
       },
         error => {

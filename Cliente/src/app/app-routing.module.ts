@@ -7,8 +7,8 @@ const routes: Routes = [
   {
     path: '',
     component:HomePageComponent,
-    loadChildren: () => import(`./modules/home/home.module`).then(m => m.HomeModule)//,
-    //canActivate: [SessionGuard],
+    loadChildren: () => import(`./modules/home/home.module`).then(m => m.HomeModule),
+    canActivate: [SessionGuard],
   },
   {
     path: 'auth', 

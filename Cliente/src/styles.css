@@ -69,3 +69,8 @@ body {
 .dropdown-item:active i{
     color: rgb(238, 237, 237);
 }
+
+.bdr{
+    border-radius: 20px;
+    overflow: hidden;
+}

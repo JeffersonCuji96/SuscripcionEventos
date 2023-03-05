@@ -5,6 +5,10 @@ const routes: Routes = [
   {
     path:'evento',
     loadChildren:()=>import(`../evento/evento.module`).then(m=>m.EventoModule)
+  },
+  {
+    path:'perfil',
+    loadChildren:()=>import(`../perfil/perfil.module`).then(m=>m.PerfilModule)
   }
 ];
 

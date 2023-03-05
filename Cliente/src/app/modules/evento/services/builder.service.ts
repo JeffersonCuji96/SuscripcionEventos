@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { AbstractControl, AsyncValidatorFn, FormBuilder, Validators } from '@angular/forms';
+import { AuthService } from '../../auth/services/auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BuilderService {
 
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder,private authService:AuthService) { }
 
   form = this.fb.group({
     Titulo: ['', {
@@ -29,7 +30,7 @@ export class BuilderService {
     FileTemporal: [''],
     ImageBase64: [''],
     IdCategoria: ['', Validators.required],
-    IdUsuario: ['13', Validators.required]
+    IdUsuario: [this.authService.getIdUserLocalStorage(), Validators.required]
   });
 
   availableInfo(ctrl: AbstractControl, fnValidator: AsyncValidatorFn): void {

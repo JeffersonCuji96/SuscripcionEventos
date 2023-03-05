@@ -19,11 +19,18 @@ export class AuthService {
   login(usuario: AccessDto): Observable<AuthenticationJwt> {
     return this.http.post<AuthenticationJwt>(this.urlApi + "api/Access", usuario);
   }
-  setCookieService(response: any) {
-    this.cookieService.set('test', response.JwtToken, response.DaysExpireToken, '/');
+  setCookieService(response: any,check:boolean) {
+    if(!check){
+      this.cookieService.set("test", response.JwtToken,{path:"/",secure:true});
+    }else{
+      this.cookieService.set("test", response.JwtToken,{path:"/",secure:true,expires:response.DaysExpireToken});
+    }
   }
   setIdUserLocalStorage(id:number){
     localStorage.setItem("client",id.toString())
+  }
+  setFullNameLocalStorage(fullname:string){
+    localStorage.setItem("fullname",fullname)
   }
   checkAutentication(): boolean {
     return this.cookieService.check('test');
@@ -38,6 +45,9 @@ export class AuthService {
     }
     return userId;
   }
+  getFullName():string{
+    return localStorage.getItem("fullname");
+  }
   checkToken(token:TokenValidViewModel):Observable<boolean>{
     return this.http.post<boolean>(this.urlApi + "api/User/CheckToken", token);
   }
@@ -46,5 +56,10 @@ export class AuthService {
   }
   confirmEmail(token:TokenValidViewModel):Observable<boolean>{
     return this.http.post<boolean>(this.urlApi + "api/User/ConfirmEmail",token);
+  }
+  removeSesion(): void {
+    this.cookieService.delete("test","/");
+    localStorage.removeItem("client");
+    localStorage.removeItem("fullname");
   }
 }

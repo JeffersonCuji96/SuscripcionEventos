@@ -27,7 +27,7 @@ namespace BL.Repositories.Implements
         {
             int state = 0;
             var oAccessViewModel = new AccessViewModel();
-            var oUsuario = testContext.Usuarios.FirstOrDefault(
+            var oUsuario = testContext.Usuarios.Include(x=>x.Persona).FirstOrDefault(
                 x => x.Email == Crypto.GetSHA256(usuario.Email) &&
                 x.Clave == Crypto.GetSHA256(usuario.Clave));
 
@@ -39,6 +39,7 @@ namespace BL.Repositories.Implements
                     oAccessViewModel.IdUsuario = oUsuario.Id;
                     oAccessViewModel.JwtToken = GenerateJwt(oUsuario.Id);
                     oAccessViewModel.DaysExpireToken = appSettings.DaysExpireToken;
+                    oAccessViewModel.FullName = $"{oUsuario.Persona.Nombre +' '+ oUsuario.Persona.Apellido}";
                 }
             }
             return Tuple.Create(oAccessViewModel,state);
