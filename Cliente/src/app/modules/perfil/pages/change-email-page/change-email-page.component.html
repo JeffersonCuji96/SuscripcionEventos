@@ -1,1 +1,41 @@
-<p>change-email-page works!</p>
+<div class="modal-content">
+    <div class="card-header">
+        <div class="float-end my-3">
+            <button type="button" class="btn-close" (click)="close()"></button>
+        </div>
+        <h4 class="text-center my-3 fw-lighter">{{Title}}</h4>
+    </div>
+    <form [formGroup]="form" (ngSubmit)="updateEmail()">
+        <div class="modal-body">
+            <div class="mb-3">
+                <label class="small px-1 text-muted">Email</label>
+                <input class="form-control" [ngClass]="f.Email.invalid 
+            && (f.Email.dirty || f.Email.touched) ? 'is-invalid' : 'form-control'" formControlName="Email"
+                    (blur)="availableEmail()" type="text" placeholder="Ingrese un email" />
+                <span class="px-1 error" *ngIf="f.Email.touched && f.Email.errors?.required">
+                    El email es requerido
+                </span>
+                <span class="px-1 error" *ngIf="f.Email.errors?.isEmail">
+                    Formato de email inválido
+                </span>
+                <span class="px-1 error" *ngIf="f.Email.errors?.pattern">
+                    Se permiten letras (a-z), números (0-9) y puntos (.)
+                </span>
+                <span class="px-1 error" *ngIf="f.Email.errors?.notEmail===false">
+                    Email no disponible, ingrese otro
+                </span>
+            </div>
+            <div class="mb-3">
+                <label class="small px-1 text-muted">Clave actual</label>
+                <input class="form-control" [ngClass]="f.ClaveActual.invalid 
+                && (f.ClaveActual.dirty || f.ClaveActual.touched) ? 'is-invalid' : 'form-control'"
+                    formControlName="ClaveActual" type="password" placeholder="Ingresar su clave actual" />
+                <span class="px-1 error" *ngIf="f.ClaveActual.touched && f.ClaveActual.errors?.required">La clave es
+                    requerida</span>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button id="btnUpdateEmail" type="submit" [disabled]="form.invalid" class="btn btn-primary">Enviar</button>
+        </div>
+    </form>
+</div>

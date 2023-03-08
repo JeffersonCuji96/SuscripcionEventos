@@ -16,6 +16,7 @@ namespace SuscripcionEventosApi.MapperConfig
 
             CreateMap<Usuario, UsuarioDTO>()
                 .ForMember(x => x.Email, opt => opt.Ignore())
+                .ForMember(x => x.ImageBase64, opt => opt.Ignore())
                 .ForMember(x => x.Clave, opt => opt.Ignore());
             CreateMap<UsuarioDTO, Usuario>();
 

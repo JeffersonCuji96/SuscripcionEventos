@@ -12,20 +12,22 @@ namespace BL.ValidationCustom
     {
         protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
         {
-            var instance = validationContext.ObjectInstance;
-            string? email = instance.GetType().GetProperty("Email")?.GetValue(instance, null)?.ToString();
-            string eEmail = String.Empty;
-            if (!string.IsNullOrEmpty(email))
+            if (value == null)
             {
-                eEmail = Crypto.GetSHA256(email.ToString());
-                using var db = new DbSuscripcionEventosContext();
-                SqlParameter[] parameters = {
+                var instance = validationContext.ObjectInstance;
+                string? email = instance.GetType().GetProperty("Email")?.GetValue(instance, null)?.ToString();
+                if (!string.IsNullOrEmpty(email))
+                {
+                    string eEmail = Crypto.GetSHA256(email.ToString());
+                    using var db = new DbSuscripcionEventosContext();
+                    SqlParameter[] parameters = {
                     new SqlParameter{ ParameterName = "@email", SqlDbType=SqlDbType.VarChar,Size=100, Value = eEmail },
                     new SqlParameter{ ParameterName = "@id",SqlDbType=SqlDbType.BigInt, Direction = ParameterDirection.Output }
                 };
-                db.Database.ExecuteSqlRaw("exec SPGetIdUserByEmail @email, @id OUTPUT", parameters);
-                if(!string.IsNullOrEmpty(parameters[1].Value.ToString()))
-                    instance.GetType().GetProperty("Id")?.SetValue(instance, Convert.ToInt64(parameters[1].Value));
+                    db.Database.ExecuteSqlRaw("exec SPGetIdUserByEmail @email, @id OUTPUT", parameters);
+                    if (!string.IsNullOrEmpty(parameters[1].Value.ToString()))
+                        instance.GetType().GetProperty("Id")?.SetValue(instance, Convert.ToInt64(parameters[1].Value));
+                }
             }
             return ValidationResult.Success;
         }

@@ -13,5 +13,8 @@ namespace BL.ViewModels
         [MaxLength(15, ErrorMessage = "Debe tener máximo 15 caracteres")]
         [IsPassword]
         public string Clave { get; set; } = null!;
+
+        [Required(ErrorMessage = "La clave actual es requerida")]
+        public string ClaveActual { get; set; } = null!;
     }
 }

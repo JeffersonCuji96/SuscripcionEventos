@@ -15,10 +15,6 @@ namespace BL.Services.Implements
         {
             return this.usuarioRepository.Login(usuario);
         }
-        public Usuario? GetUserPersonById(long id)
-        {
-            return this.usuarioRepository.GetUserPersonById(id);
-        }
         public void InsertUserPerson(Usuario usuario)
         {
             usuarioRepository.InsertUserPerson(usuario);

@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { PersonaDto } from 'src/app/core/models/personaDto';
 import { UsuarioDto } from 'src/app/core/models/usuarioDto';
 import { UserEmailViewModel } from 'src/app/core/models/view-models/userEmailViewModel';
 import { environment } from 'src/environments/environment';
@@ -27,5 +28,8 @@ export class UserService {
   }
   recoveryAccess(userEmail:UserEmailViewModel){
     return this.http.post<any>(this.urlApi + "api/User/RecoveryAccess", userEmail);
+  }
+  getByIdUser(id:number):Observable<PersonaDto>{
+    return this.http.get<PersonaDto>(this.urlApi+"api/User/"+id);
   }
 }

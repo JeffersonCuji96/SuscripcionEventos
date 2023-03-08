@@ -1,4 +1,5 @@
 export interface UserEmailViewModel{
     Id:number,
-    Email:string;
+    Email:string,
+    ClaveActual:string
 }

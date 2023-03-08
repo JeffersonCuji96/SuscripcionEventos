@@ -21,7 +21,6 @@ namespace BL.DTO
 
         [IsAvailablePhoto(1000000)]
         public string? ImageBase64 { get; set; }
-        public int IdUsuario { get; set; }
         public PersonaDTO Persona { get; set; } = null!;
     }
 }

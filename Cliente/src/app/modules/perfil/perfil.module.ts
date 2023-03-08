@@ -6,6 +6,7 @@ import { PerfilPageComponent } from './pages/perfil-page/perfil-page.component';
 import { ChangePasswordPageComponent } from './pages/change-password-page/change-password-page.component';
 import { ChangeEmailPageComponent } from './pages/change-email-page/change-email-page.component';
 import { ChangePersonalInfoPageComponent } from './pages/change-personalinfo-page/change-personalinfo-page.component';
+import { SimpleModalModule } from 'ngx-simple-modal';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,12 @@ import { ChangePersonalInfoPageComponent } from './pages/change-personalinfo-pag
     CommonModule,
     PerfilRoutingModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    SimpleModalModule
+  ],
+  entryComponents:[
+    ChangePasswordPageComponent,
+    ChangeEmailPageComponent,
   ],
   providers:[]
 })

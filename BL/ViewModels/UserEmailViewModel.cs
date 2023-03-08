@@ -12,5 +12,6 @@ namespace BL.ViewModels
         [EmailAddress(ErrorMessage = "El formato del email es inválido")]
         [RegularExpression("([a-zA-Z0-9ñÑ.@]+$)", ErrorMessage = "Se permiten letras (a-z), números (0-9) y puntos (.)")]
         public string Email { get; set; } = null!;
+        public string? ClaveActual { get; set; } =string.Empty;
     }
 }

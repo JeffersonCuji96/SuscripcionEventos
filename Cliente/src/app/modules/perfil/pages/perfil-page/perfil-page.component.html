@@ -9,23 +9,23 @@
                 </tr>
                 <tr>
                     <td class="text-end">INFORMACIÓN PERSONAL</td>
-                    <td class="table-active">Jefferson Cuji...</td>
+                    <td class="table-active">{{fullName}}...</td>
                     <td class="text-center">
                         <button class="form-control btn btn-secondary btn-sm">EDITAR</button>
                     </td>
                 </tr>
                 <tr>
                     <td class="text-end">CORREO ELECTRÓNICO</td>
-                    <td class="table-active">renemarin96jc@gmail.com</td>
+                    <td class="table-active">*****************</td>
                     <td class="text-center">
-                        <button class="form-control btn btn-secondary btn-sm">EDITAR</button>
+                        <button class="form-control btn btn-secondary btn-sm" (click)="openModalUpdateEmail()">EDITAR</button>
                     </td>
                 </tr>
                 <tr>
                     <td class="text-end">CONTRASEÑA</td>
                     <td class="table-active">*****************</td>
                     <td class="text-center">
-                        <button class="form-control btn btn-secondary btn-sm">EDITAR</button>
+                        <button class="form-control btn btn-secondary btn-sm" (click)="openModalUpdatePassword()">EDITAR</button>
                     </td>
                 </tr>
                 <tr><td colspan="3" class="bg-dark p-4"></td></tr>

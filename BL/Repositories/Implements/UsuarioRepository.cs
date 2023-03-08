@@ -62,10 +62,6 @@ namespace BL.Repositories.Implements
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
         }
-        public Usuario? GetUserPersonById(long id)
-        {
-            return testContext.Usuarios.Include(x => x.Persona).FirstOrDefault(x => x.Id == id);
-        }
         public void InsertUserPerson(Usuario usuario)
         {
             string token = Crypto.GetSHA256(Guid.NewGuid().ToString());
@@ -101,10 +97,21 @@ namespace BL.Repositories.Implements
         }
         public void UpdateEmail(UserEmailViewModel userEmailViewModel)
         {
+            string token = Crypto.GetSHA256(Guid.NewGuid().ToString());
             var eEmail = Crypto.GetSHA256(userEmailViewModel.Email);
-            testContext.Database.ExecuteSqlRaw("UPDATE Usuario SET Email = @email WHERE Id = @id",
+            testContext.Database.ExecuteSqlRaw("UPDATE Usuario SET Email = @email, IdEstado = 3, Token=@token WHERE Id = @id",
                 new SqlParameter("@id", userEmailViewModel.Id),
-                new SqlParameter("@email", eEmail));
+                new SqlParameter("@email", eEmail),
+                new SqlParameter("@token", token));
+
+            var oMailSetting = new MailSettings()
+            {
+                Path = "/auth/confirm-email/",
+                Subject = "Cambio de email",
+                Body = "<p>Confirme su email para acceder a su cuenta</p><br>",
+                LinkDescription = "Click aquí para confirmar"
+            };
+            MailHelper.SendEmail(userEmailViewModel.Email, token, appSettings, oMailSetting);
         }
         public void UpdateClave(UserPasswordViewModel userPassViewModel)
         {

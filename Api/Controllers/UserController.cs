@@ -59,9 +59,9 @@ namespace Api.Controllers
         [HttpGet("{id}")]
         public IActionResult GetById(long id)
         {
-            var oUsuario = userService.GetUserPersonById(id);
-            var usuarioDTO = mapper.Map<UsuarioDTO>(oUsuario);
-            return Ok(usuarioDTO);
+            var oPersona = personService.GetById(id);
+            var personaDTO = mapper.Map<PersonaDTO>(oPersona);
+            return Ok(personaDTO);
         }
 
         [HttpPost]
@@ -76,16 +76,6 @@ namespace Api.Controllers
             FileHelper.RemoveImage(personService.GetPathPhoto(id));
             personService.UpdatePhoto(filePhotoViewModel);
             return Ok(new { Message = "Foto actualizada con éxito!" });
-        }
-
-        [HttpPost]
-        [ServiceFilter(typeof(ValidationFilterAttribute))]
-        [Route("CheckPassword")]
-        public IActionResult CheckPassword(UserPasswordViewModel userPassViewModel)
-        {
-            if(userPassViewModel.Id==0 || userPassViewModel.Id==null)
-                return BadRequest("El código del usuario no es válido");
-            return Ok(userService.CheckPassword(userPassViewModel));
         }
 
         [HttpGet]
@@ -115,8 +105,17 @@ namespace Api.Controllers
         {
             if (userEmailViewModel.Id == 0 || userEmailViewModel.Id == null)
                 return BadRequest("El código del usuario no es válido");
+            if (string.IsNullOrEmpty(userEmailViewModel.ClaveActual)) 
+                return BadRequest("La clave actual es requerida");
+            var userPass = new UserPasswordViewModel()
+            {
+                Clave = userEmailViewModel.ClaveActual,
+                Id = userEmailViewModel.Id 
+            };
+            if (!userService.CheckPassword(userPass))
+                return BadRequest("La clave actual no es válida");
             userService.UpdateEmail(userEmailViewModel);
-            return Ok(new { Message = "Email actualizado con éxito!" });
+            return Ok(new { Message = "Email actualizado con éxito! Revise su correo y confirme su cuenta para poder acceder" });
         }
 
         [HttpPost]
@@ -126,6 +125,8 @@ namespace Api.Controllers
         {
             if (userPassViewModel.Id == 0 || userPassViewModel.Id == null)
                 return BadRequest("El código del usuario no es válido");
+            if (userService.CheckPassword(userPassViewModel))
+                return BadRequest("La clave no es válida");
             userService.UpdateClave(userPassViewModel);
             return Ok(new { Message = "Clave actualizada con éxito!" });
         }
