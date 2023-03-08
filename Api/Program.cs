@@ -89,6 +89,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseStaticFiles();
 app.UseCors("ConfigCors");
 app.UseHttpsRedirection();
 app.UseAuthentication();

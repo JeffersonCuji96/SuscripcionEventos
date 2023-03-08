@@ -45,7 +45,7 @@ export class BuilderService {
               Validators.pattern(/^\d*$/)
             ])]
           }],
-          FechaNacimiento: [''],
+          FechaNacimiento: ['',Validators.required],
         })
       },
         {
