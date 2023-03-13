@@ -7,25 +7,32 @@ import { ChangePasswordPageComponent } from './pages/change-password-page/change
 import { ChangeEmailPageComponent } from './pages/change-email-page/change-email-page.component';
 import { ChangePersonalInfoPageComponent } from './pages/change-personalinfo-page/change-personalinfo-page.component';
 import { SimpleModalModule } from 'ngx-simple-modal';
+import { SharedModule } from 'src/app/shared/shared.module';
+import { SanitizerPipe } from './utils/sanitize-url';
+import { LazyLoadImageModule } from 'ng-lazyload-image';
 
 @NgModule({
   declarations: [
     PerfilPageComponent,
     ChangePasswordPageComponent,
     ChangeEmailPageComponent,
-    ChangePersonalInfoPageComponent
+    ChangePersonalInfoPageComponent,
+    SanitizerPipe
   ],
   imports: [
     CommonModule,
     PerfilRoutingModule,
     ReactiveFormsModule,
     FormsModule,
-    SimpleModalModule
+    SimpleModalModule,
+    SharedModule,
+    LazyLoadImageModule
   ],
   entryComponents:[
     ChangePasswordPageComponent,
     ChangeEmailPageComponent,
+    ChangePersonalInfoPageComponent
   ],
-  providers:[]
+  providers:[SanitizerPipe]
 })
 export class PerfilModule { }

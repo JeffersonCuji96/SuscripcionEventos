@@ -41,7 +41,7 @@ body {
     margin-left: 2px;
 }
 
-#box-link:hover{
+#box-link:hover {
     opacity: 1;
 }
 
@@ -53,24 +53,112 @@ body {
     background-color: rgb(13, 63, 90);
 }
 
-.dropdown-item:hover{
+.dropdown-item:hover {
     transition: 0.6s;
 }
 
-.dropdown-item:hover i{
+.dropdown-item:hover i {
     color: rgb(27, 56, 71);
 }
 
-.dropdown-item:active{
+.dropdown-item:active {
     transition: none;
     background-color: rgb(24, 92, 128);
 }
 
-.dropdown-item:active i{
+.dropdown-item:active i {
     color: rgb(238, 237, 237);
 }
 
-.bdr{
+.bdr {
     border-radius: 20px;
     overflow: hidden;
+}
+
+.modal-body {
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+}
+
+/*** IMAGE MODAL ***/
+
+.img-custom {
+    border-radius: 5px;
+    cursor: zoom-in;
+    transition: 0.3s;
+}
+
+.img-custom:hover {
+    opacity: 0.7;
+}
+
+.img-modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    padding-top: 100px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.9);
+}
+
+.img-modal-content {
+    margin: auto;
+    display: block;
+    width: 80%;
+    max-width: 700px;
+}
+
+#img-caption {
+    margin: auto;
+    display: block;
+    width: 80%;
+    max-width: 700px;
+    text-align: center;
+    color: #ccc;
+    padding: 10px 0;
+    height: 150px;
+}
+
+.img-modal-content,
+#img-caption {
+    animation-name: zoom;
+    animation-duration: 0.6s;
+}
+
+@keyframes zoom {
+    from {
+        transform: scale(0)
+    }
+
+    to {
+        transform: scale(1)
+    }
+}
+
+.img-close {
+    position: absolute;
+    top: 15px;
+    right: 35px;
+    color: #f1f1f1;
+    font-size: 40px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.img-close:hover,
+.img-close:focus {
+    color: #bbb;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+@media only screen and (max-width: 700px) {
+    .img-modal-content {
+        width: 100%;
+    }
 }

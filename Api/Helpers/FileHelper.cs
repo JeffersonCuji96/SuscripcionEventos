@@ -1,20 +1,29 @@
-﻿namespace Api.Helpers
+﻿using BL.DTO;
+using Microsoft.EntityFrameworkCore.Migrations;
+
+namespace Api.Helpers
 {
     public class FileHelper
     {
-        public static string UploadImage(string imageBase64)
+        public static string UploadImage(string? imageBase64)
         {
-            var nameFile = Guid.NewGuid().ToString();
-            var stream = new MemoryStream(Convert.FromBase64String(imageBase64));
-            IFormFile file = new FormFile(stream, 0, stream.Length, nameFile, nameFile);
-            var ruta = $"wwwroot/Images/{nameFile}" + ".png";
-            using var fileStream = new FileStream(ruta, FileMode.Create);
-            file.CopyTo(fileStream);
-            return ruta;
+            var ruta = "/Images/";
+            if (!string.IsNullOrEmpty(imageBase64))
+            {
+                var nameFile = Guid.NewGuid().ToString();
+                var stream = new MemoryStream(Convert.FromBase64String(imageBase64));
+                IFormFile file = new FormFile(stream, 0, stream.Length, nameFile, nameFile);
+                ruta = $"{ruta + nameFile}" + ".png";
+                using var fileStream = new FileStream("wwwroot" + ruta, FileMode.Create);
+                file.CopyTo(fileStream);
+                return ruta;
+            }
+            return $"{ruta}no-photo.png";
         }
         public static void RemoveImage(string path)
         {
-            if (!string.IsNullOrEmpty(path))
+            string imgDefault=path.Substring(path.Length-12,12);
+            if (!string.IsNullOrEmpty(path) && imgDefault!="no-photo.png")
                 File.Delete(path);
         }
     }

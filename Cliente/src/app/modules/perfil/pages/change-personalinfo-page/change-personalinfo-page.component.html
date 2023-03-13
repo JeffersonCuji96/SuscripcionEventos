@@ -1,1 +1,100 @@
-<p>change-personalinfo-page works!</p>
+<div class="modal-content">
+    <div class="card-header">
+        <div class="float-end my-3">
+            <button type="button" class="btn-close" (click)="close()"></button>
+        </div>
+        <h4 class="text-center my-3 fw-lighter">{{Title}}</h4>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="updatePersonalInfo()">
+        <div class="modal-body">
+            <div class="mb-2 col-md-6 offset-md-3 text-center">
+                <img [lazyLoad]="imagePreview" title="Foto del usuario"  class="img-custom" [src]="imagePreview | sanitizer" height="250" width="250"/>
+            </div> 
+            <div id="modal-custom" class="img-modal">
+                <span class="img-close">&times;</span>
+                <img [lazyLoad]="imagePreview" class="img-modal-content" id="img-inside-modal">
+                <div id="img-caption"></div>
+            </div>
+            <div class="mb-2 mt-2">
+                <label class="small px-1 text-muted">Foto</label>
+                <div class="input-group">
+                    <label id="btnFile" class="btn btn-secondary">
+                        <input type="file" class="d-none" formControlName="FileTemporal" accept=".jpg, .png" (change)="onFileChanged($event)">Cambiar foto
+                    </label>
+                    <span class="d-inline-block text-truncate input-group-text form-control bg-white text-start">
+                        {{spanFileName}}
+                    </span>
+                </div>
+                <span class="px-1 error" *ngIf="f.FileTemporal.errors?.notFormat">
+                    Se permiten sólo formatos png y jpg
+                </span>
+                <span class="px-1 error" *ngIf="f.FileTemporal.dirty && f.FileTemporal.errors?.notSize">
+                    El peso de la imagen no debe ser superior a 1 MB
+                </span>
+            </div>
+            <div class="row">
+                <div class="mb-2 col-md-6">
+                    <label class="small px-1 text-muted">Nombre</label>
+                    <input class="form-control" [ngClass]="f.Nombre.invalid 
+                            && (f.Nombre.dirty || f.Nombre.touched) ? 'is-invalid' : 'form-control'"
+                        formControlName="Nombre" type="text" placeholder="Ingrese su nombre " />
+                    <span class="px-1 error" *ngIf="f.Nombre.touched && f.Nombre.errors?.required">
+                        El nombre es requerido
+                    </span>
+                    <span class="px-1 error" *ngIf="f.Nombre.errors?.pattern">
+                        Debe tener solo letras
+                    </span>
+                </div>
+                <div class="mb-2 col-md-6">
+                    <label class="small px-1 text-muted">Apellido</label>
+                    <input class="form-control"
+                        [ngClass]="f.Apellido.invalid && (f.Apellido.dirty || f.Apellido.touched) ? 'is-invalid' : 'form-control'"
+                        formControlName="Apellido" type="text" placeholder="Ingrese su apellido " />
+                    <span class="px-1 error" *ngIf="f.Apellido.touched && f.Apellido.errors?.required">
+                        El apellido es requerido
+                    </span>
+                    <span class="px-1 error" *ngIf="f.Apellido.errors?.pattern">
+                        Se permiten solo letras (a-z)
+                    </span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="mb-2 col-md-6">
+                    <label class="small px-1 text-muted">Celular</label>
+                    <input class="form-control"
+                        [ngClass]="f.Telefono.invalid && (f.Telefono.dirty || f.Telefono.touched) ? 'is-invalid' : 'form-control'"
+                        formControlName="Telefono" (blur)="availablePhone()" type="text" placeholder="Ingrese su número"
+                        value="{{Data.Telefono}}" />
+
+                    <span class="px-1 error" *ngIf="f.Telefono.errors?.numDigits">
+                        Debe tener 10 digitos
+                    </span>
+                    <span class="px-1 error" *ngIf="f.Telefono.errors?.pattern">
+                        Se permiten solo números (0-9)
+                    </span>
+                    <span class="px-1 error" *ngIf="f.Telefono.errors?.notPhone===false">
+                        Teléfono en uso, ingrese otro
+                    </span>
+                </div>
+                <div class="mb-2 col-md-6">
+                    <label class="small px-1 text-muted">Fecha de Nacimiento</label>
+                    <input class="form-control" (blur)="availableDateBirth()" formControlName="FechaNacimiento"
+                        type="date" />
+                    <span class="px-1 error" *ngIf="f.FechaNacimiento.touched && f.FechaNacimiento.errors?.required">
+                        Fecha de nacimiento requerida
+                    </span>
+                    <span class="px-1 error" *ngIf="f.FechaNacimiento.errors?.notDateBirth">
+                        La fecha no es válida
+                    </span>
+                    <span class="px-1 error" *ngIf="f.FechaNacimiento.errors?.notAdult">
+                        Debe ser mayor de edad
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button id="btnUpdateInfo" type="submit" [disabled]="form.invalid" class="btn btn-primary">Enviar</button>
+        </div>
+    </form>
+</div>

@@ -1,5 +1,6 @@
 ﻿using BL.ValidationCustom;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace BL.DTO
 {

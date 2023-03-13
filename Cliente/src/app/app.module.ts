@@ -7,7 +7,7 @@ import { Helpers } from './helpers/helper';
 import { CookieService } from 'ngx-cookie-service';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HttpConfigInterceptor } from './core/interceptors/http-config.interceptor';
-
+import { ScriptsService } from './app-services/scripts.service';
 
 @NgModule({
   declarations: [
@@ -18,7 +18,7 @@ import { HttpConfigInterceptor } from './core/interceptors/http-config.intercept
     AppRoutingModule,
     HttpClientModule
   ],
-  providers: [CookieService,Helpers,
+  providers: [CookieService,Helpers,ScriptsService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: HttpConfigInterceptor,

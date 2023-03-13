@@ -3,5 +3,6 @@ export interface PersonaDto{
     Nombre: string,
     Apellido: string,
     Telefono: string,
-    FechaNacimiento:any
+    FechaNacimiento:any,
+    Foto:string
 }

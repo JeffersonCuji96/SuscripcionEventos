@@ -1,4 +1,5 @@
-<div class="container my-5">
+<app-loader *ngIf="showLoader"></app-loader>
+<div *ngIf="!showLoader" class="container my-5">
     <div class="table-responsive">
         <table class="table bdr table-dark table-bordered caption-top align-middle">
             <tbody>
@@ -11,7 +12,7 @@
                     <td class="text-end">INFORMACIÓN PERSONAL</td>
                     <td class="table-active">{{fullName}}...</td>
                     <td class="text-center">
-                        <button class="form-control btn btn-secondary btn-sm">EDITAR</button>
+                        <button class="form-control btn btn-secondary btn-sm" (click)="openModalUpdateInfo()">EDITAR</button>
                     </td>
                 </tr>
                 <tr>
