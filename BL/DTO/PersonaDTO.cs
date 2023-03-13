@@ -16,7 +16,7 @@ namespace BL.DTO
         [RegularExpression(@"^(?!\s)(?![\s\S]*\s$)([a-zA-ZáéíóúüñÁÉÍÓÚÑÜ]\s{0,1})+$", ErrorMessage = "El apellido sólo debe contener letras y/o un espacio entre palabras")]
         public string Apellido { get; set; } = null!;
 
-        [StringLength(10, MinimumLength = 10, ErrorMessage = "El teléfono debe tener 10 dígitos")]
+        [IsValidDigits("El teléfono debe tener 10 dígitos")]
         [RegularExpression("(^[0-9]+$)", ErrorMessage = "El teléfono solo debe contener números")]
         [IsPhoneExist(nameof(Id), "El teléfono está en uso, ingrese otro")]
         public string? Telefono { get; set; }
