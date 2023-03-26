@@ -3,7 +3,10 @@
         <app-menu></app-menu>
     </div>
     <div id="body">
-        <app-jumbotron *ngIf="this.homeService.jumbotronEnabled"></app-jumbotron>
+        <div class="container my-5" *ngIf="this.homeService.jumbotronEnabled">
+            <app-jumbotron></app-jumbotron>
+            <app-lista-eventos></app-lista-eventos>
+        </div>
         <router-outlet></router-outlet>
     </div>
     <div id="footer">

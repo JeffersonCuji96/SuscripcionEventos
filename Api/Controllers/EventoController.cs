@@ -30,6 +30,14 @@ namespace Api.Controllers
             this.hostingEnviroment = hostingEnviroment;
         }
 
+        [HttpGet]
+        [Route("GetEventosSuscripciones/{id?}")]
+        public IActionResult Get(int id = 0)
+        {
+            var events = eventService.GetEventsSuscriptions(id);
+            return Ok(events);
+        }
+
         [HttpPost]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public IActionResult Save(EventoDTO eventoDTO)
@@ -42,8 +50,7 @@ namespace Api.Controllers
                     return BadRequest("Sólo se permite crear un evento al día");
             }
             var oEvento = mapper.Map<Evento>(eventoDTO);
-            if (!string.IsNullOrEmpty(eventoDTO.ImageBase64))
-                oEvento.Foto = hostingEnviroment.ContentRootPath + FileHelper.UploadImage(eventoDTO.ImageBase64);
+            oEvento.Foto = hostingEnviroment.ContentRootPath + FileHelper.UploadImage(eventoDTO.ImageBase64);
             eventService.Insert(oEvento);
             return Ok(new { Message = "Evento registrado con éxito!" });
         }

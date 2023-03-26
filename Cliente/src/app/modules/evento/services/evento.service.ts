@@ -5,7 +5,6 @@ import { CategoriaDto } from 'src/app/core/models/categoriaDto.';
 import { EventoDto } from 'src/app/core/models/eventoDTO';
 import { environment } from 'src/environments/environment';
 
-
 @Injectable({
   providedIn: 'root'
 })
@@ -14,8 +13,12 @@ export class EventoService {
   readonly urlApi = environment.urlHost;
   constructor(private http: HttpClient) { }
 
-  getCategorias():Observable<CategoriaDto>{
-    return this.http.get<CategoriaDto>(this.urlApi+"api/Evento/GetCategorias");
+  getCategorias(): Observable<CategoriaDto> {
+    return this.http.get<CategoriaDto>(this.urlApi + "api/Evento/GetCategorias");
+  }
+
+  getEventosSuscripciones(idCategoria: number): Observable<any> {
+    return this.http.get<EventoDto>(this.urlApi + "api/Evento/GetEventosSuscripciones/" + idCategoria);
   }
 
   register(evento: EventoDto): Observable<any> {

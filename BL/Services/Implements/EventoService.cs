@@ -1,5 +1,6 @@
 ﻿using BL.Models;
 using BL.Repositories;
+using BL.ViewModels;
 
 namespace BL.Services.Implements
 {
@@ -13,6 +14,10 @@ namespace BL.Services.Implements
         public bool CheckDailyEvent(DateTime fechaInicio, long idUsuario)
         {
             return eventoRepository.CheckDailyEvent(fechaInicio, idUsuario);
+        }
+        public IEnumerable<EventoSuscripcionViewModel> GetEventsSuscriptions(int idCategoria)
+        {
+            return eventoRepository.GetEventsSuscriptions(idCategoria);
         }
     }
 }

@@ -1,0 +1,37 @@
+<ng-container *ngIf="lstEventos">
+    <div class="d-inline-flex mb-4">
+        <select id="select-filter" class="form-select" (change)="onChange($event)">
+            <option value="">Filtrar por categoría</option>
+            <option value="{{categoria.Id}}" *ngFor="let categoria of lstCategorias">{{categoria.Descripcion}}</option>
+        </select>&nbsp;
+        <input *ngIf="filterSelected" class="btn btn-secondary btn-sm" value="Quitar filtro" type="button"
+            (click)="removeFilter()" />
+    </div>
+    <div class="list-group">
+        <div class="row" *ngFor="let item of lstEventos | updateRows:2">
+            <ng-container *ngFor="let evt of item">
+                <div class="content mb-5 col-md-6" loadData (elementVisible)="getEventos($event)"
+                    [isTargetElement]="evt.Id == lstEventos.length">
+                    <a href="#" class="list-group-item list-group-item-action">
+                        <div class="mb-2 mt-2 d-flex w-100 justify-content-between">
+                            <h5 class="truncate mb-1">{{evt.Titulo}}</h5>&nbsp;
+                            <small class="text-muted text-end">
+                                {{evt.Suscriptores.length === 1 ? evt.Suscriptores.length+'
+                                suscriptor':evt.Suscriptores.length+' suscriptores'}}
+                            </small>
+                        </div>
+                        <div>
+                            <img title="Foto del evento" [src]="evt.Foto | sanitizer" />
+                        </div>
+                        <p class="truncate mb-2 mt-2 text-justify">
+                            {{evt.InformacionAdicional ? evt.InformacionAdicional:'Sin información adicional'}}
+                        </p>
+                        <small class="text-muted">Inicia: {{evt.FechaInicio | date: 'dd/MM/yyyy'}}
+                            {{evt.HoraInicio.substring(0,5)}}</small>
+                    </a>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+</ng-container>
+<p *ngIf="lstEventos.length===0" class="lead text-center">No se encontró ningún evento</p>
