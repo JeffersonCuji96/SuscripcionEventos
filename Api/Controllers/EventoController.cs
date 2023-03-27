@@ -47,10 +47,10 @@ namespace Api.Controllers
             if (fInicio != null && idUsuario != null)
             {
                 if(!eventService.CheckDailyEvent(fInicio.Value, idUsuario.Value))
-                    return BadRequest("Sólo se permite crear un evento al día");
+                    return BadRequest("Sólo se permite crear un evento en la misma fecha");
             }
             var oEvento = mapper.Map<Evento>(eventoDTO);
-            oEvento.Foto = hostingEnviroment.ContentRootPath + FileHelper.UploadImage(eventoDTO.ImageBase64);
+            oEvento.Foto = hostingEnviroment.ContentRootPath + FileHelper.UploadImage(eventoDTO.ImageBase64,true);
             eventService.Insert(oEvento);
             return Ok(new { Message = "Evento registrado con éxito!" });
         }

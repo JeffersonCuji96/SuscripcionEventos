@@ -1,4 +1,5 @@
-<ng-container *ngIf="lstEventos">
+<app-loader class="loader-list" *ngIf="showLoader"></app-loader>
+<ng-container *ngIf="lstEventos && !showLoader">
     <div class="d-inline-flex mb-4">
         <select id="select-filter" class="form-select" (change)="onChange($event)">
             <option value="">Filtrar por categoría</option>
@@ -34,4 +35,4 @@
         </div>
     </div>
 </ng-container>
-<p *ngIf="lstEventos.length===0" class="lead text-center">No se encontró ningún evento</p>
+<p *ngIf="lstEventos.length===0 && !showLoader" class="lead text-center">No se encontró ningún evento</p>

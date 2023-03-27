@@ -38,7 +38,7 @@ namespace Api.Controllers
         public IActionResult Save(UsuarioDTO usuarioDTO)
         {
             var oUsuario = mapper.Map<Usuario>(usuarioDTO);
-            oUsuario.Persona.Foto = hostingEnviroment.ContentRootPath + FileHelper.UploadImage(usuarioDTO.ImageBase64);
+            oUsuario.Persona.Foto = hostingEnviroment.ContentRootPath + FileHelper.UploadImage(usuarioDTO.ImageBase64,false);
             userService.InsertUserPerson(oUsuario);
             return Ok(new { Message = "Usuario registrado con éxito! Revise su correo y confirme su cuenta para poder acceder" });
         }
@@ -71,7 +71,7 @@ namespace Api.Controllers
             if (filePhotoViewModel.Id == 0)
                 return BadRequest("El código del usuario no es válido");
             long id = Convert.ToInt64(filePhotoViewModel.Id);
-            filePhotoViewModel.Photo = hostingEnviroment.ContentRootPath + FileHelper.UploadImage(filePhotoViewModel.Photo);
+            filePhotoViewModel.Photo = hostingEnviroment.ContentRootPath + FileHelper.UploadImage(filePhotoViewModel.Photo,false);
             FileHelper.RemoveImage(personService.GetPathPhoto(id));
             personService.UpdatePhoto(filePhotoViewModel);
             return Ok(new { Message = "Foto actualizada con éxito!" });

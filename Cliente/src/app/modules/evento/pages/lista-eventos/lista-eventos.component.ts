@@ -16,6 +16,7 @@ export class ListaEventosComponent implements OnInit, OnDestroy {
   private dataCountInit: number = 6;
   public lstCategorias: CategoriaDto;
   public filterSelected: boolean;
+  public showLoader:boolean=true;
 
   constructor(
     private eventService: EventoService
@@ -39,6 +40,7 @@ export class ListaEventosComponent implements OnInit, OnDestroy {
           )).subscribe(
             (res: any) => {
               this.lstEventos = this.lstEventos.concat(res);
+              this.showLoader=false;
             });
     }
   }
