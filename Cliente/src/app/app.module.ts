@@ -8,6 +8,8 @@ import { CookieService } from 'ngx-cookie-service';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HttpConfigInterceptor } from './core/interceptors/http-config.interceptor';
 import { ScriptsService } from './app-services/scripts.service';
+import { RouteReuseStrategy } from '@angular/router';
+import { CustomRouteReuseStrategy } from './app-services/CustomRouteReuseStrategy';
 
 @NgModule({
   declarations: [
@@ -23,7 +25,12 @@ import { ScriptsService } from './app-services/scripts.service';
       provide: HTTP_INTERCEPTORS,
       useClass: HttpConfigInterceptor,
       multi: true
-    }],
+    },
+    {
+      provide: RouteReuseStrategy,
+      useClass: CustomRouteReuseStrategy
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

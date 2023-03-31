@@ -26,7 +26,7 @@ namespace BL.Repositories.Implements
         {
             var lstEventSuscriptions = testContext.Eventos.Include(p => p.Usuario.Persona).Include(c => c.Categoria)
                 .Include(s => s.Suscripciones).ThenInclude(sb => sb.Usuario.Persona)
-                .Where(x => idCategoria == 0 || x.IdCategoria == idCategoria && x.IdEstado==1 && x.Usuario.IdEstado==1)
+                .Where(x => idCategoria == 0 || x.IdCategoria == idCategoria && x.IdEstado == 1 && x.Usuario.IdEstado == 1)
                 .Select(e => new EventoSuscripcionViewModel
                 {
                     Id = e.Id,
@@ -45,18 +45,7 @@ namespace BL.Repositories.Implements
                         NombreApellido = e.Usuario.Persona.Nombre + ' ' + e.Usuario.Persona.Apellido,
                         Foto = e.Usuario.Persona.Foto
                     },
-                    Suscriptores = e.Suscripciones.Where(scp=>scp.IdEstado==1).Select(sc =>
-                    new SuscripcionViewModel()
-                    {
-                        Id = sc.Id,
-                        Suscriptor = new
-                        PersonaViewModel()
-                        {
-                            Id = sc.IdUsuario,
-                            NombreApellido = sc.Usuario.Persona.Nombre + ' ' + sc.Usuario.Persona.Apellido,
-                            Foto = sc.Usuario.Persona.Foto
-                        }
-                    })
+                    Suscriptores = e.Suscripciones.Count()
                 });
             return lstEventSuscriptions.ToList();
         }

@@ -1,0 +1,48 @@
+<div class="container my-5">
+    <div class="row justify-content-center m-2">
+        <div class="col-lg-10">
+            <div class="card card-shadow rounded-3">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between">
+                        <div><a class="link-secondary" style="cursor: pointer;" (click)="backPage()"><i class="fa fa-angle-double-left fs-5 lh-lg"></i></a></div>
+                        <div><span class="text-muted lh-lg">Categoría: </span>{{objEvento.Categoria}}</div>
+                    </div>
+                </div>
+                <img [src]="objEvento.Foto | sanitizer" class="img-fluid m-3 rounded-3" alt="Foto del evento">
+                <hr class="m-0" />
+                <div class="card-body">
+                    <h3 class="card-title text-center my-2">{{objEvento.Titulo}}</h3>
+                    <p class="card-text text-justify">
+                        {{objEvento.InformacionAdicional ? objEvento.InformacionAdicional:'Sin información adicional'}}
+                    </p>
+                    <p class="card-text m-0"><span class="text-muted">Dirección: </span>
+                        {{objEvento.Ubicacion}}</p>
+                    <p class="card-text m-0"><span class="text-muted">Suscriptores: </span>
+                        {{objEvento.Suscriptores}} personas suscritas a este evento</p>
+
+                    <div class="card mx-auto text-center mt-4 mb-3 card-shadow widthCardImage">
+                        <div class="card-header">
+                            <h5>Organizador<span class="fs-6">(a)</span></h5>
+                        </div>
+                        <img [src]="objEvento.Organizador.Foto" class="card-img-bottom" alt="Foto del organizador">
+                        <div class="card-footer">
+                            <b>{{objEvento.Organizador.NombreApellido}}</b>
+                        </div>
+                    </div>
+                    <div class="text-end mt-5">
+                        <button class="btn btn-secondary">Suscribirse</button>
+                    </div>
+                </div>
+                <div class="card-footer lh-lg">
+                    <div id="timetable" class="d-flex justify-content-between">
+                        <div><b>Inicia: </b>{{objEvento.FechaInicio | date: 'dd/MM/yyyy'}}
+                            {{objEvento.HoraInicio.substring(0,5)}}</div>
+                        <div *ngIf="objEvento.FechaFin"><b>Termina: </b>{{objEvento.FechaFin | date: 'dd/MM/yyyy'}}
+                            {{objEvento.HoraFin.substring(0,5)}}</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

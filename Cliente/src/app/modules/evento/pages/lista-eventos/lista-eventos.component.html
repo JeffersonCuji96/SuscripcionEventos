@@ -1,5 +1,6 @@
 <app-loader class="loader-list" *ngIf="showLoader"></app-loader>
 <ng-container *ngIf="lstEventos && !showLoader">
+    <div class="container">
     <div class="d-inline-flex mb-4">
         <select id="select-filter" class="form-select" (change)="onChange($event)">
             <option value="">Filtrar por categoría</option>
@@ -9,16 +10,16 @@
             (click)="removeFilter()" />
     </div>
     <div class="list-group">
-        <div class="row" *ngFor="let item of lstEventos | updateRows:2">
-            <ng-container *ngFor="let evt of item">
+        <div class="row" *ngFor="let item of lstEventos | updateRows:2; let cod=index;">
+            <ng-container *ngFor="let evt of item; let i=index;">
                 <div class="content mb-5 col-md-6" loadData (elementVisible)="getEventos($event)"
-                    [isTargetElement]="evt.Id == lstEventos.length">
-                    <a href="#" class="list-group-item list-group-item-action">
+                    [isTargetElement]="evt.Codigo === lstEventos.length">
+                    <a (click)="showDetailEvent(item[i])" style="cursor:pointer" class="list-group-item list-group-item-action">
                         <div class="mb-2 mt-2 d-flex w-100 justify-content-between">
                             <h5 class="truncate mb-1">{{evt.Titulo}}</h5>&nbsp;
                             <small class="text-muted text-end">
-                                {{evt.Suscriptores.length === 1 ? evt.Suscriptores.length+'
-                                suscriptor':evt.Suscriptores.length+' suscriptores'}}
+                                {{evt.Suscriptores === 1 ? evt.Suscriptores+'
+                                suscriptor':evt.Suscriptores+' suscriptores'}}
                             </small>
                         </div>
                         <div>
@@ -33,6 +34,7 @@
                 </div>
             </ng-container>
         </div>
+    </div>
     </div>
 </ng-container>
 <p *ngIf="lstEventos.length===0 && !showLoader" class="lead text-center">No se encontró ningún evento</p>

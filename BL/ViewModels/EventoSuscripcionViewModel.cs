@@ -13,6 +13,6 @@
         public string? Foto { get; set; }
         public string Categoria { get; set; } = null!;
         public PersonaViewModel Organizador { get; set; } = null!;
-        public IEnumerable<SuscripcionViewModel>? Suscriptores { get; set; }
+        public long Suscriptores { get; set; }
     }
 }

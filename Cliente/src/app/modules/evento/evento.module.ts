@@ -5,18 +5,25 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BuilderService } from './services/builder.service';
 import { RegisterPageComponent } from './pages/register-page/register-page.component';
 import { DirectiveFormatTime } from './utils/directive-formatTime';
+import { DetailEventoComponent } from './pages/detail-evento/detail-evento.component';
+import { PipeModule } from 'src/app/pipe.module';
 
 @NgModule({
   declarations: [
     RegisterPageComponent,
+    DetailEventoComponent,
     DirectiveFormatTime
   ],
   imports: [
     CommonModule,
     EventoRoutingModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    PipeModule
   ],
-  providers:[BuilderService]
+  exports:[
+    DetailEventoComponent
+  ],
+  providers:[ BuilderService ]
 })
 export class EventoModule { }
