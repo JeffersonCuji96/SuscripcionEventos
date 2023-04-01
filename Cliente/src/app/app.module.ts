@@ -10,6 +10,7 @@ import { HttpConfigInterceptor } from './core/interceptors/http-config.intercept
 import { ScriptsService } from './app-services/scripts.service';
 import { RouteReuseStrategy } from '@angular/router';
 import { CustomRouteReuseStrategy } from './app-services/CustomRouteReuseStrategy';
+import { NgxScrollPositionRestorationModule } from 'ngx-scroll-position-restoration';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { CustomRouteReuseStrategy } from './app-services/CustomRouteReuseStrateg
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    NgxScrollPositionRestorationModule.forRoot() //Guarda la posicion del scroll al regresar a la página anterior
   ],
   providers: [CookieService,Helpers,ScriptsService,
     {
