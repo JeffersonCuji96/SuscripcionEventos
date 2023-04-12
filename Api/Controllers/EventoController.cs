@@ -42,13 +42,10 @@ namespace Api.Controllers
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public IActionResult Save(EventoDTO eventoDTO)
         {
-            var fInicio = eventoDTO.FechaInicio;
-            var idUsuario = eventoDTO.IdUsuario;
-            if (fInicio != null && idUsuario != null)
-            {
-                if(!eventService.CheckDailyEvent(fInicio.Value, idUsuario.Value))
-                    return BadRequest("Sólo se permite crear un evento en la misma fecha");
-            }
+            var strCheckDate = eventService.CheckDateEvent(eventoDTO.FechaInicio, eventoDTO.FechaFin, eventoDTO.IdUsuario);
+            if (!string.IsNullOrEmpty(strCheckDate))
+                return BadRequest(strCheckDate);
+            
             var oEvento = mapper.Map<Evento>(eventoDTO);
             oEvento.Foto = hostingEnviroment.ContentRootPath + FileHelper.UploadImage(eventoDTO.ImageBase64,true);
             eventService.Insert(oEvento);

@@ -13,14 +13,22 @@ namespace BL.Repositories.Implements
         {
             this.testContext = testContext;
         }
-        public bool CheckDailyEvent(DateTime fechaInicio, long idUsuario)
+        public string CheckDateEvent(DateTime? fechaInicio, DateTime? fechaFin, long? idUsuario)
         {
-            var oEventoLast = testContext.Eventos.OrderBy(x => x.Id).LastOrDefault(x => x.IdUsuario == idUsuario);
-            if (oEventoLast == null)
-                return true;
-            if (oEventoLast.FechaFin != null)
-                return fechaInicio > oEventoLast.FechaFin;
-            return fechaInicio > oEventoLast.FechaInicio;
+            string message = "La fecha de inicio y/o fin no debe coincidir con fechas de otros eventos creado por el mismo usuario";
+            var lstEventsUser = testContext.Eventos.Where(x => x.IdUsuario == idUsuario).ToList();
+            if (fechaFin != null)
+            {
+                if (lstEventsUser.Any(x => x.FechaInicio == fechaFin || x.FechaInicio == fechaInicio || x.FechaFin == fechaInicio || x.FechaFin == fechaFin ||
+                (x.FechaInicio > fechaInicio && x.FechaFin < fechaFin) || (fechaInicio > x.FechaInicio && fechaInicio < x.FechaFin) ||
+                (fechaInicio > x.FechaInicio && fechaFin < x.FechaFin) || (fechaFin > x.FechaInicio && fechaFin < x.FechaFin) ||
+                (x.FechaInicio > fechaInicio && x.FechaInicio < fechaFin)))
+                    return message;
+                return string.Empty;
+            }
+            if (lstEventsUser.Any(x => x.FechaInicio == fechaInicio || x.FechaFin == fechaInicio || (fechaInicio > x.FechaInicio && fechaInicio < x.FechaFin)))
+                return message;
+            return string.Empty;
         }
         public IEnumerable<EventoSuscripcionViewModel> GetEventsSuscriptions(int idCategoria)
         {

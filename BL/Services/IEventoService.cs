@@ -5,7 +5,7 @@ namespace BL.Services
 {
     public interface IEventoService:IGenericService<Evento>
     {
-        bool CheckDailyEvent(DateTime fechaInicio, long idUsuario);
+        string CheckDateEvent(DateTime? fechaInicio, DateTime? fechaFin, long? idUsuario);
         IEnumerable<EventoSuscripcionViewModel> GetEventsSuscriptions(int idCategoria);
     }
 }

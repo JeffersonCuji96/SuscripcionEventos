@@ -11,9 +11,9 @@ namespace BL.Services.Implements
         {
             this.eventoRepository = eventoRepository;
         }
-        public bool CheckDailyEvent(DateTime fechaInicio, long idUsuario)
+        public string CheckDateEvent(DateTime? fechaInicio, DateTime? fechaFin, long? idUsuario)
         {
-            return eventoRepository.CheckDailyEvent(fechaInicio, idUsuario);
+            return eventoRepository.CheckDateEvent(fechaInicio, fechaFin, idUsuario);
         }
         public IEnumerable<EventoSuscripcionViewModel> GetEventsSuscriptions(int idCategoria)
         {
