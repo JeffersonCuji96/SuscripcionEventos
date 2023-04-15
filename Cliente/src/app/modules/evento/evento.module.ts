@@ -7,12 +7,14 @@ import { RegisterPageComponent } from './pages/register-page/register-page.compo
 import { DirectiveFormatTime } from './utils/directive-formatTime';
 import { DetailEventoComponent } from './pages/detail-evento/detail-evento.component';
 import { PipeModule } from 'src/app/pipe.module';
+import { ReviewEventosComponent } from './pages/review-eventos/review-eventos.component';
 
 @NgModule({
   declarations: [
     RegisterPageComponent,
     DetailEventoComponent,
-    DirectiveFormatTime
+    DirectiveFormatTime,
+    ReviewEventosComponent
   ],
   imports: [
     CommonModule,

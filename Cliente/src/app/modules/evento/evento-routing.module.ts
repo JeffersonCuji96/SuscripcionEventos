@@ -3,12 +3,17 @@ import { RouterModule, Routes } from '@angular/router';
 import { SessionGuard } from 'src/app/core/guards/session.guard';
 import { DetailEventoComponent } from './pages/detail-evento/detail-evento.component';
 import { RegisterPageComponent } from './pages/register-page/register-page.component';
+import { ReviewEventosComponent } from './pages/review-eventos/review-eventos.component';
 
 const routes: Routes = [
   {
     path: 'register',
     canActivate: [SessionGuard],
     component: RegisterPageComponent
+  },
+  {
+    path:'revision',
+    component:ReviewEventosComponent
   },
   {
     path:'detail/:data',

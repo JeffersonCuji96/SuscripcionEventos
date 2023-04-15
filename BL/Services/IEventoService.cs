@@ -7,5 +7,6 @@ namespace BL.Services
     {
         string CheckDateEvent(DateTime? fechaInicio, DateTime? fechaFin, long? idUsuario);
         IEnumerable<EventoSuscripcionViewModel> GetEventsSuscriptions(int idCategoria);
+        IEnumerable<Evento> GetEventsByUser(long idUsuario);
     }
 }

@@ -24,10 +24,17 @@
               "src/assets"
             ],
             "styles": [
+              "./node_modules/bootstrap/dist/css/bootstrap.min.css",
               "src/styles.css",
+              "src/assets/datatables/dataTables.bootstrap5.min.css",
               "./node_modules/ngx-simple-modal/styles/simple-modal.css"
             ],
-            "scripts": []
+            "scripts": [
+              "./node_modules/jquery/dist/jquery.js",
+              "./node_modules/bootstrap/dist/js/bootstrap.min.js",
+              "src/assets/datatables/datatables.min.js",
+              "src/assets/datatables/dataTables.bootstrap5.min.js"
+            ]
           },
           "configurations": {
             "production": {

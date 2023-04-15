@@ -170,3 +170,12 @@ body {
 .modal {
     z-index: 100001 !important;
 }
+
+@media only screen and (max-width: 768px) {
+    .dataTables_filter {
+        margin-top: 20px;
+        margin-bottom: 10px;
+    }
+}
+
+  

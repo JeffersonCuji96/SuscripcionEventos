@@ -19,5 +19,9 @@ namespace BL.Services.Implements
         {
             return eventoRepository.GetEventsSuscriptions(idCategoria);
         }
+        public IEnumerable<Evento> GetEventsByUser(long idUsuario)
+        {
+            return eventoRepository.GetEventsByUser(idUsuario);
+        }
     }
 }

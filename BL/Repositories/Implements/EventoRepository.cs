@@ -16,7 +16,7 @@ namespace BL.Repositories.Implements
         public string CheckDateEvent(DateTime? fechaInicio, DateTime? fechaFin, long? idUsuario)
         {
             string message = "La fecha de inicio y/o fin no debe coincidir con fechas de otros eventos creado por el mismo usuario";
-            var lstEventsUser = testContext.Eventos.Where(x => x.IdUsuario == idUsuario).ToList();
+            var lstEventsUser = testContext.Eventos.Where(x => x.IdUsuario == idUsuario && x.IdEstado != 2).ToList();
             if (fechaFin != null)
             {
                 if (lstEventsUser.Any(x => x.FechaInicio == fechaFin || x.FechaInicio == fechaInicio || x.FechaFin == fechaInicio || x.FechaFin == fechaFin ||
@@ -34,7 +34,7 @@ namespace BL.Repositories.Implements
         {
             var lstEventSuscriptions = testContext.Eventos.Include(p => p.Usuario.Persona).Include(c => c.Categoria)
                 .Include(s => s.Suscripciones).ThenInclude(sb => sb.Usuario.Persona)
-                .Where(x => idCategoria == 0 || x.IdCategoria == idCategoria && x.IdEstado == 1 && x.Usuario.IdEstado == 1)
+                .Where(x => x.IdEstado == 1 && x.Usuario.IdEstado == 1 && (idCategoria == 0 || x.IdCategoria == idCategoria))
                 .Select(e => new EventoSuscripcionViewModel
                 {
                     Id = e.Id,
@@ -56,6 +56,10 @@ namespace BL.Repositories.Implements
                     Suscriptores = e.Suscripciones.Count()
                 });
             return lstEventSuscriptions.ToList();
+        }
+        public IEnumerable<Evento> GetEventsByUser(long idUsuario)
+        {
+            return testContext.Eventos.Include(x => x.Categoria).Where(x => x.IdUsuario == idUsuario && x.IdEstado != 2);
         }
     }
 }

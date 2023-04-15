@@ -36,7 +36,8 @@ namespace BL.DTO
         public string? ImageBase64 { get; set; }
 
         [Required(ErrorMessage = "La categoría es requerida")]
-        public int? IdCategoria { get; set; } 
+        public int? IdCategoria { get; set; }
+        public CategoriaDTO? Categoria { get; set; }
 
         [Required(ErrorMessage = "El usuario es requerido")]
         public long? IdUsuario { get; set; }

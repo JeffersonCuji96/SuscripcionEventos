@@ -20,7 +20,8 @@ namespace SuscripcionEventosApi.MapperConfig
                 .ForMember(x => x.Clave, opt => opt.Ignore());
             CreateMap<UsuarioDTO, Usuario>();
 
-            CreateMap<Evento,EventoDTO>();
+            CreateMap<Evento,EventoDTO>()
+                .ForMember(e => e.ImageBase64, o => o.MapFrom(m => m.Foto));
             CreateMap<EventoDTO, Evento>();
 
             CreateMap<Categoria, CategoriaDTO>();

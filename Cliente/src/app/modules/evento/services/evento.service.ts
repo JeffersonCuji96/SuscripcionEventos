@@ -21,6 +21,10 @@ export class EventoService {
     return this.http.get<EventoDto>(this.urlApi + "api/Evento/GetEventosSuscripciones/" + idCategoria);
   }
 
+  getByUserEventos(idUsuario: number): Observable<EventoDto> {
+    return this.http.get<EventoDto>(this.urlApi + "api/Evento/GetByUserEventos/" + idUsuario);
+  }
+
   register(evento: EventoDto): Observable<any> {
     return this.http.post<any>(this.urlApi + "api/Evento", evento);
   }

@@ -38,6 +38,15 @@ namespace Api.Controllers
             return Ok(events);
         }
 
+        [HttpGet]
+        [Route("GetByUserEventos/{id}")]
+        public IActionResult GetByUserEventos(long id)
+        {
+            var events = eventService.GetEventsByUser(id);
+            var eventsDTO = events.Select(x => mapper.Map<EventoDTO>(x));
+            return Ok(eventsDTO);
+        }
+
         [HttpPost]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public IActionResult Save(EventoDTO eventoDTO)
