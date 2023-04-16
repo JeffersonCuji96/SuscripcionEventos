@@ -1,7 +1,9 @@
 ﻿using BL.Helpers;
 using BL.Models;
 using BL.ViewModels;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 using System.Linq;
 
 namespace BL.Repositories.Implements
@@ -13,10 +15,15 @@ namespace BL.Repositories.Implements
         {
             this.testContext = testContext;
         }
-        public string CheckDateEvent(DateTime? fechaInicio, DateTime? fechaFin, long? idUsuario)
+        public string CheckDateEvent(DateTime? fechaInicio, DateTime? fechaFin, long? idUsuario, long idEvento)
         {
+            var lstEventsUser = new List<Evento>();
             string message = "La fecha de inicio y/o fin no debe coincidir con fechas de otros eventos creado por el mismo usuario";
-            var lstEventsUser = testContext.Eventos.Where(x => x.IdUsuario == idUsuario && x.IdEstado != 2).ToList();
+            
+            if (idEvento == 0)
+                lstEventsUser = testContext.Eventos.Where(x => x.IdUsuario == idUsuario && x.IdEstado != 2).ToList();
+            lstEventsUser = testContext.Eventos.Where(x => x.Id != idEvento && x.IdUsuario == idUsuario && x.IdEstado != 2).ToList();
+
             if (fechaFin != null)
             {
                 if (lstEventsUser.Any(x => x.FechaInicio == fechaFin || x.FechaInicio == fechaInicio || x.FechaFin == fechaInicio || x.FechaFin == fechaFin ||
@@ -60,6 +67,27 @@ namespace BL.Repositories.Implements
         public IEnumerable<Evento> GetEventsByUser(long idUsuario)
         {
             return testContext.Eventos.Include(x => x.Categoria).Where(x => x.IdUsuario == idUsuario && x.IdEstado != 2);
+        }
+        public void RemoveEvent(long idEvento)
+        {
+            testContext.Database.ExecuteSqlRaw("UPDATE Evento SET IdEstado = 2 WHERE Id = @id",
+                new SqlParameter("@id", idEvento));
+        }
+        public void UpdateEvent(Evento evento, bool checkImage)
+        {
+            testContext.Entry(evento).State = EntityState.Modified;
+            testContext.Entry(evento).Property(x => x.Foto).IsModified = checkImage;
+            testContext.SaveChanges();
+        }
+        public string GetPathPhoto(long id)
+        {
+            SqlParameter[] parameters = {
+                new SqlParameter{ ParameterName = "@id", SqlDbType=SqlDbType.BigInt, Value = id },
+                new SqlParameter{ ParameterName = "@path",SqlDbType=SqlDbType.VarChar,Size=200, Direction = ParameterDirection.Output }
+            };
+            testContext.Database.ExecuteSqlRaw("exec SPGetPathPhotoEvent @id, @path OUTPUT", parameters);
+            string? path = parameters[1].Value.ToString();
+            return path ?? string.Empty;
         }
     }
 }

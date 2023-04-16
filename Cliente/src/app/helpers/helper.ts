@@ -1,10 +1,9 @@
-import { Router } from '@angular/router';
 import * as moment from 'moment';
 import { Observable, ReplaySubject } from 'rxjs';
 import Swal from 'sweetalert2';
 
 export class Helpers {
-    
+
     disableInputElement(id: any, value: boolean) {
         (<HTMLInputElement>document.getElementById(id)).disabled = value;
     }
@@ -81,17 +80,36 @@ export class Helpers {
     swalShowSuccess(message: string) {
         this.swalShow("<h4>Operación realizada</h4>", message, "success")
     }
-    compareTwoObjects(object1:any, object2:any) {
+    compareTwoObjects(object1: any, object2: any) {
         const keys1 = Object.keys(object1);
         const keys2 = Object.keys(object2);
         if (keys1.length !== keys2.length) {
-          return false;
+            return false;
         }
         for (let key of keys1) {
-          if (object1[key] !== object2[key]) {
-            return false;
-          }
+            if (object1[key] !== object2[key]) {
+                return false;
+            }
         }
         return true;
+    }
+
+    confirmDeleteSwal() {
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: 'btn btn-success m-2',
+                cancelButton: 'btn btn-danger m-2'
+            },
+            buttonsStyling: false
+        });
+        return swalWithBootstrapButtons.fire({
+            title: 'Está seguro?',
+            text: "No se podrá revertir la acción!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Eliminar',
+            cancelButtonText: 'Cancelar',
+            reverseButtons: true
+        });
     }
 }

@@ -1,4 +1,5 @@
-﻿using BL.ValidationCustom;
+﻿using BL.Models;
+using BL.ValidationCustom;
 using System.ComponentModel.DataAnnotations;
 
 namespace BL.DTO

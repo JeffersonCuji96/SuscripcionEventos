@@ -8,6 +8,9 @@ import { DirectiveFormatTime } from './utils/directive-formatTime';
 import { DetailEventoComponent } from './pages/detail-evento/detail-evento.component';
 import { PipeModule } from 'src/app/pipe.module';
 import { ReviewEventosComponent } from './pages/review-eventos/review-eventos.component';
+import { SimpleModalModule } from 'ngx-simple-modal';
+import { LazyLoadImageModule } from 'ng-lazyload-image';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -21,10 +24,16 @@ import { ReviewEventosComponent } from './pages/review-eventos/review-eventos.co
     EventoRoutingModule,
     ReactiveFormsModule,
     FormsModule,
-    PipeModule
+    PipeModule,
+    SimpleModalModule,
+    SharedModule,
+    LazyLoadImageModule
   ],
   exports:[
     DetailEventoComponent
+  ],
+  entryComponents:[
+    RegisterPageComponent
   ],
   providers:[ BuilderService ]
 })

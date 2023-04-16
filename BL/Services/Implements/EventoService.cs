@@ -11,9 +11,9 @@ namespace BL.Services.Implements
         {
             this.eventoRepository = eventoRepository;
         }
-        public string CheckDateEvent(DateTime? fechaInicio, DateTime? fechaFin, long? idUsuario)
+        public string CheckDateEvent(DateTime? fechaInicio, DateTime? fechaFin, long? idUsuario, long idEvento)
         {
-            return eventoRepository.CheckDateEvent(fechaInicio, fechaFin, idUsuario);
+            return eventoRepository.CheckDateEvent(fechaInicio, fechaFin, idUsuario, idEvento);
         }
         public IEnumerable<EventoSuscripcionViewModel> GetEventsSuscriptions(int idCategoria)
         {
@@ -22,6 +22,19 @@ namespace BL.Services.Implements
         public IEnumerable<Evento> GetEventsByUser(long idUsuario)
         {
             return eventoRepository.GetEventsByUser(idUsuario);
+        }
+        public void RemoveEvent(long idEvento)
+        {
+            eventoRepository.RemoveEvent(idEvento);
+        }
+        public void UpdateEvent(Evento evento, bool checkImage)
+        {
+            eventoRepository.UpdateEvent(evento, checkImage);
+        }
+
+        public string GetPathPhoto(long id)
+        {
+            return eventoRepository.GetPathPhoto(id);
         }
     }
 }

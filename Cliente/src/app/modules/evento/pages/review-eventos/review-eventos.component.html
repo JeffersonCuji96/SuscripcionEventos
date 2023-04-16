@@ -1,4 +1,5 @@
-<ng-container *ngIf="lstEventos">
+<app-loader *ngIf="showLoader"></app-loader>
+<ng-container *ngIf="lstEventos && !showLoader">
     <div class="container mt-5 mb-5">
         <table id="tblEventos" class="table table-striped" width="100%">
             <thead>
@@ -7,6 +8,7 @@
                     <th>Fecha Inicio</th>
                     <th>Hora Inicio</th>
                     <th>Categoría</th>
+                    <th>Estado</th>
                     <th>Acción</th>
                 </tr>
             </thead>
@@ -16,8 +18,9 @@
                     <td>{{evt.FechaInicio | date: "dd/MM/yyyy"}}</td>
                     <td>{{evt.HoraInicio.substring(0,5)}}</td>
                     <td>{{evt.Categoria.Descripcion}}</td>
+                    <td>{{evt.IdEstado===1 ? 'Activo':'Finalizado'}}</td>
                     <td>
-                        <i class="fas fa-edit fa-lg text-secondary" (click)="showDetailEvent(evt.Id)" style="cursor: pointer;"></i>
+                        <i class="fas fa-edit fa-lg text-secondary" (click)="showDetailEvent(evt)" style="cursor: pointer;"></i>
                         &#160;
                         <i class="fas fa-trash-alt fa-lg text-danger" (click)="removeEvent(evt.Id)" style="cursor: pointer;"></i>
                     </td>

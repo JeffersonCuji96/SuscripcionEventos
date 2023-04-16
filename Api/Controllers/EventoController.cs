@@ -4,6 +4,8 @@ using AutoMapper;
 using BL.DTO;
 using BL.Models;
 using BL.Services;
+using BL.Services.Implements;
+using BL.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -51,7 +53,7 @@ namespace Api.Controllers
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public IActionResult Save(EventoDTO eventoDTO)
         {
-            var strCheckDate = eventService.CheckDateEvent(eventoDTO.FechaInicio, eventoDTO.FechaFin, eventoDTO.IdUsuario);
+            var strCheckDate = eventService.CheckDateEvent(eventoDTO.FechaInicio, eventoDTO.FechaFin, eventoDTO.IdUsuario, 0);
             if (!string.IsNullOrEmpty(strCheckDate))
                 return BadRequest(strCheckDate);
             
@@ -68,6 +70,36 @@ namespace Api.Controllers
             var categorias = categoriaService.GetAll();
             var categoriasDTO = categorias.Select(x => mapper.Map<CategoriaDTO>(x));
             return Ok(categoriasDTO);
+        }
+
+        [HttpDelete]
+        [Route("RemoveEvent/{id}")]
+        public IActionResult RemoveEvent(long id)
+        {
+            eventService.RemoveEvent(id);
+            return Ok(new { Message = "Evento eliminado con éxito!" });
+        }
+
+        [HttpPut]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
+        [Route("UpdateEvent/{id}/{checkImage}")]
+        public IActionResult UpdateEvent(EventoDTO eventoDTO, long id, bool checkImage)
+        {
+            if (eventoDTO.Id != id || eventoDTO.Id == 0)
+                return BadRequest("El código del evento no es válido");
+            
+            var strCheckDate = eventService.CheckDateEvent(eventoDTO.FechaInicio, eventoDTO.FechaFin, eventoDTO.IdUsuario, id);
+            if (!string.IsNullOrEmpty(strCheckDate))
+                return BadRequest(strCheckDate);
+
+            var oEvento = mapper.Map<Evento>(eventoDTO);
+            if (checkImage)
+            {
+                oEvento.Foto = hostingEnviroment.ContentRootPath + FileHelper.UploadImage(eventoDTO.ImageBase64, true);
+                FileHelper.RemoveImage(eventService.GetPathPhoto(id));
+            }
+            eventService.UpdateEvent(oEvento, checkImage);
+            return Ok(new { Message = "Evento actualizado!" });
         }
     }
 }

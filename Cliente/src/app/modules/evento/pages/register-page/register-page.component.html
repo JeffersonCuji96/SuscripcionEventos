@@ -1,12 +1,25 @@
-<div class="container my-5">
+<div [ngClass]="Data === null ? 'container my-5':'container my-3 text-start'">
     <div class="row justify-content-center">
         <div class="col-lg-7">
             <div class="card shadow-lg border-0 rounded-lg">
                 <div class="card-header">
-                    <h4 class="text-center fw-lighter my-4">Crear evento</h4>
+                    <div class="float-end my-3" *ngIf="Data">
+                        <button type="button" class="btn-close" (click)="close()"></button>
+                    </div>
+                    <h4 class="text-center my-4 fw-lighter">{{Title}}</h4>
                 </div>
-                <div class="card-body">
+                <div [ngClass]="Data === null ? 'card-body':'modal-body'">
                     <form [formGroup]="serviceBuilder.form" (ngSubmit)="register()">
+                        <ng-container *ngIf="Data !== null">
+                            <div class="mb-2 col-md-6 offset-md-3 text-center">
+                                <img [lazyLoad]="imagePreview" title="Foto del evento"  class="img-fluid img-custom" [src]="imagePreview | sanitizer"/>
+                            </div> 
+                            <div id="modal-custom" class="img-modal">
+                                <span class="img-close">&times;</span>
+                                <img [lazyLoad]="imagePreview" class="img-modal-content" id="img-inside-modal">
+                                <div id="img-caption"></div>
+                            </div>
+                        </ng-container>
                         <div class="mb-2">
                             <label class="small px-1 text-muted">Título</label>
                             <input class="form-control" [ngClass]="f.Titulo.invalid 
@@ -20,7 +33,7 @@
                             </span>
                         </div>
                         <div class="row">
-                            <div class="mb-2 col-md-6">
+                            <div [ngClass]="status !== 4 ? 'mb-2':''" class="col-md-6">
                                 <label class="small px-1 text-muted">Fecha de Inicio</label>
                                 <input class="form-control" [ngClass]="f.FechaInicio.invalid 
                                 && (f.FechaInicio.dirty || f.FechaInicio.touched) ? 'is-invalid' : 'form-control'" (blur)="availableDateStart()" type="date" formControlName="FechaInicio" />
@@ -35,7 +48,7 @@
                                     La fecha de inicio no puede ser mayor a la fecha de fin
                                 </span>
                             </div>
-                            <div class="mb-2 col-md-6">
+                            <div [ngClass]="status !== 4 ? 'mb-2':''" class="col-md-6">
                                 <label class="small px-1 text-muted">Hora de Inicio</label>
                                 <input class="form-control" formatTime type="time" [ngClass]="f.HoraInicio.invalid 
                                 && (f.HoraInicio.dirty || f.HoraInicio.touched) ? 'is-invalid' : 'form-control'" (blur)="availableTimeStart()" formControlName="HoraInicio" />
@@ -56,11 +69,11 @@
                                 </span>
                             </div>
                         </div>
-                        <span><i id="box-link" [ngClass]="!isShowBoxDateTime ? 'fa-solid fa-square-plus' : 'fa-solid fa-square-minus'" (click)="showBoxDateTime(!isShowBoxDateTime)"></i>&nbsp;<a
+                        <span *ngIf="status !== 4"><i id="box-link" [ngClass]="!isShowBoxDateTime ? 'fa-solid fa-square-plus' : 'fa-solid fa-square-minus'" (click)="showBoxDateTime(!isShowBoxDateTime)"></i>&nbsp;<a
                                 class="enlaceFooter small">Fecha y hora de
                                 finalización</a></span>
                         <div class="row" *ngIf="isShowBoxDateTime">
-                            <div class="mb-2 col-md-6">
+                            <div [ngClass]="status !== 4 ? 'mb-2':''" class="col-md-6">
                                 <label class="small px-1 text-muted">Fecha de Fin</label>
                                 <input class="form-control" type="date" [ngClass]="f.FechaFin.invalid 
                                 && (f.FechaFin.dirty || f.FechaFin.touched) ? 'is-invalid' : 'form-control'" (blur)="availableDateEnd()" formControlName="FechaFin" />
@@ -74,7 +87,7 @@
                                     La fecha de fin no pueder ser menor a la fecha actual
                                 </span>
                             </div>
-                            <div class="mb-2 col-md-6">
+                            <div [ngClass]="status !== 4 ? 'mb-2':''" class="col-md-6">
                                 <label class="small px-1 text-muted">Hora de Fin</label>
                                 <input class="form-control" formatTime type="time" [ngClass]="f.HoraFin.invalid 
                                 && (f.HoraFin.dirty || f.HoraFin.touched) ? 'is-invalid' : 'form-control'" (blur)="availableTimeEnd()" formControlName="HoraFin" />
@@ -96,9 +109,20 @@
                             </div>
                         </div>
                         <div class="mb-2">
-                            <label class="small px-1 text-muted">Foto</label>
-                            <input class="form-control" type="file" placeholder="Ingrese su nombre"
+                            <label class="small px-1 text-muted" *ngIf="status !== 4">Foto</label>
+                            <div class="input-group" *ngIf="Data !== null">
+                                <ng-container *ngIf="status !== 4">
+                                    <label id="btnFile" class="btn btn-secondary">
+                                        <input type="file" class="d-none" formControlName="FileTemporal" accept=".jpg, .png" (change)="onFileChanged($event)">Cambiar foto
+                                    </label>
+                                    <span class="d-inline-block text-truncate input-group-text form-control bg-white text-start">
+                                        {{spanFileName}}
+                                    </span>
+                                </ng-container>
+                            </div>
+                            <input *ngIf="Data === null" class="form-control" type="file"
                                 formControlName="FileTemporal" accept=".jpg, .png" (change)="onFileChanged($event)" />
+                                
                             <span class="px-1 error" *ngIf="f.FileTemporal.errors?.notFormat">
                                 Se permiten sólo formatos png y jpg
                             </span>
@@ -143,10 +167,16 @@
                             </div>
                             <div class="mb-3 col-md-6">
                                 <span>&nbsp;</span>
-                                <input id="btnRegEvento" [disabled]="serviceBuilder.form.invalid" class="form-control btn btn-primary" type="submit" value="Crear un evento" />
+                                <input *ngIf="Data === null" id="btnRegEvento" [disabled]="serviceBuilder.form.invalid" class="form-control btn btn-primary" type="submit" value="Crear un evento" />
+                                <input *ngIf="Data !== null" id="btnUpdateEvento" [disabled]="serviceBuilder.form.invalid" [ngClass]="status !== 4 ? 'form-control btn btn-primary':'d-none'" type="submit" value="Actualizar">
                             </div>
                         </div>
                     </form>
+                </div>
+                <div class="modal-footer" *ngIf="Data !== null">
+                    <div class="mx-auto">
+                        <label class="text-muted fs-5">EVENTO {{status ===4 ? 'FINALIZADO':'ACTIVO'}}</label>
+                    </div>
                 </div>
             </div>
         </div>
