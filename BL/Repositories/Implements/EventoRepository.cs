@@ -60,7 +60,7 @@ namespace BL.Repositories.Implements
                         NombreApellido = e.Usuario.Persona.Nombre + ' ' + e.Usuario.Persona.Apellido,
                         Foto = e.Usuario.Persona.Foto
                     },
-                    Suscriptores = e.Suscripciones.Count()
+                    Suscriptores = e.Suscripciones.Count(x=>x.IdEstado==1)
                 });
             return lstEventSuscriptions.ToList();
         }

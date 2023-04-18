@@ -30,7 +30,10 @@
                         </div>
                     </div>
                     <div class="text-end mt-5">
-                        <button class="btn btn-secondary">Suscribirse</button>
+                        <ng-container *ngIf="isOrganizer">
+                            <button id="btnSuscribe" class="btn btn-primary" *ngIf="isSuscribe === 2 || isSuscribe === 0" (click)="suscribe()">Suscribirme</button>
+                            <button id="btnUnsuscribe" class="btn btn-danger" *ngIf="isSuscribe === 1" (click)="unsuscribe()">Desuscribirme</button>
+                        </ng-container>
                     </div>
                 </div>
                 <div class="card-footer lh-lg">

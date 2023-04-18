@@ -26,6 +26,9 @@ namespace SuscripcionEventosApi.MapperConfig
 
             CreateMap<Categoria, CategoriaDTO>();
             CreateMap<CategoriaDTO, Categoria>();
+
+            CreateMap<Suscripcion, SuscripcionDTO>();
+            CreateMap<SuscripcionDTO, Suscripcion>();
         }
 
     }

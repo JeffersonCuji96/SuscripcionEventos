@@ -1,3 +1,4 @@
+import { ComponentRef } from '@angular/core';
 import { RouteReuseStrategy, ActivatedRouteSnapshot, DetachedRouteHandle } from '@angular/router';
 
 export class CustomRouteReuseStrategy implements RouteReuseStrategy {
@@ -47,5 +48,15 @@ export class CustomRouteReuseStrategy implements RouteReuseStrategy {
       .filter(Boolean)
       .join('/');
     return '/' + fullPath;
+  }
+
+  //Destruye un componente asociado
+  deleteStoreRoute(url:string):void{
+    const handle=this.storedRoutes.get(url);
+    if(handle === undefined){
+      return;
+    }
+    (handle as {componentRef:ComponentRef<any>}).componentRef.destroy();
+    this.storedRoutes.delete(url);
   }
 }
