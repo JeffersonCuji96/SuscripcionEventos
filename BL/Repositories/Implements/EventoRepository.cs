@@ -1,4 +1,5 @@
-﻿using BL.Helpers;
+﻿using BL.DTO;
+using BL.Helpers;
 using BL.Models;
 using BL.ViewModels;
 using Microsoft.Data.SqlClient;
@@ -15,25 +16,25 @@ namespace BL.Repositories.Implements
         {
             this.testContext = testContext;
         }
-        public string CheckDateEvent(DateTime? fechaInicio, DateTime? fechaFin, long? idUsuario, long idEvento)
+        public string CheckDateEvent(EventoDTO eventoDTO, long idEvento)
         {
             var lstEventsUser = new List<Evento>();
             string message = "La fecha de inicio y/o fin no debe coincidir con fechas de otros eventos creado por el mismo usuario";
             
             if (idEvento == 0)
-                lstEventsUser = testContext.Eventos.Where(x => x.IdUsuario == idUsuario && x.IdEstado != 2).ToList();
-            lstEventsUser = testContext.Eventos.Where(x => x.Id != idEvento && x.IdUsuario == idUsuario && x.IdEstado != 2).ToList();
+                lstEventsUser = testContext.Eventos.Where(x => x.IdUsuario == eventoDTO.IdUsuario && x.IdEstado != 2).ToList();
+            lstEventsUser = testContext.Eventos.Where(x => x.Id != idEvento && x.IdUsuario == eventoDTO.IdUsuario && x.IdEstado != 2).ToList();
 
-            if (fechaFin != null)
+            if (eventoDTO.FechaFin != null)
             {
-                if (lstEventsUser.Any(x => x.FechaInicio == fechaFin || x.FechaInicio == fechaInicio || x.FechaFin == fechaInicio || x.FechaFin == fechaFin ||
-                (x.FechaInicio > fechaInicio && x.FechaFin < fechaFin) || (fechaInicio > x.FechaInicio && fechaInicio < x.FechaFin) ||
-                (fechaInicio > x.FechaInicio && fechaFin < x.FechaFin) || (fechaFin > x.FechaInicio && fechaFin < x.FechaFin) ||
-                (x.FechaInicio > fechaInicio && x.FechaInicio < fechaFin)))
+                if (lstEventsUser.Any(x => x.FechaInicio == eventoDTO.FechaFin || x.FechaInicio == eventoDTO.FechaInicio || x.FechaFin == eventoDTO.FechaInicio || x.FechaFin == eventoDTO.FechaFin ||
+                (x.FechaInicio > eventoDTO.FechaInicio && x.FechaFin < eventoDTO.FechaFin) || (eventoDTO.FechaInicio > x.FechaInicio && eventoDTO.FechaInicio < x.FechaFin) ||
+                (eventoDTO.FechaInicio > x.FechaInicio && eventoDTO.FechaFin < x.FechaFin) || (eventoDTO.FechaFin > x.FechaInicio && eventoDTO.FechaFin < x.FechaFin) ||
+                (x.FechaInicio > eventoDTO.FechaInicio && x.FechaInicio < eventoDTO.FechaFin)))
                     return message;
                 return string.Empty;
             }
-            if (lstEventsUser.Any(x => x.FechaInicio == fechaInicio || x.FechaFin == fechaInicio || (fechaInicio > x.FechaInicio && fechaInicio < x.FechaFin)))
+            if (lstEventsUser.Any(x => x.FechaInicio == eventoDTO.FechaInicio || x.FechaFin == eventoDTO.FechaInicio || (eventoDTO.FechaInicio > x.FechaInicio && eventoDTO.FechaInicio < x.FechaFin)))
                 return message;
             return string.Empty;
         }

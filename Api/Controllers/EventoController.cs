@@ -53,7 +53,7 @@ namespace Api.Controllers
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public IActionResult Save(EventoDTO eventoDTO)
         {
-            var strCheckDate = eventService.CheckDateEvent(eventoDTO.FechaInicio, eventoDTO.FechaFin, eventoDTO.IdUsuario, 0);
+            var strCheckDate = eventService.CheckDateEvent(eventoDTO, 0);
             if (!string.IsNullOrEmpty(strCheckDate))
                 return BadRequest(strCheckDate);
             
@@ -88,7 +88,7 @@ namespace Api.Controllers
             if (eventoDTO.Id != id || eventoDTO.Id == 0)
                 return BadRequest("El código del evento no es válido");
             
-            var strCheckDate = eventService.CheckDateEvent(eventoDTO.FechaInicio, eventoDTO.FechaFin, eventoDTO.IdUsuario, id);
+            var strCheckDate = eventService.CheckDateEvent(eventoDTO, id);
             if (!string.IsNullOrEmpty(strCheckDate))
                 return BadRequest(strCheckDate);
 

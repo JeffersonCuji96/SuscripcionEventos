@@ -1,4 +1,5 @@
-﻿using BL.Models;
+﻿using BL.DTO;
+using BL.Models;
 using BL.Repositories;
 using BL.ViewModels;
 
@@ -11,9 +12,9 @@ namespace BL.Services.Implements
         {
             this.eventoRepository = eventoRepository;
         }
-        public string CheckDateEvent(DateTime? fechaInicio, DateTime? fechaFin, long? idUsuario, long idEvento)
+        public string CheckDateEvent(EventoDTO eventoDTO, long idEvento)
         {
-            return eventoRepository.CheckDateEvent(fechaInicio, fechaFin, idUsuario, idEvento);
+            return eventoRepository.CheckDateEvent(eventoDTO, idEvento);
         }
         public IEnumerable<EventoSuscripcionViewModel> GetEventsSuscriptions(int idCategoria)
         {
