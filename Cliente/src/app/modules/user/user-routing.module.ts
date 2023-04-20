@@ -9,7 +9,7 @@ const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: '/user/register'
+    redirectTo: '/error/404'
   }
 ];
 

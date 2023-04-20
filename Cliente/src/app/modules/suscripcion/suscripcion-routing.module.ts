@@ -11,7 +11,7 @@ const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: '/suscripcion/list'
+    redirectTo: '/error/404'
   }
 ];
 

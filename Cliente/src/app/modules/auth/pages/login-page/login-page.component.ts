@@ -18,25 +18,21 @@ export class LoginPageComponent implements OnInit, OnDestroy {
   private stop$ = new Subject<void>();
   public form: FormGroup;
   public isChecked = false;
-  public isEnableLink=false;
+  public isEnableLink = false;
+  event$: any;
 
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
     private authService: AuthService,
     private helper: Helpers) {
-
     this.form = this.formBuilder.group({
       Email: ['', Validators.required],
       Clave: ['', Validators.required]
     });
   }
 
-  ngOnInit(): void {
-    if(this.authService.checkAutentication()){
-      this.router.navigate(['/'])
-    }
-  }
+  ngOnInit(): void {}
 
   ngOnDestroy() {
     this.stop$.next();
@@ -44,15 +40,15 @@ export class LoginPageComponent implements OnInit, OnDestroy {
   }
 
   login(): void {
-    const btnId="btnLogin";
+    const btnId = "btnLogin";
     this.form.disable();
     this.helper.disableInputElement(btnId, true);
-    this.isEnableLink=true;
+    this.isEnableLink = true;
     var usuario: AccessDto = this.form.value;
     this.authService.login(usuario)
       .pipe(takeUntil(this.stop$))
-      .subscribe((response:any) => {
-        this.authService.setCookieService(response.Item1,this.isChecked);
+      .subscribe((response: any) => {
+        this.authService.setCookieService(response.Item1, this.isChecked);
         this.authService.setIdUserLocalStorage(response.Item1.IdUsuario);
         this.authService.setFullNameLocalStorage(response.Item1.FullName);
         this.router.navigate(['/']);
@@ -60,7 +56,7 @@ export class LoginPageComponent implements OnInit, OnDestroy {
         error => {
           this.helper.manageErrors(error);
           this.helper.disableInputElement(btnId, false);
-          this.isEnableLink=false;
+          this.isEnableLink = false;
           this.form.enable();
         });
 

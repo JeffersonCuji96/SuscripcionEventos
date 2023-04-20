@@ -13,15 +13,17 @@ const routes: Routes = [
   },
   {
     path:'revision',
+    canActivate: [SessionGuard],
     component:ReviewEventosComponent
   },
   {
     path:'detail/:data',
+    canActivate: [SessionGuard],
     component:DetailEventoComponent
   },
   {
     path: '**',
-    redirectTo: '/evento/register'
+    redirectTo: '/error/404'
   }
 ];
 

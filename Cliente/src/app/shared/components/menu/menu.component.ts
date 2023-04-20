@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { AuthService } from 'src/app/modules/auth/services/auth.service';
 
 @Component({
@@ -11,8 +10,7 @@ export class MenuComponent implements OnInit {
 
   public fullName:string;
   constructor(
-    private authService:AuthService,
-    private router:Router
+    private authService:AuthService
     ) {
       this.fullName=authService.getFullName();
      }
@@ -21,7 +19,7 @@ export class MenuComponent implements OnInit {
   }
   logout() {
     this.authService.removeSesion();
-    this.router.navigate(['/', 'auth']);
+    window.location.href="/auth/login";
   }
 
 }

@@ -21,6 +21,10 @@ const routes: Routes = [
   {
     path:'error',
     loadChildren:()=>import(`./modules/error/error.module`).then(m=>m.ErrorModule)
+  },
+  {
+    path: '**',
+    redirectTo: '/error/404'
   }
 ];
 

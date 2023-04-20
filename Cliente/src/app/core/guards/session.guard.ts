@@ -18,7 +18,7 @@ export class SessionGuard implements CanActivate {
     try {
       const authenticity: boolean = this.authService.checkAutentication();
       if (!authenticity) {
-        this.router.navigate(['/', 'auth'])
+        this.router.navigate(['/auth/login'])
       }
       return authenticity
     } catch (e) {

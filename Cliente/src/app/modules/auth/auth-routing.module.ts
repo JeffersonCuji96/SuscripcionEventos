@@ -6,10 +6,12 @@ import { ChangePasswordPageComponent } from './pages/change-password-page/change
 import { ConfirmEmailComponent } from './pages/confirm-email/confirm-email.component';
 import { ForgotPageComponent } from './pages/forgot-page/forgot-page.component';
 import { LoginPageComponent } from './pages/login-page/login-page.component';
+import { LoginGuard } from 'src/app/core/guards/login.guard';
 
 const routes: Routes = [
   {
     path: 'login',
+    canActivate:[LoginGuard],
     component: LoginPageComponent
   },
   {
