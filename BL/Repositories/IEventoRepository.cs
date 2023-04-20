@@ -12,5 +12,6 @@ namespace BL.Repositories
         void RemoveEvent(long idEvento);
         void UpdateEvent(Evento evento, bool checkImage);
         string GetPathPhoto(long id);
+        EventCheckViewModel GetDataEventCheck(long id);
     }
 }

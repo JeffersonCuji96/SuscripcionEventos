@@ -37,5 +37,9 @@ namespace BL.Services.Implements
         {
             return eventoRepository.GetPathPhoto(id);
         }
+        public EventCheckViewModel GetDataEventCheck(long id)
+        {
+            return eventoRepository.GetDataEventCheck(id);
+        }
     }
 }

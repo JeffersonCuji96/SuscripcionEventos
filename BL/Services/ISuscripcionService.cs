@@ -1,4 +1,5 @@
-﻿using BL.Models;
+﻿using BL.DTO;
+using BL.Models;
 using BL.ViewModels;
 
 namespace BL.Services
@@ -7,5 +8,6 @@ namespace BL.Services
     {
         long SuscribeEvent(long idSuscripcion, bool tipo);
         Tuple<long, int> CheckSuscribeUser(SuscribeCheckViewModel suscribe);
+        string CheckDateEventSuscription(EventCheckViewModel eventViewModel);
     }
 }

@@ -19,11 +19,11 @@ namespace BL.Repositories.Implements
         public string CheckDateEvent(EventoDTO eventoDTO, long idEvento)
         {
             var lstEventsUser = new List<Evento>();
-            string message = "La fecha de inicio y/o fin no debe coincidir con fechas de otros eventos creado por el mismo usuario";
+            string message = "La fecha de inicio y/o fin no debe coincidir con fechas de otros eventos creados por el mismo usuario";
             
-            if (idEvento == 0)
-                lstEventsUser = testContext.Eventos.Where(x => x.IdUsuario == eventoDTO.IdUsuario && x.IdEstado != 2).ToList();
-            lstEventsUser = testContext.Eventos.Where(x => x.Id != idEvento && x.IdUsuario == eventoDTO.IdUsuario && x.IdEstado != 2).ToList();
+            if (idEvento == 0) 
+                lstEventsUser = testContext.Eventos.Where(x => x.IdUsuario == eventoDTO.IdUsuario && x.IdEstado == 1).ToList();
+            else lstEventsUser = testContext.Eventos.Where(x => x.Id != idEvento && x.IdUsuario == eventoDTO.IdUsuario && x.IdEstado == 1).ToList();
 
             if (eventoDTO.FechaFin != null)
             {
@@ -89,6 +89,16 @@ namespace BL.Repositories.Implements
             testContext.Database.ExecuteSqlRaw("exec SPGetPathPhotoEvent @id, @path OUTPUT", parameters);
             string? path = parameters[1].Value.ToString();
             return path ?? string.Empty;
+        }
+        public EventCheckViewModel GetDataEventCheck(long id)
+        {
+            var dataEventCheck = testContext.Eventos.FromSqlRaw("exec SPGetDataEventCheck @id", new SqlParameter("@id", id))
+                .AsEnumerable().Select(x=>new EventCheckViewModel{
+                    Id=x.Id,
+                    FechaInicio=x.FechaInicio,
+                    FechaFin=x.FechaFin
+                }).First();
+            return dataEventCheck;
         }
     }
 }

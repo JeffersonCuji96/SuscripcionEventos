@@ -1,4 +1,5 @@
 ﻿using BL.Common;
+using BL.DTO;
 using BL.Models;
 using BL.ViewModels;
 using Microsoft.Data.SqlClient;
@@ -33,5 +34,24 @@ namespace BL.Repositories.Implements
             return Tuple.Create(id,estado);
         }
 
+        public string CheckDateEventSuscription(EventCheckViewModel eventViewModel)
+        {
+            var lstEventsUser = new List<Suscripcion>();
+            string message = "No se puede suscribir a un evento donde la fecha de inicio y/o fin coincide con fechas de otros eventos a los que se ha suscrito";
+            lstEventsUser = testContext.Suscripciones.Include(x => x.Evento).Where(x => x.IdUsuario == eventViewModel.IdUsuario && x.IdEstado == 1 && x.Evento.Id != eventViewModel.Id).ToList();
+
+            if (eventViewModel.FechaFin != null)
+            {
+                if (lstEventsUser.Any(x => x.Evento.FechaInicio == eventViewModel.FechaFin || x.Evento.FechaInicio == eventViewModel.FechaInicio || x.Evento.FechaFin == eventViewModel.FechaInicio || x.Evento.FechaFin == eventViewModel.FechaFin ||
+                (x.Evento.FechaInicio > eventViewModel.FechaInicio && x.Evento.FechaFin < eventViewModel.FechaFin) || (eventViewModel.FechaInicio > x.Evento.FechaInicio && eventViewModel.FechaInicio < x.Evento.FechaFin) ||
+                (eventViewModel.FechaInicio > x.Evento.FechaInicio && eventViewModel.FechaFin < x.Evento.FechaFin) || (eventViewModel.FechaFin > x.Evento.FechaInicio && eventViewModel.FechaFin < x.Evento.FechaFin) ||
+                (x.Evento.FechaInicio > eventViewModel.FechaInicio && x.Evento.FechaInicio < eventViewModel.FechaFin)))
+                    return message;
+                return string.Empty;
+            }
+            if (lstEventsUser.Any(x => x.Evento.FechaInicio == eventViewModel.FechaInicio || x.Evento.FechaFin == eventViewModel.FechaInicio || (eventViewModel.FechaInicio > x.Evento.FechaInicio && eventViewModel.FechaInicio < x.Evento.FechaFin)))
+                return message;
+            return string.Empty;
+        }
     }
 }
