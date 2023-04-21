@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
-import { map, takeUntil, tap } from 'rxjs/operators';
+import { concatMap, map, takeUntil, tap } from 'rxjs/operators';
 import { CategoriaDto } from 'src/app/core/models/categoriaDto.';
 import { HomeService } from 'src/app/modules/home/services/home.service';
 import { EventoService } from '../../services/evento.service';
@@ -59,21 +59,18 @@ export class ListaEventosComponent implements OnInit, OnDestroy {
       if (this.lengthDataLimit !== this.lstEventos.length || (this.lengthDataLimit === 0 && this.lstEventos.length === 0)) {
         let endLimit = this.lstEventos.length + this.dataCountInit + 1;
         this.suscriptionService.issueChanges$.pipe(
-          takeUntil(this.stop$)).subscribe(res => {
+          takeUntil(this.stop$),
+          concatMap(res => {
             res !== 0 ? endLimit = res : null;
+            return this.eventService.getEventosSuscripciones(this.idCategoriaFilter);
+          }),
+          tap(t => this.lengthDataLimit = t.length),
+          map(x =>
+            x.reduce((a: any, b: any, index: number) => index + 1 > this.lstEventos.length && index + 1 < endLimit ? [...a, { ...b, Codigo: index + 1 }] : a, [])
+          )).subscribe((res: any) => {
+            this.lstEventos = this.lstEventos.concat(res);
+            this.showLoader = false;
           });
-        this.eventService.getEventosSuscripciones(this.idCategoriaFilter)
-          .pipe(
-            takeUntil(this.stop$),
-            tap(t => this.lengthDataLimit = t.length),
-            map(x =>
-              x.reduce((a: any, b: any, index: number) => index + 1 > this.lstEventos.length && index + 1 < endLimit ? [...a, { ...b, Codigo: index + 1 }] : a, [])
-            )).subscribe(
-              (res: any) => {
-                this.suscriptionService.emitChanges(0);
-                this.lstEventos = this.lstEventos.concat(res);
-                this.showLoader = false;
-              });
       }
     }
   }
