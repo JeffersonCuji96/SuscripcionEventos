@@ -14,7 +14,7 @@
             <ng-container *ngFor="let evt of item; let i=index;">
                 <div class="content mb-5 col-md-6" loadData (elementVisible)="getEventos($event)"
                     [isTargetElement]="evt.Codigo === lstEventos.length">
-                    <a (click)="showDetailEvent(item[i],lstEventos.length)" style="cursor:pointer" class="list-group-item list-group-item-action">
+                    <a id="eventBox" (click)="showDetailEvent(item[i],lstEventos.length)" style="cursor:pointer" class="list-group-item list-group-item-action">
                         <div class="mb-2 mt-2 d-flex w-100 justify-content-between">
                             <h5 class="truncate mb-1">{{evt.Titulo}}</h5>&nbsp;
                             <small class="text-muted text-end">

@@ -1,5 +1,16 @@
 @media all and (min-width: 992px) {
 	.navbar .nav-item .dropdown-menu{ display: none; }
 	.navbar .nav-item:hover .dropdown-menu{ display: block; }
-	.navbar .nav-item .dropdown-menu{ margin-top:0; }
+	.navbar .nav-item .dropdown-menu{ margin: 0; }
+	.navbar .nav-item .dropdown-menu-end{
+		margin: 0 0 0 -3.5rem;
+	}
+}
+@media all and (max-width: 991px) {
+	.navbar .nav-item { width: 300px;}
+}
+.navbar .nav-item .nav-link:hover {
+	transition: none;
+    background-color: rgb(13, 63, 90);
+	border-radius: 4px;
 }

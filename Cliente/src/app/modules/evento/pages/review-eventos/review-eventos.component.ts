@@ -81,6 +81,7 @@ export class ReviewEventosComponent implements OnInit, OnDestroy {
     $(document).ready(function () {
       $('#tblEventos').DataTable({
         retrieve: true,
+        scrollX: true,
         columnDefs: [
           {
             targets: [0, 3],
