@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { concatMap, map, takeUntil, tap } from 'rxjs/operators';
 import { CategoriaDto } from 'src/app/core/models/categoriaDto.';
-import { HomeService } from 'src/app/modules/home/services/home.service';
 import { EventoService } from '../../services/evento.service';
 import { SuscripcionService } from 'src/app/modules/suscripcion/services/suscripcion.service';
 
@@ -25,7 +24,6 @@ export class ListaEventosComponent implements OnInit, OnDestroy {
 
   constructor(
     private eventService: EventoService,
-    private homeService: HomeService,
     private router: Router,
     private suscriptionService: SuscripcionService
   ) { }
@@ -115,7 +113,6 @@ export class ListaEventosComponent implements OnInit, OnDestroy {
 
   showDetailEvent(item: any, loadLimit: number) {
     item.Limit = loadLimit + 1;
-    this.homeService.enableJumbotron(false);
     this.router.navigate(['/evento/detail', btoa(JSON.stringify(item))], { skipLocationChange: true });
   }
 }

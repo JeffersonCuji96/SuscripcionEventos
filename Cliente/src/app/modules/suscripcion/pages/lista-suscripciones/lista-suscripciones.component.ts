@@ -7,9 +7,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ListaSuscripcionesComponent implements OnInit {
 
+  public title = "EVENTOS SUSCRITOS";
+  public suscription = true;
+
   constructor() { }
-
-  ngOnInit(): void {
-  }
-
+  ngOnInit(): void {}
 }

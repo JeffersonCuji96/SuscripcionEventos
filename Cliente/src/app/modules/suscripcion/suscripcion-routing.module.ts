@@ -5,7 +5,7 @@ import { SessionGuard } from 'src/app/core/guards/session.guard';
 
 const routes: Routes = [
   {
-    path: 'list',
+    path: '',
     canActivate: [SessionGuard],
     component: ListaSuscripcionesComponent
   },

@@ -24,5 +24,9 @@ namespace BL.Services.Implements
         {
             return suscripcionRepository.CheckDateEventSuscription(eventViewModel);
         }
+        public IEnumerable<EventoSuscripcionViewModel> GetSuscriptionsByUser(long idUsuario)
+        {
+            return suscripcionRepository.GetSuscriptionsByUser(idUsuario);
+        }
     }
 }

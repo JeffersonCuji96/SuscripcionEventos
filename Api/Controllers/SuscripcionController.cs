@@ -70,5 +70,13 @@ namespace Api.Controllers
         {
             return Ok(suscriptionService.CheckSuscribeUser(suscribe));
         }
+
+        [HttpGet]
+        [Route("GetByUserSuscriptions/{id}")]
+        public IActionResult GetByUserSuscriptions(long id)
+        {
+            var events = suscriptionService.GetSuscriptionsByUser(id);
+            return Ok(events);
+        }
     }
 }

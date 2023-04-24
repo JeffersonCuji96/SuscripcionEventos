@@ -18,6 +18,10 @@ const routes: Routes = [
   {
     path:'perfil',
     loadChildren:()=>import(`../perfil/perfil.module`).then(m=>m.PerfilModule)
+  },
+  {
+    path:'suscripciones',
+    loadChildren:()=>import(`../suscripcion/suscripcion.module`).then(m=>m.SuscripcionModule)
   }
 ];
 

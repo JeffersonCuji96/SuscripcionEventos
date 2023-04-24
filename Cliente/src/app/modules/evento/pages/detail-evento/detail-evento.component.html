@@ -34,6 +34,7 @@
                             <button id="btnSuscribe" class="btn btn-primary" *ngIf="isSuscribe === 2 || isSuscribe === 0" (click)="suscribe()">Suscribirme</button>
                             <button id="btnUnsuscribe" class="btn btn-danger" *ngIf="isSuscribe === 1" (click)="unsuscribe()">Desuscribirme</button>
                         </ng-container>
+                        <label class="text-muted fs-5" *ngIf="objEvento.IdEstado === 4">EVENTO FINALIZADO</label>
                     </div>
                 </div>
                 <div class="card-footer lh-lg">

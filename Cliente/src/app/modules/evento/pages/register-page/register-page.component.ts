@@ -65,10 +65,7 @@ export class RegisterPageComponent extends SimpleModalComponent<AlertModel, null
       this.imagePreview = this.Data.ImageBase64;
       this.Data.FechaFin !== null ? this.showBoxDateTime(true) : this.showBoxDateTime(false);
       this.serviceBuilder.form.patchValue(this.Data);
-      if (this.status === 4) {
-        this.serviceBuilder.form.disable();
-        this.Title = "Información del evento";
-      }
+      this.status === 4 ? this.serviceBuilder.form.disable():null;
     }
   }
 

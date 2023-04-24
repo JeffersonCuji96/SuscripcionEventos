@@ -53,5 +53,33 @@ namespace BL.Repositories.Implements
                 return message;
             return string.Empty;
         }
+        public IEnumerable<EventoSuscripcionViewModel> GetSuscriptionsByUser(long idUsuario)
+        {
+            var lstEvents = testContext.Suscripciones.Include(x => x.Evento).ThenInclude(x => x.Categoria)
+                .Include(x => x.Usuario.Persona).Where(x => x.IdUsuario == idUsuario && x.IdEstado == 1 && x.Evento.IdEstado != 2)
+                .Select(e => new EventoSuscripcionViewModel
+                {
+                    Id = e.Evento.Id,
+                    Titulo = e.Evento.Titulo,
+                    FechaInicio = e.Evento.FechaInicio,
+                    HoraInicio = e.Evento.HoraInicio,
+                    FechaFin = e.Evento.FechaFin,
+                    HoraFin = e.Evento.HoraFin,
+                    Ubicacion = e.Evento.Ubicacion,
+                    InformacionAdicional = e.Evento.InformacionAdicional,
+                    Foto = e.Evento.Foto,
+                    Categoria = e.Evento.Categoria.Descripcion,
+                    IdEstado= e.Evento.IdEstado,
+                    IdCategoria=e.Evento.IdCategoria,
+                    Organizador = new PersonaViewModel()
+                    {
+                        Id = e.Evento.Usuario.Persona.Id,
+                        NombreApellido = e.Evento.Usuario.Persona.Nombre + ' ' + e.Evento.Usuario.Persona.Apellido,
+                        Foto = e.Evento.Usuario.Persona.Foto
+                    },
+                    Suscriptores = e.Evento.Suscripciones.Count(x => x.IdEstado == 1)
+                });
+            return lstEvents;
+        }
     }
 }

@@ -12,6 +12,8 @@
         public string? InformacionAdicional { get; set; }
         public string? Foto { get; set; }
         public string Categoria { get; set; } = null!;
+        public int IdEstado { get; set; }
+        public int IdCategoria { get; set; }
         public PersonaViewModel Organizador { get; set; } = null!;
         public long Suscriptores { get; set; }
     }

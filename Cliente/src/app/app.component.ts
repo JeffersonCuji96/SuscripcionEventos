@@ -15,8 +15,9 @@ export class AppComponent {
       .subscribe(
         (event: NavigationEvent) => {
           if (event instanceof NavigationStart) {
-
-            if (event.url === "/") {
+            if (event.url !== "/") {
+              this.homeService.enableJumbotron(false);
+            }else{
               this.homeService.enableJumbotron(true);
             }
           }

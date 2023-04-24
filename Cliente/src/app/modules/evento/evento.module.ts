@@ -30,7 +30,8 @@ import { SharedModule } from 'src/app/shared/shared.module';
     LazyLoadImageModule
   ],
   exports:[
-    DetailEventoComponent
+    DetailEventoComponent,
+    ReviewEventosComponent
   ],
   entryComponents:[
     RegisterPageComponent

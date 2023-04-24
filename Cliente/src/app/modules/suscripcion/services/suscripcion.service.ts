@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { Injectable  } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { EventoDto } from 'src/app/core/models/eventoDTO';
 import { SuscripcionDto } from 'src/app/core/models/suscripcionDto';
 import { environment } from 'src/environments/environment';
 
@@ -28,5 +29,9 @@ export class SuscripcionService {
 
   unsuscribe(suscripcion: SuscripcionDto,id:number): Observable<any> {
     return this.http.put<any>(this.urlApi + "api/Suscripcion/"+id,suscripcion);
+  }
+
+  getByUserSuscriptions(idUsuario: number): Observable<EventoDto> {
+    return this.http.get<EventoDto>(this.urlApi + "api/Suscripcion/GetByUserSuscriptions/" + idUsuario);
   }
 }

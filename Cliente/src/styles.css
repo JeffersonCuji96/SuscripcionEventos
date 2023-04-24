@@ -11,6 +11,10 @@ body {
     color: #d9534f;
 }
 
+.pointer-custom{
+    cursor: pointer;
+}
+
 .enlaceFooter {
     text-decoration: none;
     pointer-events: none;

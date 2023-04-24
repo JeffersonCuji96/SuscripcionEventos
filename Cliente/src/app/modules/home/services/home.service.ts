@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 })
 export class HomeService  {
 
-  public jumbotronEnabled:boolean=false;
+  public jumbotronEnabled:boolean=true;
 
   constructor() { }
 

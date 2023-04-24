@@ -58,7 +58,7 @@ export class DetailEventoComponent implements OnInit, OnDestroy {
   }
 
   checkUserOrganizer() {
-    if (this.objSuscripcion.IdUsuario === this.objEvento.Organizador.Id) {
+    if (this.objSuscripcion.IdUsuario === this.objEvento.Organizador.Id || this.objEvento.IdEstado === 4) {
       this.isOrganizer = false;
     }
   }

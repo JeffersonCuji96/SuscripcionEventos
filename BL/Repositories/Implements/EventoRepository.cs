@@ -41,8 +41,7 @@ namespace BL.Repositories.Implements
         public IEnumerable<EventoSuscripcionViewModel> GetEventsSuscriptions(int idCategoria)
         {
             var lstEventSuscriptions = testContext.Eventos.Include(p => p.Usuario.Persona).Include(c => c.Categoria)
-                .Include(s => s.Suscripciones).ThenInclude(sb => sb.Usuario.Persona)
-                .Where(x => x.IdEstado == 1 && x.Usuario.IdEstado == 1 && (idCategoria == 0 || x.IdCategoria == idCategoria))
+                .Include(s => s.Suscripciones).Where(x => x.IdEstado == 1 && x.Usuario.IdEstado == 1 && (idCategoria == 0 || x.IdCategoria == idCategoria))
                 .Select(e => new EventoSuscripcionViewModel
                 {
                     Id = e.Id,
@@ -55,6 +54,8 @@ namespace BL.Repositories.Implements
                     InformacionAdicional = e.InformacionAdicional,
                     Foto = e.Foto,
                     Categoria = e.Categoria.Descripcion,
+                    IdEstado = e.IdEstado,
+                    IdCategoria=e.IdCategoria,
                     Organizador = new PersonaViewModel()
                     {
                         Id = e.Usuario.Persona.Id,
