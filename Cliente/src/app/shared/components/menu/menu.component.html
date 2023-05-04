@@ -39,3 +39,16 @@
         </div>
     </div>
 </nav>
+
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+  <div class="toast border-0 rounded-3" role="alert" aria-live="assertive" aria-atomic="true" #toast>
+    <div class="toast-header">
+        <strong class="me-auto text-white">Recordatorio</strong>
+        <small class="text-white">Hoy {{message?.Inicio}}</small>
+        <button type="button" class="btn-close bg-light" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body fs-6">
+        El evento: {{message?.Evento}} al que se suscribió ¡Inicia dentro de 1 hora!
+    </div>
+  </div>
+</div>

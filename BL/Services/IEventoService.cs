@@ -13,5 +13,8 @@ namespace BL.Services
         void UpdateEvent(Evento evento, bool checkImage);
         string GetPathPhoto(long id);
         EventCheckViewModel GetDataEventCheck(long id);
+        (IEnumerable<NotificationViewModel>, IEnumerable<MessageViewModel>) GetNextEvent();
+        void ChangeEventFinalize(long idEvento);
+        IEnumerable<long> GetEventsTodayByUser(long idUsuario);
     }
 }

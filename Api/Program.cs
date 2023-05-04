@@ -10,9 +10,10 @@ using Api.Filters;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using Api.Helpers;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
+using Api.Hubs;
+using Api;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,7 +32,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: "ConfigCors", builder =>
     {
         builder.SetIsOriginAllowed(origin => new Uri(origin).Host == "localhost")
-        .AllowAnyHeader().AllowAnyMethod();
+        .AllowCredentials().AllowAnyHeader().AllowAnyMethod();
     });
 });
 
@@ -70,6 +71,22 @@ builder.Services.AddAuthentication(x =>
         ValidateIssuer = false,
         ValidateAudience = false
     };
+    z.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+           /*Si el token está presente y el path es del hub, se establece el token en el contexto 
+            * de autenticación para que se pueda usar y autenticar al usuario que hizo la solicitud*/
+           var accessToken = context.Request.Query["access_token"];
+            var path = context.HttpContext.Request.Path;
+            if (!string.IsNullOrEmpty(accessToken) &&
+                (path.StartsWithSegments("/suscription-hub")))
+            {
+                context.Token = accessToken;
+            }
+            return Task.CompletedTask;
+        }
+    };
 });
 
 builder.Services.AddControllers().AddJsonOptions(options =>
@@ -78,11 +95,16 @@ builder.Services.AddControllers().AddJsonOptions(options =>
     options.JsonSerializerOptions.PropertyNamingPolicy = null;
 });
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c=> c.MapType<TimeSpan>(() => new OpenApiSchema
+builder.Services.AddSwaggerGen(c => c.MapType<TimeSpan>(() => new OpenApiSchema
 {
     Type = "string",
     Example = new OpenApiString("00:00:00")
 }));
+
+builder.Services.AddSignalR().AddJsonProtocol(options => {
+    options.PayloadSerializerOptions.PropertyNamingPolicy = null;
+});
+builder.Services.AddHostedService<PopulationHostedService>();
 
 var app = builder.Build();
 
@@ -97,4 +119,5 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+app.MapHub<SuscriptionHub>("/suscription-hub");
 app.Run();

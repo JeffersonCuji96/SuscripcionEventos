@@ -101,5 +101,45 @@ namespace BL.Repositories.Implements
                 }).First();
             return dataEventCheck;
         }
+
+        /*Método que obtiene los eventos una hora antes de su inicio, se combina con todos los usuarios que estén suscritos al evento. Se retorna 
+         *una tupla por que el primer listado de notificaciones se va a guardar en una base de datos no relacionañ y el otro listado contiene solo 
+         *el id del evento que sería el grupo donde se envía la notificación, el título y la hora de inicio. Esto para evitar que se envíe más 
+         *de una notificación por grupo, ya que el primer listado contiene repetidos debido a que se incluye los suscriptores*/
+        public (IEnumerable<NotificationViewModel>,IEnumerable<MessageViewModel>) GetNextEvent()
+        {
+            var currentDate = DateHelper.GetCurrentDate();
+            var hora = TimeSpan.Parse(currentDate.AddHours(1).AddSeconds(-currentDate.Second).ToString("HH:mm:ss tt"));
+            var lstEventsSuscriptors = testContext.Eventos
+                .Where(x => x.IdEstado == 1 && x.FechaInicio == currentDate.Date && x.HoraInicio == hora)
+                .Join(testContext.Suscripciones.Where(x=>x.IdEstado==1), e => e.Id, s => s.IdEvento, (e, s) => new { Evento = e, Suscriptor = s })
+                .Select(x => new NotificationViewModel()
+                {
+                    IdEvento = x.Evento.Id.ToString(),
+                    TituloEvento = x.Evento.Titulo,
+                    InicioEvento = x.Evento.HoraInicio.ToString("hh\\:mm"),
+                    IdUsuarioSuscrito = x.Suscriptor.IdUsuario,
+                    Estado = 1
+                });
+            var lstEventsNotification = lstEventsSuscriptors
+                .Select(x => new MessageViewModel()
+                { 
+                    Grupo=x.IdEvento, 
+                    Evento=x.TituloEvento, 
+                    Inicio=x.InicioEvento 
+                }).Distinct();
+            return (lstEventsSuscriptors,lstEventsNotification);
+        }
+        public void ChangeEventFinalize(long idEvento)
+        {
+            testContext.Database.ExecuteSqlRaw("UPDATE Evento SET IdEstado = 4 WHERE Id = @id",
+                new SqlParameter("@id", idEvento));
+        }
+        public IEnumerable<long> GetEventsTodayByUser(long idUsuario)
+        {
+            var currentDate = DateHelper.GetCurrentDate();
+            var idsEvents = testContext.Suscripciones.Where(x => x.IdEstado == 1 && x.IdUsuario==idUsuario && x.Evento.FechaInicio==currentDate).Select(x=>x.IdEvento);
+            return idsEvents;
+        }
     }
 }

@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable  } from '@angular/core';
+import { EventEmitter, Injectable  } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { EventoDto } from 'src/app/core/models/eventoDTO';
 import { SuscripcionDto } from 'src/app/core/models/suscripcionDto';
@@ -12,6 +12,7 @@ export class SuscripcionService {
 
   constructor(private http: HttpClient) { }
   readonly urlApi = environment.urlHost;
+  suscriptionChange = new EventEmitter<boolean>();
   
   private issueChanges = new BehaviorSubject<number>(0);
   issueChanges$ = this.issueChanges.asObservable();

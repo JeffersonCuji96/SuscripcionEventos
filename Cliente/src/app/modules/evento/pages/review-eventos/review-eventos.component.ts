@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit,NgZone  } from '@angular/core';
 import { EventoService } from '../../services/evento.service';
 import { AuthService } from 'src/app/modules/auth/services/auth.service';
 import { takeUntil } from 'rxjs/operators';
@@ -30,11 +30,13 @@ export class ReviewEventosComponent implements OnInit, OnDestroy {
     private helper: Helpers,
     private SimpleModalService: SimpleModalService,
     private router: Router,
-    private suscriptionService: SuscripcionService
+    private suscriptionService: SuscripcionService,
+    private ngZone: NgZone,
   ) { }
 
   ngOnInit(): void {
     this.checkEventEmitChanges();
+    this.checkSuscriptionEmitChanges();
     if (this.Suscription === false) {
       this.getByUserventos();
     } else {
@@ -47,6 +49,16 @@ export class ReviewEventosComponent implements OnInit, OnDestroy {
       takeUntil(this.stop$))
       .subscribe(res => {
         res ? this.getByUserventos() : null;
+      });
+  }
+
+  checkSuscriptionEmitChanges() {
+    this.suscriptionService.suscriptionChange.pipe(
+      takeUntil(this.stop$))
+      .subscribe(res => {
+        if (res) {
+          this.ngZone.run(() => this.getByUserSuscriptions());
+        }
       });
   }
 

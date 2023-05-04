@@ -41,5 +41,17 @@ namespace BL.Services.Implements
         {
             return eventoRepository.GetDataEventCheck(id);
         }
+        public (IEnumerable<NotificationViewModel>, IEnumerable<MessageViewModel>) GetNextEvent()
+        {
+            return eventoRepository.GetNextEvent();
+        }
+        public void ChangeEventFinalize(long idEvento)
+        {
+            eventoRepository.ChangeEventFinalize(idEvento);
+        }
+        public IEnumerable<long> GetEventsTodayByUser(long idUsuario)
+        {
+            return eventoRepository.GetEventsTodayByUser(idUsuario);
+        }
     }
 }

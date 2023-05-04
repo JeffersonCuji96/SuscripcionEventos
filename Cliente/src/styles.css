@@ -11,7 +11,11 @@ body {
     color: #d9534f;
 }
 
-.pointer-custom{
+.fade {
+    transition: opacity 0.5s linear !important;
+}
+
+.pointer-custom {
     cursor: pointer;
 }
 
@@ -182,4 +186,13 @@ body {
     }
 }
 
-  
+/*Toast notificación*/
+.toast-container {
+    z-index: 9999;
+}
+.toast-body {
+    background-color: white;
+}
+.toast-header{
+    background-color: rgb(24, 92, 128);
+}

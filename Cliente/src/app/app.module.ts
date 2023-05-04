@@ -11,6 +11,7 @@ import { ScriptsService } from './app-services/scripts.service';
 import { RouteReuseStrategy } from '@angular/router';
 import { CustomRouteReuseStrategy } from './app-services/CustomRouteReuseStrategy';
 import { NgxScrollPositionRestorationModule } from 'ngx-scroll-position-restoration';
+import { HubService } from './app-services/hub.service';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,7 @@ import { NgxScrollPositionRestorationModule } from 'ngx-scroll-position-restorat
     HttpClientModule,
     NgxScrollPositionRestorationModule.forRoot() //Guarda la posicion del scroll al regresar a la página anterior
   ],
-  providers: [CookieService,Helpers,ScriptsService,
+  providers: [CookieService,Helpers,ScriptsService,HubService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: HttpConfigInterceptor,

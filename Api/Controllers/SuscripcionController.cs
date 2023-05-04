@@ -4,12 +4,14 @@ using BL.DTO;
 using BL.Models;
 using BL.Services;
 using BL.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class SuscripcionController : ControllerBase
     {
         private readonly IMapper mapper;
@@ -77,6 +79,14 @@ namespace Api.Controllers
         {
             var events = suscriptionService.GetSuscriptionsByUser(id);
             return Ok(events);
+        }
+
+        [HttpGet]
+        [Route("GetEventsTodayByUser/{id}")]
+        public IActionResult GetEventsTodayByUser(long id)
+        {
+            var idsEvents = eventService.GetEventsTodayByUser(id);
+            return Ok(idsEvents);
         }
     }
 }
