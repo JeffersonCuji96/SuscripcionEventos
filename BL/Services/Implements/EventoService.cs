@@ -53,5 +53,9 @@ namespace BL.Services.Implements
         {
             return eventoRepository.GetEventsTodayByUser(idUsuario);
         }
+        public EventoSuscripcionViewModel? GetEventNotification(long idEvento)
+        {
+            return eventoRepository.GetEventNotification(idEvento);
+        }
     }
 }

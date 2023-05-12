@@ -3,6 +3,8 @@ import { EventEmitter, Injectable  } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { EventoDto } from 'src/app/core/models/eventoDTO';
 import { SuscripcionDto } from 'src/app/core/models/suscripcionDto';
+import { EventNotificationViewModel } from 'src/app/core/models/view-models/eventNotificationViewModel';
+import { NotificationViewModel } from 'src/app/core/models/view-models/notificationViewModel';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -34,5 +36,17 @@ export class SuscripcionService {
 
   getByUserSuscriptions(idUsuario: number): Observable<EventoDto> {
     return this.http.get<EventoDto>(this.urlApi + "api/Suscripcion/GetByUserSuscriptions/" + idUsuario);
+  }
+
+  getNotificationsMongoDb(id:number):Observable<NotificationViewModel>{
+    return this.http.get<NotificationViewModel>(this.urlApi + "api/Suscripcion/GetNotificationsMongoDb/"+id);
+  }
+
+  removeNotification(id:string){
+    return this.http.delete<any>(this.urlApi+"api/Suscripcion/RemoveNotification/"+id);
+  }
+
+  getNotificationEvent(eventNotification:EventNotificationViewModel):Observable<any>{
+    return this.http.post<any>(this.urlApi + "api/Suscripcion/GetNotificationEvent", eventNotification);
   }
 }

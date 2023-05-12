@@ -16,5 +16,6 @@ namespace BL.Repositories
         (IEnumerable<NotificationViewModel>, IEnumerable<MessageViewModel>) GetNextEvent();
         void ChangeEventFinalize(long idEvento);
         IEnumerable<long> GetEventsTodayByUser(long idUsuario);
+        EventoSuscripcionViewModel? GetEventNotification(long idEvento);
     }
 }

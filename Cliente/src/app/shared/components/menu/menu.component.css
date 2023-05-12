@@ -7,10 +7,87 @@
 	}
 }
 @media all and (max-width: 991px) {
-	.navbar .nav-item { width: 300px;}
+	.navbar .nav-item {
+		width: 300px;
+	}
+
+	#notify {
+		margin-left: 4px;
+		display: inline-block !important;
+	}
 }
+
 .navbar .nav-item .nav-link:hover {
 	transition: none;
-    background-color: rgb(13, 63, 90);
+	background-color: rgb(13, 63, 90);
 	border-radius: 4px;
+}
+
+#bellsIcon {
+	fill: rgb(192, 192, 192);
+}
+
+.animate__shakeX {
+	animation-duration: 1s;
+	animation-delay: 0.5;
+	animation-name: shakeX;
+}
+
+@keyframes shakeX {
+
+	0%,
+	100% {
+		transform: translateX(0);
+	}
+
+	10%,
+	90% {
+		transform: translateX(-5px);
+	}
+
+	20%,
+	80% {
+		transform: translateX(5px);
+	}
+
+	30%,
+	50%,
+	70% {
+		transform: translateX(-5px);
+	}
+
+	40%,
+	60% {
+		transform: translateX(5px);
+	}
+}
+
+.no-outline {
+	outline: none;
+	border-radius: 5px !important;
+	resize: none;
+}
+
+.item-notifications {
+	color: #1e2125;
+	background-color: #e9ecef;
+}
+
+.linkcustom:active {
+	color: #1e2125;
+	background-color: #e4e6e8;
+}
+
+.circle-notif {
+	z-index: 99999;
+}
+
+.sizecircle {
+	font-size: 0.7rem;
+	margin-left: 0.4rem;
+}
+
+#menuNotifications {
+	max-height: 314px;
+	overflow-y: auto;
 }

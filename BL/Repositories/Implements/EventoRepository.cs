@@ -115,16 +115,16 @@ namespace BL.Repositories.Implements
                 .Join(testContext.Suscripciones.Where(x=>x.IdEstado==1), e => e.Id, s => s.IdEvento, (e, s) => new { Evento = e, Suscriptor = s })
                 .Select(x => new NotificationViewModel()
                 {
-                    IdEvento = x.Evento.Id.ToString(),
+                    IdEvento = x.Evento.Id,
                     TituloEvento = x.Evento.Titulo,
-                    InicioEvento = x.Evento.HoraInicio.ToString("hh\\:mm"),
+                    InicioEvento = x.Evento.FechaInicio.ToString("yyyy-MM-dd") +" "+ x.Evento.HoraInicio.ToString("hh\\:mm"),
                     IdUsuarioSuscrito = x.Suscriptor.IdUsuario,
                     Estado = 1
                 });
             var lstEventsNotification = lstEventsSuscriptors
                 .Select(x => new MessageViewModel()
                 { 
-                    Grupo=x.IdEvento, 
+                    Grupo=x.IdEvento.ToString(), 
                     Evento=x.TituloEvento, 
                     Inicio=x.InicioEvento 
                 }).Distinct();
@@ -132,7 +132,7 @@ namespace BL.Repositories.Implements
         }
         public void ChangeEventFinalize(long idEvento)
         {
-            testContext.Database.ExecuteSqlRaw("UPDATE Evento SET IdEstado = 4 WHERE Id = @id",
+            testContext.Database.ExecuteSqlRaw("UPDATE Evento SET IdEstado = 5 WHERE Id = @id",
                 new SqlParameter("@id", idEvento));
         }
         public IEnumerable<long> GetEventsTodayByUser(long idUsuario)
@@ -140,6 +140,34 @@ namespace BL.Repositories.Implements
             var currentDate = DateHelper.GetCurrentDate();
             var idsEvents = testContext.Suscripciones.Where(x => x.IdEstado == 1 && x.IdUsuario==idUsuario && x.Evento.FechaInicio==currentDate).Select(x=>x.IdEvento);
             return idsEvents;
+        }
+        public EventoSuscripcionViewModel? GetEventNotification(long idEvento)
+        {
+            var eventNotification = testContext.Eventos.Include(p => p.Usuario.Persona).Include(c => c.Categoria)
+                .Include(s => s.Suscripciones).Select(e => new EventoSuscripcionViewModel
+                {
+                    Id = e.Id,
+                    Titulo = e.Titulo,
+                    FechaInicio = e.FechaInicio,
+                    HoraInicio = e.HoraInicio,
+                    FechaFin = e.FechaFin,
+                    HoraFin = e.HoraFin,
+                    Ubicacion = e.Ubicacion,
+                    InformacionAdicional = e.InformacionAdicional,
+                    Foto = e.Foto,
+                    Categoria = e.Categoria.Descripcion,
+                    IdEstado = e.IdEstado,
+                    IdCategoria = e.IdCategoria,
+                    Organizador = new PersonaViewModel()
+                    {
+                        Id = e.Usuario.Persona.Id,
+                        NombreApellido = e.Usuario.Persona.Nombre + ' ' + e.Usuario.Persona.Apellido,
+                        Foto = e.Usuario.Persona.Foto
+                    },
+                    Suscriptores = e.Suscripciones.Count(x => x.IdEstado == 1)
+                }).FirstOrDefault(x => x.Id == idEvento && x.IdEstado != 2);
+
+            return eventNotification;
         }
     }
 }

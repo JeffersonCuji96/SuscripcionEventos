@@ -14,6 +14,7 @@ using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Api.Hubs;
 using Api;
+using MongoDB.Driver;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,7 +38,14 @@ builder.Services.AddCors(options =>
 });
 
 //Configuración para agregar el dbcontext, repositorios y servicios
-builder.Services.AddDbContext<DbSuscripcionEventosContext>(options => options.UseSqlServer(configuration.GetConnectionString("connectionString")));
+builder.Services.AddDbContext<DbSuscripcionEventosContext>(options => options.UseSqlServer(configuration.GetConnectionString("sqlServerDb")));
+builder.Services.AddSingleton<IMongoClient>(s =>
+{
+    var settings = MongoClientSettings.FromConnectionString(configuration.GetConnectionString("mongoDB"));
+    settings.ServerApi = new ServerApi(ServerApiVersion.V1);
+    var client = new MongoClient(settings);
+    return client;
+});
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<IPersonaRepository, PersonaRepository>();
