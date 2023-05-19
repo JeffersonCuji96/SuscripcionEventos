@@ -11,6 +11,17 @@ namespace BL.ValidationCustom
         {
             _sizeImage = sizeImage;
         }
+
+        /// <summary>
+        /// Método para validar el peso y formato de una imagen
+        /// </summary>
+        /// <remarks>
+        /// Se valida que la imagen solo tenga formatos jpg y png y sea un archivo válido
+        /// de tipo imagen. Y el tamaño se valida según la cantidad que se especifique en 
+        /// el DTO donde se realice esta validación
+        /// </remarks>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public override bool IsValid(object? value)
         {
             string? imageBase64 = value?.ToString();

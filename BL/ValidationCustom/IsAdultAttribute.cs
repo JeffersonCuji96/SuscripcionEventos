@@ -13,6 +13,12 @@ namespace BL.ValidationCustom
         {
             ErrorMessage = message;
         }
+
+        /// <summary>
+        /// Método para validar que el usuario sea mayor de edad
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public override bool IsValid(object? value)
         {
             if (value != null)

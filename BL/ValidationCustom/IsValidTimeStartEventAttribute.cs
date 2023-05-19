@@ -13,6 +13,18 @@ namespace BL.ValidationCustom
         {
             PropertyFInicio = propertyFInicio;
         }
+
+        /// <summary>
+        /// Método para validar la hora inicial de un evento
+        /// </summary>
+        /// <remarks>
+        /// Se verifica que la hora inicial no sea del pasado, no sea igual o menor
+        /// a la hora actual y que deba tener mínimo 30 minutos de anticipación 
+        /// antes de que inicie par poder crear el evento
+        /// </remarks>
+        /// <param name="value"></param>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
         protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
         {
             var instance = validationContext.ObjectInstance;

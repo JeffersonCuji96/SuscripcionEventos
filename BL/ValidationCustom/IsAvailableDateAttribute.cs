@@ -11,6 +11,12 @@ namespace BL.ValidationCustom
         {
             ErrorMessage = message;
         }
+
+        /// <summary>
+        /// Método para validar si fecha ingresada es mayor o igual a la fecha actual del servidor
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public override bool IsValid(object? value)
         {
             if (value != null)

@@ -11,6 +11,12 @@ namespace BL.ValidationCustom
         {
             ErrorMessage = message;
         }
+
+        /// <summary>
+        /// Método que valida la existencia de un email
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public override bool IsValid(object? value)
         {
             string? email = value?.ToString();

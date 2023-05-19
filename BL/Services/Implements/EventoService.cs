@@ -41,13 +41,13 @@ namespace BL.Services.Implements
         {
             return eventoRepository.GetDataEventCheck(id);
         }
-        public (IEnumerable<NotificationViewModel>, IEnumerable<MessageViewModel>) GetNextEvent()
+        public (IEnumerable<NotificationViewModel>, IEnumerable<MessageViewModel>, IEnumerable<long>) GetNextEvent()
         {
             return eventoRepository.GetNextEvent();
         }
-        public void ChangeEventFinalize(long idEvento)
+        public void ChangeEventNotified(long idEvento)
         {
-            eventoRepository.ChangeEventFinalize(idEvento);
+            eventoRepository.ChangeEventNotified(idEvento);
         }
         public IEnumerable<long> GetEventsTodayByUser(long idUsuario)
         {
@@ -56,6 +56,10 @@ namespace BL.Services.Implements
         public EventoSuscripcionViewModel? GetEventNotification(long idEvento)
         {
             return eventoRepository.GetEventNotification(idEvento);
+        }
+        public void ChangeEventProcessed(long idEvento)
+        {
+            eventoRepository.ChangeEventProcessed(idEvento);
         }
     }
 }

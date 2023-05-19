@@ -5,6 +5,11 @@ namespace BL.Helpers
 {
     public class Crypto
     {
+        /// <summary>
+        /// Método para generar un hash y encriptar una cadena
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
         public static string GetSHA256(string str)
         {
             SHA256 sha256 = SHA256.Create();

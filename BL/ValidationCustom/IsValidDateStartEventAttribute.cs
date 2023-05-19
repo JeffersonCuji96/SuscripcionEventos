@@ -11,6 +11,15 @@ namespace BL.ValidationCustom
         {
             ErrorMessage = message;
         }
+
+        /// <summary>
+        /// Método para validar la fecha inicial de un evento 
+        /// </summary>
+        /// <remarks>
+        /// Se verifica que la fecha inicial no sea menor a la fecha actual
+        /// </remarks>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public override bool IsValid(object? value)
         {
             if (value != null)

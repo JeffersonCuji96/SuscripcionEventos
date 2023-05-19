@@ -35,6 +35,15 @@ namespace Api.Controllers
             _notificationCollection = database.GetCollection<NotificationViewModel>("notification");
         }
 
+        /// <summary>
+        /// Método para realizar la suscripción de un usuario a un evento
+        /// </summary>
+        /// <remarks>
+        /// Se obtiene el evento con los datos específicos que se necesitan para validar
+        /// la suscripción, del evento al que se va a suscribir un usuario
+        /// </remarks>
+        /// <param name="suscripcionDTO"></param>
+        /// <returns></returns>
         [HttpPost]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public IActionResult Suscribe(SuscripcionDTO suscripcionDTO)
@@ -62,6 +71,12 @@ namespace Api.Controllers
             return Ok(new { Message = "Se ha suscrito con éxito!", Id =idSuscripcion });
         }
 
+        /// <summary>
+        /// Método para desuscribir al usuario de un evento
+        /// </summary>
+        /// <param name="suscripcionDTO"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpPut("{id}")]
         public IActionResult Unsuscribe(SuscripcionDTO suscripcionDTO, long id)
         {
@@ -72,6 +87,11 @@ namespace Api.Controllers
             return Ok(new { Message = "Se ha desuscrito con éxito!" });
         }
 
+        /// <summary>
+        /// Método para verificar si un usuario está suscrito a un evento
+        /// </summary>
+        /// <param name="suscribe"></param>
+        /// <returns></returns>
         [HttpPost]
         [Route("CheckSuscribe")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
@@ -84,6 +104,15 @@ namespace Api.Controllers
             return Ok(suscriptionService.CheckSuscribeUser(suscribe));
         }
 
+        /// <summary>
+        /// Método par obtener un listado de las suscripciones de un usuario
+        /// </summary>
+        /// <remarks>
+        /// Junto a las suscripciones se agrega la cantidad de suscriptores que tiene cada evento 
+        /// al que esté suscrito el usuario para posteriormente usar esa información en el detalle
+        /// </remarks>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet]
         [Route("GetByUserSuscriptions/{id}")]
         public IActionResult GetByUserSuscriptions(long id)
@@ -94,6 +123,15 @@ namespace Api.Controllers
             return Ok(events);
         }
 
+        /// <summary>
+        /// Método para obtener los identificadores de cada evento al que está suscrito el usuario
+        /// </summary>
+        /// <remarks>
+        /// Solo se obtiene la información que sea de la fecha actual, para ser usado en un posible
+        /// ingreso de un grupo de notificaciones, en este caso el grupo vendría a ser el evento
+        /// </remarks>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet]
         [Route("GetEventsTodayByUser/{id}")]
         public IActionResult GetEventsTodayByUser(long id)
@@ -104,6 +142,16 @@ namespace Api.Controllers
             return Ok(idsEvents);
         }
 
+        /// <summary>
+        /// Método para obtener las notificaciones de una base de datos no relacional
+        /// </summary>
+        /// <remarks>
+        /// Se filtra las notificaciones por un usuario especifico y de un estado que no 
+        /// sea eliminado(3). Además se agrega un opción para retornar solamente las 10 
+        /// últimas notificaciones
+        /// </remarks>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet]
         [Route("GetNotificationsMongoDb/{id}")]
         public async Task<IActionResult> GetNotificationsMongoDb(long id)
@@ -118,7 +166,7 @@ namespace Api.Controllers
             var opciones = new FindOptions<NotificationViewModel>
             {
                 Sort = Builders<NotificationViewModel>.Sort.Descending("_id"),
-                Limit = 5
+                Limit = 10
             };
 
             if (filtro ==null && opciones == null)
@@ -128,6 +176,15 @@ namespace Api.Controllers
             return Ok(results);
         }
 
+        /// <summary>
+        /// Método para realizar la eliminación lógica de una notificación
+        /// </summary>
+        /// <remarks>
+        /// Se agrega un filtro para una notificación especifica y una opción
+        /// para el cambio de estado a eliminado(3).
+        /// </remarks>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete]
         [Route("RemoveNotification/{id}")]
         public async Task<IActionResult> RemoveNotification(string id)
@@ -140,6 +197,15 @@ namespace Api.Controllers
             return Ok(updateResult.ModifiedCount);
         }
 
+        /// <summary>
+        /// Método para obtener los datos de una notificación y cambiar el estado a visualizado
+        /// </summary>
+        /// <remarks>
+        /// Se verifica si el estado actual de la notificación es activo(1) para proceder a cambiarlo a un estado
+        /// de visualizado(2). Posteriormente se obtiene los datos del evento que representa la notificación
+        /// </remarks>
+        /// <param name="notificationEvent"></param>
+        /// <returns></returns>
         [HttpPost]
         [Route("GetNotificationEvent")]
         public async Task<IActionResult> GetNotificationEvent(EventNotificationViewModel notificationEvent)
@@ -158,10 +224,9 @@ namespace Api.Controllers
 
             var eventNotification = eventService.GetEventNotification(notificationEvent.IdEvento);
             if (eventNotification == null)
-                return BadRequest("El evento no existe o ha sido eliminado");
+                return BadRequest("El detalle del evento no se puede obtener porque ha sido eliminado");
 
             return Ok(eventNotification);
         }
-
     }
 }

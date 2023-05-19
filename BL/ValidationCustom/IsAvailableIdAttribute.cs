@@ -10,6 +10,16 @@ namespace BL.ValidationCustom
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter, AllowMultiple = false)]
     sealed public class IsAvailableIdAttribute : ValidationAttribute
     {
+        /// <summary>
+        /// Método que obtiene el id del usuario para establecerlo a la propiedad id
+        /// </summary>
+        /// <remarks>
+        /// En caso de que el id del usuario no tenga un valor, Se obtiene el id por medio de la 
+        /// propiedad email usando un procedimiento
+        /// </remarks>
+        /// <param name="value"></param>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
         protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
         {
             if (value == null)

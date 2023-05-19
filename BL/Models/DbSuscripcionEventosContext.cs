@@ -23,7 +23,7 @@ public partial class DbSuscripcionEventosContext : DbContext
     public virtual DbSet<Evento> Eventos { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlServer("Data Source=DESKTOP-7MFLKJF\\SQLEXPRESS;Initial Catalog=dbsuscripcioneventos;Integrated Security=True;TrustServerCertificate=True;Encrypt=False;");
+        => optionsBuilder.UseSqlServer("Data Source=DESKTOP-VVMFOJK\\SQLEXPRESS;Initial Catalog=dbsuscripcioneventos;Integrated Security=True;TrustServerCertificate=True;Encrypt=False;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

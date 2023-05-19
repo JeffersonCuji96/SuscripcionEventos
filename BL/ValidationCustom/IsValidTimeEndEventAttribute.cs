@@ -18,6 +18,18 @@ namespace BL.ValidationCustom
             PropertyFFin = propertyFFin;
             PropertyFInicio = propertyFInicio;
         }
+
+        /// <summary>
+        /// Método que valida la hora final de un evento
+        /// </summary>
+        /// <remarks>
+        /// Se verifica que exista una fecha final ya que ambos datos son obligatorios,
+        /// también se verifica que no sea igual o menor a la hora de inicio y que mínimo
+        /// tenga dure 30 minutos partiendo de la hora inicial
+        /// </remarks>
+        /// <param name="value"></param>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
         protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
         {
             var instance = validationContext.ObjectInstance;

@@ -18,6 +18,16 @@ namespace BL.Repositories.Implements
             this.testContext = testContext;
             this.appSettings = appSettings.Value;
         }
+
+        /// <summary>
+        /// Método para suscribirse o desuscribirse de un evento
+        /// </summary>
+        /// <remarks>
+        /// El estado 1 vendría a ser una suscripción y el estado 2 la desuscripción
+        /// </remarks>
+        /// <param name="idSuscripcion"></param>
+        /// <param name="tipo"></param>
+        /// <returns></returns>
         public long SuscribeEvent(long idSuscripcion, bool tipo)
         {
             if (tipo == false)
@@ -26,6 +36,11 @@ namespace BL.Repositories.Implements
             return idSuscripcion;
         }
 
+        /// <summary>
+        /// Método para verificar que el usuario está suscrito a un evento
+        /// </summary>
+        /// <param name="suscribe"></param>
+        /// <returns></returns>
         public Tuple<long,int> CheckSuscribeUser(SuscribeCheckViewModel suscribe)
         {
             var oSuscripcion = testContext.Suscripciones.FirstOrDefault(x => x.IdUsuario == suscribe.IdUsuario && x.IdEvento == suscribe.IdEvento);
@@ -34,6 +49,15 @@ namespace BL.Repositories.Implements
             return Tuple.Create(id,estado);
         }
 
+        /// <summary>
+        /// Método para validar la suscripción de un usuario
+        /// </summary>
+        /// <remarks>
+        /// Se verifica que las fechas del evento al que el usuario se quiere suscribir
+        /// no coincidan con las fechas de otras suscripciones
+        /// </remarks>
+        /// <param name="eventViewModel"></param>
+        /// <returns></returns>
         public string CheckDateEventSuscription(EventCheckViewModel eventViewModel)
         {
             var lstEventsUser = new List<Suscripcion>();
@@ -53,6 +77,16 @@ namespace BL.Repositories.Implements
                 return message;
             return string.Empty;
         }
+
+        /// <summary>
+        /// Método par obtener un listado de las suscripciones de un usuario
+        /// </summary>
+        /// <remarks>
+        /// Junto a las suscripciones se agrega la cantidad de suscriptores que tiene cada evento 
+        /// al que esté suscrito el usuario para posteriormente usar esa información en el detalle
+        /// </remarks>
+        /// <param name="idUsuario"></param>
+        /// <returns></returns>
         public IEnumerable<EventoSuscripcionViewModel> GetSuscriptionsByUser(long idUsuario)
         {
             var lstEvents = testContext.Suscripciones.Include(x => x.Evento).ThenInclude(x => x.Categoria)

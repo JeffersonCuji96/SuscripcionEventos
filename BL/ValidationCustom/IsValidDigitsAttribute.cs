@@ -9,6 +9,15 @@ namespace BL.ValidationCustom
         {
             ErrorMessage = message;
         }
+
+        /// <summary>
+        /// Método que valida el número de digitos de un teléfono
+        /// </summary>
+        /// <remarks>
+        /// La cantidad que se verifica es que sea de 10 para un número de ecuador
+        /// </remarks>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public override bool IsValid(object? value)
         {
             string? num = Convert.ToString(value);

@@ -6,6 +6,13 @@ namespace SuscripcionEventosApi.MapperConfig
 {
     public class Mapping : Profile
     {
+        /// <summary>
+        /// Mapeo de datos
+        /// </summary>
+        /// <remarks>
+        /// Se definen los mapeos entre diferentes tipos de clases utilizando el método CreateMap de AutoMapper. 
+        /// Cada llamada a CreateMap especifica un mapeo entre una clase de origen y una clase de destino.
+        /// </remarks>
         public Mapping()
         {
             CreateMap<Usuario, AccesoDTO>();

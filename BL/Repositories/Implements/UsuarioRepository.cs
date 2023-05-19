@@ -23,6 +23,16 @@ namespace BL.Repositories.Implements
             this.testContext = testContext;
             this.appSettings = appSettings.Value;
         }
+
+        /// <summary>
+        /// Método para autenticar el usuario
+        /// </summary>
+        /// <remarks>
+        /// En caso de ser válidas las credenciales del usuario, se verifica si la cuenta
+        /// está activa, después se genera el token y se retorna los datos de identificación
+        /// </remarks>
+        /// <param name="usuario"></param>
+        /// <returns></returns>
         public Tuple<AccessViewModel, int> Login(Usuario usuario)
         {
             int state = 0;
@@ -44,6 +54,17 @@ namespace BL.Repositories.Implements
             }
             return Tuple.Create(oAccessViewModel,state);
         }
+
+        /// <summary>
+        /// Método para generar un token 
+        /// </summary>
+        /// <remarks>
+        /// Se genera un token JWT que incluye el identificador de usuario como reclamación y 
+        /// está firmado con una clave secreta. El token se utiliza para autenticar y autorizar 
+        /// a los usuarios en la aplicación o servicio
+        /// </remarks>
+        /// <param name="id"></param>
+        /// <returns></returns>
         private string GenerateJwt(long id)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -62,6 +83,15 @@ namespace BL.Repositories.Implements
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
         }
+
+        /// <summary>
+        /// Método para registrar a un usuario y enviar un email de confirmación
+        /// </summary>
+        /// <remarks>
+        /// Desués del registro, se envía al usuario un correo de confirmación junto con el 
+        /// token de autenticación para que pueda acceder a su cuenta
+        /// </remarks>
+        /// <param name="usuario"></param>
         public void InsertUserPerson(Usuario usuario)
         {
             string token = Crypto.GetSHA256(Guid.NewGuid().ToString());
@@ -85,16 +115,33 @@ namespace BL.Repositories.Implements
             };
             MailHelper.SendEmail(emailOrigin, token, appSettings, oMailSetting);
         }
+
+        /// <summary>
+        /// Método para verificar la clave actual del usuario
+        /// </summary>
+        /// <param name="userPassViewModel"></param>
+        /// <returns></returns>
         public bool CheckPassword(UserPasswordViewModel userPassViewModel)
         {
             string ePass = Crypto.GetSHA256(userPassViewModel.Clave);
             return testContext.Usuarios.Any(x => x.Id == userPassViewModel.Id && x.Clave == ePass);
         }
+
+        /// <summary>
+        /// Método para verificar si existe el email
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
         public bool CheckEmail(string email)
         {
             string eEmail = Crypto.GetSHA256(email);
             return testContext.Usuarios.Any(x => x.Email == eEmail);
         }
+
+        /// <summary>
+        /// Método para actualizar un email y enviar un correo de confirmación
+        /// </summary>
+        /// <param name="userEmailViewModel"></param>
         public void UpdateEmail(UserEmailViewModel userEmailViewModel)
         {
             string token = Crypto.GetSHA256(Guid.NewGuid().ToString());
@@ -113,6 +160,11 @@ namespace BL.Repositories.Implements
             };
             MailHelper.SendEmail(userEmailViewModel.Email, token, appSettings, oMailSetting);
         }
+
+        /// <summary>
+        /// Método para actualizar la clave actual del usuario
+        /// </summary>
+        /// <param name="userPassViewModel"></param>
         public void UpdateClave(UserPasswordViewModel userPassViewModel)
         {
             var ePass = Crypto.GetSHA256(userPassViewModel.Clave);
@@ -121,12 +173,17 @@ namespace BL.Repositories.Implements
                 new SqlParameter("@pass", ePass));
         }
 
-        /*
-            Se genera un número pseudoaleatorio encriptado para actualizar el campo del token 
-            en la entidad usuario. También se actualiza la fecha de expiración que se agregando 
-            5 minutos a la fecha actual, que será el tiempo que dure el enlace de 
-            recuperación que se envía al correo del usuario.
-         */
+        /// <summary>
+        /// Método para recuperar el acceso a la cuenta del usuario
+        /// </summary>
+        /// <remarks>
+        /// Se genera un número pseudoaleatorio encriptado para actualizar el campo del token 
+        /// en la entidad usuario.También se actualiza la fecha de expiración que se agregando
+        /// 5 minutos a la fecha actual, que será el tiempo que dure el enlace de
+        /// recuperación que se envía al correo del usuario.
+        /// </remarks>
+        /// <param name="userEmailViewModel"></param>
+        /// <param name="date"></param>
         public void RecoveryAccess(UserEmailViewModel userEmailViewModel, DateTime date)
         {
             string token = Crypto.GetSHA256(Guid.NewGuid().ToString());
@@ -147,9 +204,15 @@ namespace BL.Repositories.Implements
                 MailHelper.SendEmail(userEmailViewModel.Email, token, appSettings, oMailSetting);
             }
         }
-        /*
-            Se obtiene la fecha de caducidad del token para compararlo con la fecha actual del servidor.
-         */
+        /// <summary>
+        /// Método para verificar que el token sea válido
+        /// </summary>
+        /// <remarks>
+        /// Se obtiene la fecha de caducidad del token para compararlo con la fecha actual del servidor.
+        /// </remarks>
+        /// <param name="tokenValidViewModel"></param>
+        /// <param name="currentDate"></param>
+        /// <returns></returns>
         public bool CheckToken(TokenValidViewModel tokenValidViewModel, DateTime currentDate)
         {
             SqlParameter[] parameters = {
@@ -166,6 +229,12 @@ namespace BL.Repositories.Implements
             }
             return false;
         }
+
+        /// <summary>
+        /// Método para cambiar la clave después de la solicitud de recuperación de la cuenta
+        /// </summary>
+        /// <param name="tokenPassViewModel"></param>
+        /// <returns></returns>
         public bool ChangeClave(TokenPasswordViewModel tokenPassViewModel)
         {
             var oUser = testContext.Usuarios.FirstOrDefault(x => x.Token == tokenPassViewModel.Token);
@@ -180,6 +249,11 @@ namespace BL.Repositories.Implements
             return false;
         }
 
+        /// <summary>
+        /// Método para confirmar la cuenta a través del email del usuario
+        /// </summary>
+        /// <param name="tokenValidViewModel"></param>
+        /// <returns></returns>
         public bool ConfirmEmail(TokenValidViewModel tokenValidViewModel)
         {
             var oUser = testContext.Usuarios.FirstOrDefault(x => x.Token == tokenValidViewModel.Token && x.IdEstado==3);
@@ -192,6 +266,12 @@ namespace BL.Repositories.Implements
             }
             return false;
         }
+
+        /// <summary>
+        /// Método para verificar el estado del usuario
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public bool VerifyStatusUser(long id)
         {
             return testContext.Usuarios.Any(x=>x.Id==id && x.IdEstado==1);

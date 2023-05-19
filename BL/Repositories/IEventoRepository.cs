@@ -13,9 +13,10 @@ namespace BL.Repositories
         void UpdateEvent(Evento evento, bool checkImage);
         string GetPathPhoto(long id);
         EventCheckViewModel GetDataEventCheck(long id);
-        (IEnumerable<NotificationViewModel>, IEnumerable<MessageViewModel>) GetNextEvent();
-        void ChangeEventFinalize(long idEvento);
+        (IEnumerable<NotificationViewModel>, IEnumerable<MessageViewModel>, IEnumerable<long>) GetNextEvent();
+        void ChangeEventNotified(long idEvento);
         IEnumerable<long> GetEventsTodayByUser(long idUsuario);
         EventoSuscripcionViewModel? GetEventNotification(long idEvento);
+        void ChangeEventProcessed(long idEvento);
     }
 }

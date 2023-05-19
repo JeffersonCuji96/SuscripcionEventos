@@ -5,6 +5,13 @@ namespace BL.Helpers
 {
     public class MailHelper
     {
+        /// <summary>
+        /// Método para realizar el envío de un correo al usuario
+        /// </summary>
+        /// <param name="emailReceiving"></param>
+        /// <param name="token"></param>
+        /// <param name="appData"></param>
+        /// <param name="mailSettings"></param>
         public static void SendEmail(string emailReceiving, string token, AppSettings appData, MailSettings mailSettings)
         {
             string emailOrigin = appData.SupportEmail;

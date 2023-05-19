@@ -14,6 +14,18 @@ namespace BL.ValidationCustom
             PropertyFInicio = propertyfInicio;
             PropertyHFin = propertyhFin;
         }
+
+        /// <summary>
+        /// Método para validar la fecha final de un evento
+        /// </summary>
+        /// <remarks>
+        /// Se compara que la fecha final que se ingresa no sea menor a la fecha actual, 
+        /// menor a la fecha de inicio, y que tenga una hora de fin ya que es requerido
+        /// junto a la fecha final
+        /// </remarks>
+        /// <param name="value"></param>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
         protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
         {
             var instance = validationContext.ObjectInstance;

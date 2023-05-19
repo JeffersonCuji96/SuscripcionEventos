@@ -12,6 +12,18 @@ namespace BL.ValidationCustom
             PropertyName = propertyName;
             ErrorMessage = message;
         }
+
+        /// <summary>
+        /// Método que valida la existencia de un teléfono
+        /// </summary>
+        /// <remarks>
+        /// La validación ignora el número propio cuando se va actualizar los datos
+        /// personales del usuario, ya que coincidiría con el mismo. Y en caso de ser 
+        /// un registro se compara el número de teléfono con todos los registros 
+        /// </remarks>
+        /// <param name="value"></param>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
         protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
         {
             var instance = validationContext.ObjectInstance;

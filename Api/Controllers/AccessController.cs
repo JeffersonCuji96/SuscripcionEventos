@@ -22,6 +22,16 @@ namespace Api.Controllers
             this.userService = userService;
         }
 
+        /// <summary>
+        /// Método que realiza la autenticación del usuario
+        /// </summary>
+        /// <remarks>
+        /// La verificación puede obtener tres posibles estados, el primero en caso de que las credenciales sean 
+        /// incorrectas, el segundo si la cuenta del usuario esta inactiva y el tercero si la cuenta aún no ha 
+        /// sido confirmado por el correo del usuario
+        /// </remarks>
+        /// <param name="accesoDTO"></param>
+        /// <returns></returns>
         [HttpPost]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public ActionResult Login(AccesoDTO accesoDTO)

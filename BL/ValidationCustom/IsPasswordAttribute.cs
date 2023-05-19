@@ -6,6 +6,15 @@ namespace BL.ValidationCustom
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter, AllowMultiple = false)]
     sealed public class IsPasswordAttribute : ValidationAttribute
     {
+        /// <summary>
+        /// Método que valida una contraseña
+        /// </summary>
+        /// <remarks>
+        /// Se verifica que la clave que ingresa el usuario debe tener mínimo un número,
+        /// una letra, mayúscula y minúscula, un caracter especial y no contener espacios,
+        /// </remarks>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public override bool IsValid(object? value)
         {
             string? pass = value?.ToString();
