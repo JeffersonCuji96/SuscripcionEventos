@@ -18,7 +18,7 @@
                     <p class="card-text m-0"><span class="text-muted">Dirección: </span>
                         {{objEvento.Ubicacion}}</p>
                     <p class="card-text m-0"><span class="text-muted">Suscriptores: </span>
-                        {{objEvento.Suscriptores}} personas suscritas a este evento</p>
+                        {{objEvento.Suscriptores > 1 || objEvento.Suscriptores===0 ? objEvento.Suscriptores+" personas suscritas a este evento": objEvento.Suscriptores+" persona suscrita a este evento" }} </p>
 
                     <div class="card mx-auto text-center mt-4 mb-3 card-shadow widthCardImage">
                         <div class="card-header">
@@ -34,7 +34,7 @@
                             <button id="btnSuscribe" class="btn btn-primary" *ngIf="isSuscribe === 2 || isSuscribe === 0" (click)="suscribe()">Suscribirme</button>
                             <button id="btnUnsuscribe" class="btn btn-danger" *ngIf="isSuscribe === 1 && objEvento.IdEstado!==5" (click)="unsuscribe()">Desuscribirme</button>
                         </ng-container>
-                        <label class="text-muted fs-5" *ngIf="objEvento.IdEstado === 4">EVENTO FINALIZADO</label>
+                        <label class="text-muted fs-5" *ngIf="objEvento.IdEstado === 4">EVENTO PROCESADO</label>
                         <label class="text-muted fs-5" *ngIf="objEvento.IdEstado === 5">EVENTO NOTIFICADO</label>
                     </div>
                 </div>

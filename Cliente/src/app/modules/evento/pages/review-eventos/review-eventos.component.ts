@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit,NgZone  } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, NgZone } from '@angular/core';
 import { EventoService } from '../../services/evento.service';
 import { AuthService } from 'src/app/modules/auth/services/auth.service';
 import { takeUntil } from 'rxjs/operators';
@@ -36,7 +36,9 @@ export class ReviewEventosComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.checkEventEmitChanges();
-    this.checkSuscriptionEmitChanges();
+    this.notifiedSuscriptionChange();
+    this.notifiedEventChange();
+    this.processedEventChange();
     if (this.Suscription === false) {
       this.getByUserventos();
     } else {
@@ -52,13 +54,38 @@ export class ReviewEventosComponent implements OnInit, OnDestroy {
       });
   }
 
-  checkSuscriptionEmitChanges() {
+  notifiedSuscriptionChange() {
     this.suscriptionService.suscriptionChange.pipe(
       takeUntil(this.stop$))
       .subscribe(res => {
-        if (res) {
+        if (res && this.Suscription === true) {
           this.ngZone.run(() => this.getByUserSuscriptions());
         }
+      });
+  }
+
+  notifiedEventChange() {
+    this.eventService.notifiedEventChange.pipe(
+      takeUntil(this.stop$))
+      .subscribe(res => {
+        if (res && this.Suscription === false) {
+          this.ngZone.run(() => this.getByUserventos());
+        }
+      });
+  }
+
+  processedEventChange() {
+    this.eventService.processedEventChange.pipe(
+      takeUntil(this.stop$))
+      .subscribe(res => {
+        this.ngZone.run(()=>{
+          if(res && this.Suscription === false){
+            this.getByUserventos();
+          } 
+          if(res && this.Suscription === true){
+            this.getByUserSuscriptions();
+          } 
+        });
       });
   }
 
@@ -113,7 +140,7 @@ export class ReviewEventosComponent implements OnInit, OnDestroy {
     this.SimpleModalService.addModal(
       RegisterPageComponent,
       {
-        Title: event.IdEstado === 4 ? 'Información del evento':'Edición del evento',
+        Title: event.IdEstado === 4 ? 'Información del evento' : 'Edición del evento',
         Data: this.formatDateEvent(event)
       }
     );
@@ -134,6 +161,7 @@ export class ReviewEventosComponent implements OnInit, OnDestroy {
           .pipe(takeUntil(this.stop$))
           .subscribe(response => {
             this.helper.swalShowSuccess(response.Message);
+            this.eventService.notifiedEventChange.emit(true);
             this.getByUserventos();
           },
             error => {
@@ -143,7 +171,7 @@ export class ReviewEventosComponent implements OnInit, OnDestroy {
     });
   }
 
-  showPageDetailEvent(event:any) {
+  showPageDetailEvent(event: any) {
     event.Limit = 0;
     this.router.navigate(['/evento/detail', btoa(JSON.stringify(event))], { skipLocationChange: true });
   }

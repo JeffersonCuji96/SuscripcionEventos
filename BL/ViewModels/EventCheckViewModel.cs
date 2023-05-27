@@ -2,9 +2,10 @@
 {
     public class EventCheckViewModel
     {
-        public long Id { get; set; }
-        public DateTime FechaInicio { get; set; }
-        public DateTime? FechaFin { get; set; }
         public long IdUsuario { get; set; }
+        public DateTime FechaInicio { get; set; }
+        public TimeSpan HoraInicio { get; set; }
+        public DateTime? FechaFin { get; set; }
+        public TimeSpan? HoraFin { get; set; }
     }
 }

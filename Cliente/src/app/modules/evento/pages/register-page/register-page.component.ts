@@ -14,6 +14,8 @@ import { ValidationEventoCustom } from '../../utils/validation-custom';
 import { SimpleModalComponent } from 'ngx-simple-modal';
 import { AlertModel } from 'src/app/core/models/alert-model';
 import { ScriptsService } from 'src/app/app-services/scripts.service';
+import { AuthService } from 'src/app/modules/auth/services/auth.service';
+import { CustomRouteReuseStrategy } from 'src/app/app-services/CustomRouteReuseStrategy';
 
 @Component({
   selector: 'app-register-page',
@@ -38,12 +40,14 @@ export class RegisterPageComponent extends SimpleModalComponent<AlertModel, null
     public serviceBuilder: BuilderService,
     private eventService: EventoService,
     private userService: UserService,
+    private authService:AuthService,
     private router: Router,
     private helper: Helpers,
     private scriptService: ScriptsService) {
     super();
   }
   ngOnInit(): void {
+    window.scroll(0, 0);
     this.serviceBuilder.form.enable();
     this.getCategorias();
     this.setValueForm();
@@ -65,7 +69,7 @@ export class RegisterPageComponent extends SimpleModalComponent<AlertModel, null
       this.imagePreview = this.Data.ImageBase64;
       this.Data.FechaFin !== null ? this.showBoxDateTime(true) : this.showBoxDateTime(false);
       this.serviceBuilder.form.patchValue(this.Data);
-      this.status === 4 ? this.serviceBuilder.form.disable():null;
+      this.status !== 1 ? this.serviceBuilder.form.disable():null;
     }
   }
 
@@ -74,6 +78,8 @@ export class RegisterPageComponent extends SimpleModalComponent<AlertModel, null
       .subscribe(
         res => {
           this.lstCategorias = res;
+          this.Data === null ? this.f.IdCategoria.setValue("") : null;
+          this.f.IdUsuario.setValue(this.authService.getIdUserLocalStorage());
         });
   }
 
@@ -106,6 +112,8 @@ export class RegisterPageComponent extends SimpleModalComponent<AlertModel, null
         .pipe(takeUntil(this.stop$))
         .subscribe(response => {
           this.helper.swalShowSuccess(response.Message);
+          this.eventService.notifiedJoinEvent.emit(true);
+          this.deleteStoredRoute("/");
           this.router.navigate(['/']);
         },
           error => {
@@ -138,6 +146,7 @@ export class RegisterPageComponent extends SimpleModalComponent<AlertModel, null
         .subscribe(response => {
           this.helper.swalShowSuccess(response.Message);
           this.eventService.emitChanges(true);
+          this.eventService.notifiedJoinEvent.emit(true);
           this.close();
         },
           error => {
@@ -259,5 +268,10 @@ export class RegisterPageComponent extends SimpleModalComponent<AlertModel, null
     this.imagePreview = null;
     this.isChangeImage = false;
     this.Data = null;
+  }
+
+  deleteStoredRoute(url:string):void{
+    const strategy = this.router.routeReuseStrategy as CustomRouteReuseStrategy;
+    strategy.deleteStoreRoute(url);
   }
 }

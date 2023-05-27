@@ -1,10 +1,11 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
-import { concatMap, map, takeUntil, tap } from 'rxjs/operators';
+import { map, takeUntil, tap } from 'rxjs/operators';
 import { CategoriaDto } from 'src/app/core/models/categoriaDto.';
 import { EventoService } from '../../services/evento.service';
 import { SuscripcionService } from 'src/app/modules/suscripcion/services/suscripcion.service';
+import { Helpers } from 'src/app/helpers/helper';
 
 @Component({
   selector: 'app-lista-eventos',
@@ -21,15 +22,18 @@ export class ListaEventosComponent implements OnInit, OnDestroy {
   public showLoader: boolean = true;
   public lengthDataLimit: number = 0;
   public idCategoriaFilter: number = 0;
+  public linkClicked: boolean = false;
 
   constructor(
     private eventService: EventoService,
     private router: Router,
-    private suscriptionService: SuscripcionService
+    private suscriptionService: SuscripcionService,
+    private helpers: Helpers
   ) { }
 
   ngOnInit(): void {
-    window.scroll(0, 0);
+    this.updateCountDesuscription();
+    this.updateCountSuscription();
     this.getCategorias();
     this.getEventos(true);
     this.filterSelected = false;
@@ -47,21 +51,16 @@ export class ListaEventosComponent implements OnInit, OnDestroy {
      como sucede cuando se aplica algún filtro(categoría), por eso se usa el indice ya que de no hacerlo la longitud del listado no coincidiría con
      el 'Id' del evento pero sí con el índice (1,2,3,4,5,6...)
     *Cuando se selecciona un evento se despliega el detalle del mismo y en caso de que el usuario decida suscribirse o desuscribirse del evento,
-     se debe eliminar manualmente el componente debido al comportamiento por defecto de RouteReuseStrategy. Después se emite un valor que sería la 
-     cantidad de eventos que se cargarán en la lista y así reflejar el número de suscriptores actualizado. El comportamiento da como resultado que
-     cuando el usuario retroceda a la página de inicio, sea ubicado en la última sección donde seleccionó el evento. Para ello se hace uso de un observable 
-     para usar el último valor emitido(límite) antes de cargar el listado de eventos.
+     se emite un valor(Id), al detectar el cambio del observable se modifica el objeto evento del listado con la cantidad de suscriptores 
+     que corresponda, esto es necesario debido al comportamiento de routestrategy aplicada en este componente. Si en caso el usuario 
+     retrocede a la página anterior(Inicio), es ubicado en la última sección donde seleccionó el evento.
   */
   getEventos(fetchData: boolean) {
     if (fetchData) {
       if (this.lengthDataLimit !== this.lstEventos.length || (this.lengthDataLimit === 0 && this.lstEventos.length === 0)) {
         let endLimit = this.lstEventos.length + this.dataCountInit + 1;
-        this.suscriptionService.issueChanges$.pipe(
+        this.eventService.getEventosSuscripciones(this.idCategoriaFilter).pipe(
           takeUntil(this.stop$),
-          concatMap(res => {
-            res !== 0 ? endLimit = res : null;
-            return this.eventService.getEventosSuscripciones(this.idCategoriaFilter);
-          }),
           tap(t => this.lengthDataLimit = t.length),
           map(x =>
             x.reduce((a: any, b: any, index: number) => index + 1 > this.lstEventos.length && index + 1 < endLimit ? [...a, { ...b, Codigo: index + 1 }] : a, [])
@@ -76,6 +75,27 @@ export class ListaEventosComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.stop$.next();
     this.stop$.complete();
+  }
+
+  updateCountSuscription() {
+    this.suscriptionService.changeSuscription$.pipe(
+      takeUntil(this.stop$))
+      .subscribe(res => {
+        if (res !== 0) {
+          const objeto = this.lstEventos.find((i: any) => i.Id === res);
+          objeto.Suscriptores += 1;
+        }
+      });
+  }
+  updateCountDesuscription() {
+    this.suscriptionService.changeDesuscription$.pipe(
+      takeUntil(this.stop$))
+      .subscribe(res => {
+        if (res !== 0) {
+          const objeto = this.lstEventos.find((i: any) => i.Id === res);
+          objeto.Suscriptores -= 1;
+        }
+      });
   }
 
   getCategorias() {
@@ -112,7 +132,23 @@ export class ListaEventosComponent implements OnInit, OnDestroy {
   }
 
   showDetailEvent(item: any, loadLimit: number) {
-    item.Limit = loadLimit + 1;
-    this.router.navigate(['/evento/detail', btoa(JSON.stringify(item))], { skipLocationChange: true });
+    this.linkClicked = true;
+    this.eventService.getStatusEvent(item.Id)
+      .pipe(takeUntil(this.stop$))
+      .subscribe(
+        status => {
+          this.linkClicked = false;
+          if (status === 2) {
+            this.helpers.swalShow(
+              "<h4>Operación no realizada</h4>",
+              "No de se puede mostrar el detalle del evento debido a que ha sido eliminado",
+              "warning");
+          } else {
+            item.IdEstado = status;
+            //item.Limit = loadLimit + 1;
+            //item.Listado=JSON.stringify(this.lstEventos);
+            this.router.navigate(['/evento/detail', btoa(JSON.stringify(item))], { skipLocationChange: true });
+          }
+        });
   }
 }

@@ -60,21 +60,41 @@ namespace BL.Repositories.Implements
         /// <returns></returns>
         public string CheckDateEventSuscription(EventCheckViewModel eventViewModel)
         {
-            var lstEventsUser = new List<Suscripcion>();
+            var lstEventsUser = new List<Evento>();
             string message = "No se puede suscribir a un evento donde la fecha de inicio y/o fin coincide con fechas de otros eventos a los que se ha suscrito";
-            lstEventsUser = testContext.Suscripciones.Include(x => x.Evento).Where(x => x.IdUsuario == eventViewModel.IdUsuario && x.IdEstado == 1 && x.Evento.Id != eventViewModel.Id).ToList();
+            lstEventsUser = testContext.Suscripciones.Include(x => x.Evento)
+                .Where(x => x.IdEstado==1 && x.IdUsuario == eventViewModel.IdUsuario)
+                .Select(x=>x.Evento)
+                .ToList();
 
-            if (eventViewModel.FechaFin != null)
+            if (lstEventsUser.Count > 0)
             {
-                if (lstEventsUser.Any(x => x.Evento.FechaInicio == eventViewModel.FechaFin || x.Evento.FechaInicio == eventViewModel.FechaInicio || x.Evento.FechaFin == eventViewModel.FechaInicio || x.Evento.FechaFin == eventViewModel.FechaFin ||
-                (x.Evento.FechaInicio > eventViewModel.FechaInicio && x.Evento.FechaFin < eventViewModel.FechaFin) || (eventViewModel.FechaInicio > x.Evento.FechaInicio && eventViewModel.FechaInicio < x.Evento.FechaFin) ||
-                (eventViewModel.FechaInicio > x.Evento.FechaInicio && eventViewModel.FechaFin < x.Evento.FechaFin) || (eventViewModel.FechaFin > x.Evento.FechaInicio && eventViewModel.FechaFin < x.Evento.FechaFin) ||
-                (x.Evento.FechaInicio > eventViewModel.FechaInicio && x.Evento.FechaInicio < eventViewModel.FechaFin)))
-                    return message;
-                return string.Empty;
+                if (eventViewModel.FechaFin != null)
+                {
+                    if (lstEventsUser.Any(x =>
+                    (eventViewModel.FechaInicio == x.FechaInicio && eventViewModel.HoraInicio == x.HoraInicio) ||
+                    (eventViewModel.FechaFin == x.FechaFin && eventViewModel.HoraFin == x.HoraFin) ||
+                    (eventViewModel.FechaFin == x.FechaInicio && eventViewModel.HoraFin == x.HoraInicio) ||
+                    (eventViewModel.FechaInicio == x.FechaFin && eventViewModel.HoraInicio == x.HoraFin) ||
+                    (x.FechaInicio==eventViewModel.FechaInicio && x.FechaFin==null && x.HoraInicio> eventViewModel.HoraInicio && x.HoraInicio < eventViewModel.HoraFin) ||
+                    (eventViewModel.FechaInicio >= x.FechaInicio && eventViewModel.HoraInicio > x.HoraInicio && eventViewModel.FechaFin <= x.FechaFin && eventViewModel.HoraFin < x.HoraFin) ||
+                    (eventViewModel.FechaInicio >= x.FechaInicio && eventViewModel.HoraInicio > x.HoraInicio && eventViewModel.FechaInicio <= x.FechaFin && eventViewModel.HoraInicio < x.HoraFin) ||
+                    (eventViewModel.FechaFin >= x.FechaInicio && eventViewModel.HoraFin > x.HoraInicio && eventViewModel.FechaFin <= x.FechaFin && eventViewModel.HoraFin < x.HoraFin) ||
+                    (x.FechaInicio >= eventViewModel.FechaInicio && x.FechaFin <= eventViewModel.FechaFin && x.HoraInicio > eventViewModel.HoraInicio && x.HoraFin < eventViewModel.HoraFin)
+                    ))
+                        return message;
+                }
+                else
+                {
+                    if (lstEventsUser.Any(x =>
+                    (eventViewModel.FechaInicio == x.FechaInicio && eventViewModel.HoraInicio == x.HoraInicio) ||
+                    (eventViewModel.FechaInicio == x.FechaInicio && eventViewModel.HoraInicio > x.HoraInicio && eventViewModel.HoraInicio<x.HoraFin) ||
+                    (eventViewModel.FechaInicio > x.FechaInicio && eventViewModel.FechaInicio < x.FechaFin) ||
+                    (eventViewModel.FechaInicio == x.FechaFin && eventViewModel.HoraInicio == x.HoraFin)
+                    ))
+                        return message;
+                }
             }
-            if (lstEventsUser.Any(x => x.Evento.FechaInicio == eventViewModel.FechaInicio || x.Evento.FechaFin == eventViewModel.FechaInicio || (eventViewModel.FechaInicio > x.Evento.FechaInicio && eventViewModel.FechaInicio < x.Evento.FechaFin)))
-                return message;
             return string.Empty;
         }
 

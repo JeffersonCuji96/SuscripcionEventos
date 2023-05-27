@@ -48,15 +48,12 @@ namespace Api
         /// Método para la gestión de notificaciones
         /// </summary>
         /// <remarks>
-        /// Se inicia desde una consulta principal donde se obtiene los eventos que coincidan con la fecha actual y 
-        /// un estádo válido. Los eventos que están por iniciar se combina con todos los usuarios que estén
+        /// Se inicia desde una consulta principal donde se obtienen los eventos que coincidan con la fecha actual y 
+        /// un estádo válido. Los eventos que están por iniciar se combinan con todos los usuarios que estén
         /// suscritos al evento, esos datos vendrían a ser las notificaciones que se guardan en una base de 
-        /// datos no relacional. Los eventos que han iniciado contiene solamente el id del evento ya que se 
-        /// necesita para cambiarlo del estado notificado(5) a procesado(4). El otro listado son las notificaciones 
-        /// que se envían a los usuarios que estén dentro del grupo(evento), y cambiar el estado del evento a
-        /// notificado(4), estos datos se obtienen a partir de los eventos que están a una hora de iniciar, 
-        /// especificando que sean distintos para evitar que se envíe más de una notificación por grupo, ya que 
-        /// el primer listado contiene repetidos debido a que se incluye los suscriptores
+        /// datos no relacional. Los eventos que están por inician o han iniciado contienen solamente el id del evento ya que se 
+        /// necesita para cambiarlo del estado activo(1) a notificado(5) y después a procesado(4) según corresponda. Además se hace un
+        /// seguimiento del cambio de los estados, para notificarlos y realizar alguna operación de lado del cliente.
         /// </remarks>
         /// <param name="state"></param>
         private void SendInfo(object? state)
@@ -67,19 +64,34 @@ namespace Api
                 _eventoService = scope.ServiceProvider.GetRequiredService<IEventoService>();
 
                 var dataEvents = _eventoService.GetNextEvent();
-                var collectionsNotifications = dataEvents.Item1.ToList();
-                var messageNotifications = dataEvents.Item2.ToList();
-                var eventsInitialize = dataEvents.Item3.ToList();
+                var collectionsSuscriptions = dataEvents.Item1.ToList();
+                var suscriptionsNotifications = dataEvents.Item2.ToList();
+                var eventsProcessed = dataEvents.Item3[0];
+                var eventsNotified = dataEvents.Item3[1];
 
-                if (eventsInitialize.Count != 0)
-                    eventsInitialize.ForEach(id => _eventoService.ChangeEventProcessed(id));
-
-                if (collectionsNotifications.Count != 0)
-                {
-                    await _notificationCollection.InsertManyAsync(collectionsNotifications);
-                    foreach (var x in messageNotifications)
+                if (eventsProcessed.Length != 0) 
+                { 
+                    foreach(var x in eventsProcessed)
                     {
-                        _eventoService.ChangeEventNotified(long.Parse(x.Grupo));
+                        _eventoService.ChangeEventProcessed(long.Parse(x));
+                        await _suscriptionHub.Clients.Group(x).SendAsync("Processed", true);
+                    }
+                }
+
+                if (eventsNotified.Length != 0)
+                {
+                    foreach (var x in eventsNotified)
+                    {
+                        _eventoService.ChangeEventNotified(long.Parse(x));
+                        await _suscriptionHub.Clients.Group(x).SendAsync("Notified", true);
+                    }
+                }
+
+                if (collectionsSuscriptions.Count != 0)
+                {
+                    await _notificationCollection.InsertManyAsync(collectionsSuscriptions);
+                    foreach (var x in suscriptionsNotifications)
+                    {
                         await _suscriptionHub.Clients.Group(x.Grupo).SendAsync("Notification", x);
                     }
                 }

@@ -53,13 +53,6 @@ namespace Api.Controllers
             var eventViewModel = eventService.GetDataEventCheck(oSuscripcion.IdEvento);
             eventViewModel.IdUsuario = oSuscripcion.IdUsuario;
 
-            var strCheckDateEvent = eventService.CheckDateEvent(new EventoDTO { 
-                FechaInicio=eventViewModel.FechaInicio, FechaFin=eventViewModel.FechaFin,
-                IdUsuario = eventViewModel.IdUsuario
-            },0);
-            if (!string.IsNullOrEmpty(strCheckDateEvent))
-                return BadRequest($"No se puede suscribir debido a que {strCheckDateEvent.ToLower()}");
-
             var strCheckDateEventSuscription = suscriptionService.CheckDateEventSuscription(eventViewModel);
             if (!string.IsNullOrEmpty(strCheckDateEventSuscription))
                 return BadRequest(strCheckDateEventSuscription);
@@ -127,8 +120,27 @@ namespace Api.Controllers
         /// Método para obtener los identificadores de cada evento al que está suscrito el usuario
         /// </summary>
         /// <remarks>
-        /// Solo se obtiene la información que sea de la fecha actual, para ser usado en un posible
-        /// ingreso de un grupo de notificaciones, en este caso el grupo vendría a ser el evento
+        /// Solo se obtiene la información que sea de la fecha actual, para notificar cambios de 
+        /// los eventos en los que está suscrito el usuario
+        /// </remarks>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("GetSuscriptionsTodayByUser/{id}")]
+        public IActionResult GetSuscriptionsTodayByUser(long id)
+        {
+            if (id == 0)
+                return BadRequest("El código del usuario no es válido");
+            var idsEvents = eventService.GetSuscriptionsTodayByUser(id);
+            return Ok(idsEvents);
+        }
+
+        /// <summary>
+        /// Método para obtener los identificadores de cada evento que ha organizado el usuario
+        /// </summary>
+        /// <remarks>
+        /// Solo se obtiene la información que sea de la fecha actual, para notificar cambios en 
+        /// los eventos que el usuario ha organizado
         /// </remarks>
         /// <param name="id"></param>
         /// <returns></returns>

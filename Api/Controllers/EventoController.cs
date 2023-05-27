@@ -4,6 +4,7 @@ using AutoMapper;
 using BL.DTO;
 using BL.Models;
 using BL.Services;
+using BL.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -85,7 +86,8 @@ namespace Api.Controllers
                 return BadRequest(strCheckDate);
             
             var oEvento = mapper.Map<Evento>(eventoDTO);
-            oEvento.Foto = hostingEnviroment.ContentRootPath + FileHelper.UploadImage(eventoDTO.ImageBase64,true);
+            //oEvento.Foto = hostingEnviroment.ContentRootPath + FileHelper.UploadImage(eventoDTO.ImageBase64,true);
+            oEvento.Foto = "https://localhost:7281/Images/Events/demo-img3.jpg";
             eventService.Insert(oEvento);
             return Ok(new { Message = "Evento registrado con éxito!" });
         }
@@ -101,6 +103,32 @@ namespace Api.Controllers
             var categorias = categoriaService.GetAll();
             var categoriasDTO = categorias.Select(x => mapper.Map<CategoriaDTO>(x));
             return Ok(categoriasDTO);
+        }
+
+        /// <summary>
+        ///Método para verificar si el evento es organizado por el usuario actual
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        [Authorize]
+        [Route("CheckEventOrganizer")]
+        public IActionResult CheckEventOrganizer(OrganizerCheckViewModel organizerCheckViewModel)
+        {
+            bool check = eventService.CheckEventOrganizer(organizerCheckViewModel);
+            return Ok(check);
+        }
+
+        /// <summary>
+        /// Método para obtener el estado del evento
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Authorize]
+        [Route("GetStatusEvent/{id}")]
+        public IActionResult GetStatusEvent(long id)
+        {
+            int status = eventService.GetStatusEvent(id);
+            return Ok(status);
         }
 
         /// <summary>

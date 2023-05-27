@@ -71,8 +71,9 @@ export class DetailEventoComponent implements OnInit, OnDestroy {
         this.helper.swalShowSuccess(response.Message);
         this.isSuscribe = 1;
         this.objSuscripcion.Id=response.Id;
-        this.deleteStoredRoute("/");
-        this.suscriptionService.emitChanges(this.objEvento.Limit);
+        this.objEvento.Suscriptores+=1;
+        this.suscriptionService.changeSuscription.next(this.objEvento.Id);
+        this.suscriptionService.notifiedSuscriptionChange.emit(true);
       },
         error => {
           this.helper.manageErrors(error);
@@ -108,8 +109,9 @@ export class DetailEventoComponent implements OnInit, OnDestroy {
       .subscribe(response => {
         this.helper.swalShowSuccess(response.Message);
         this.isSuscribe=0;
-        this.deleteStoredRoute("/");
-        this.suscriptionService.emitChanges(this.objEvento.Limit);
+        this.objEvento.Suscriptores-=1;
+        this.suscriptionService.changeDesuscription.next(this.objEvento.Id);
+        this.suscriptionService.notifiedSuscriptionChange.emit(true);
       },
         error => {
           this.helper.manageErrors(error);

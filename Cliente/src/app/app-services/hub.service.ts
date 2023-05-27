@@ -23,6 +23,10 @@ export class HubService {
     return this.connectionHub;
   }
 
+  getSuscriptionsBeforeJoinGroup(id:number){
+    return this.http.get<any>(this.urlApi + "api/Suscripcion/GetSuscriptionsTodayByUser/"+id);
+  }
+
   getEventsBeforeJoinGroup(id:number){
     return this.http.get<any>(this.urlApi + "api/Suscripcion/GetEventsTodayByUser/"+id);
   }

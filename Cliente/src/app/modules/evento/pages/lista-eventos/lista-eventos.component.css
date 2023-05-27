@@ -29,3 +29,7 @@ img {
     transform: scale(0.97);
     transition: 0.4s;
 }
+a.disabled {
+    cursor: not-allowed;
+    pointer-events: none;
+}

@@ -16,15 +16,5 @@ namespace Api.Hubs
             var id = Context.ConnectionId;
             await Groups.AddToGroupAsync(id,grupo);
         }
-
-        /// <summary>
-        /// Método para salir de un grupo de notificaciones
-        /// </summary>
-        /// <param name="grupo"></param>
-        /// <returns></returns>
-        public async Task LeaveGroup(string grupo)
-        {
-            await Groups.RemoveFromGroupAsync(Context.ConnectionId, grupo);
-        }
     }
 }

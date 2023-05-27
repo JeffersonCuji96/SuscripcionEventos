@@ -6,6 +6,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 using System.Linq;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace BL.Repositories.Implements
 {
@@ -164,38 +165,49 @@ namespace BL.Repositories.Implements
         {
             var dataEventCheck = testContext.Eventos.FromSqlRaw("exec SPGetDataEventCheck @id", new SqlParameter("@id", id))
                 .AsEnumerable().Select(x=>new EventCheckViewModel{
+                    IdUsuario=0,
+                    FechaInicio=x.FechaInicio,
+                    HoraInicio=x.HoraInicio,
+                    FechaFin=x.FechaFin,
+                    HoraFin=x.HoraFin
+                }).First();
+            return dataEventCheck;
+        }
+
+        /*public EventCheckViewModel GetDataEventCheck(long id)
+        {
+            var dataEventCheck = testContext.Eventos.FromSqlRaw("exec SPGetDataEventCheck @id", new SqlParameter("@id", id))
+                .AsEnumerable().Select(x=>new EventCheckViewModel{
                     Id=x.Id,
                     FechaInicio=x.FechaInicio,
                     FechaFin=x.FechaFin
                 }).First();
             return dataEventCheck;
-        }
+        }*/
 
         /// <summary>
         /// Método que obtiene los eventos que están a una hora de iniciar, los que han iniciado y los que se van a notificar
         /// </summary>
         /// <remarks>
-        /// Se inicia desde una consulta principal donde se obtiene los eventos que coincidan con la fecha actual y 
-        /// un estádo válido. Los eventos que están por iniciar se combina con todos los usuarios que estén
+        /// Se inicia desde una consulta principal donde se obtienen los eventos que coincidan con la fecha actual y 
+        /// un estádo válido. Los eventos que están por iniciar se combinan con todos los usuarios que estén
         /// suscritos al evento, esos datos vendrían a ser las notificaciones que se guardan en una base de 
-        /// datos no relacional. Los eventos que han iniciado contiene solamente el id del evento ya que se 
-        /// necesita para cambiarlo del estado notificado(5) a procesado(4). El otro listado son las notificaciones 
-        /// que se envían a los usuarios que estén dentro del grupo(evento), y cambiar el estado del evento a
-        /// notificado(4), estos datos se obtienen a partir de los eventos que están a una hora de iniciar, 
-        /// especificando que sean distintos para evitar que se envíe más de una notificación por grupo, ya que 
-        /// el primer listado contiene repetidos debido a que se incluye los suscriptores
+        /// datos no relacional. Los eventos que están por inician o han iniciado contienen solamente el id del evento ya que se 
+        /// necesita para cambiarlo del estado activo(1) a notificado(5) y después a procesado(4) según corresponda. Se hace un
+        /// seguimiento del cambio de los estados, para notificarlos y realizar alguna operación de lado del cliente.
         /// </remarks>
         /// <returns></returns>
-        public (IEnumerable<NotificationViewModel>,IEnumerable<MessageViewModel>, IEnumerable<long>) GetNextEvent()
+        public (IEnumerable<NotificationViewModel>,IEnumerable<MessageViewModel>, List<string[]>) GetNextEvent()
         {
             var currentDate = DateHelper.GetCurrentDate();
             var hourNotified = TimeSpan.Parse(currentDate.AddHours(1).AddSeconds(-currentDate.Second).ToString("HH:mm:ss tt"));
             var hourCurrent = TimeSpan.Parse(currentDate.AddSeconds(-currentDate.Second).ToString("HH:mm:ss tt"));
+            var eventsProcessedYNotified = new List<string[]>();
 
             var eventsQuery = testContext.Eventos.Where(x => x.FechaInicio == currentDate.Date && (x.IdEstado==1 || x.IdEstado==5));
 
             var lstEventsSuscriptors = eventsQuery
-                .Where(x => x.HoraInicio == hourNotified)
+                .Where(x => x.HoraInicio == hourNotified && x.IdEstado==1)
                 .Join(testContext.Suscripciones.Where(x=>x.IdEstado==1), e => e.Id, s => s.IdEvento, (e, s) => new { Evento = e, Suscriptor = s })
                 .Select(x => new NotificationViewModel()
                 {
@@ -204,21 +216,25 @@ namespace BL.Repositories.Implements
                     InicioEvento = x.Evento.FechaInicio.ToString("yyyy-MM-dd") +" "+ x.Evento.HoraInicio.ToString("hh\\:mm"),
                     IdUsuarioSuscrito = x.Suscriptor.IdUsuario,
                     Estado = 1
-                });
+                }).ToList();
 
-            var lstEventsNotification = lstEventsSuscriptors
+            var lstSuscriptionsNotification = lstEventsSuscriptors
                 .Select(x => new MessageViewModel()
                 { 
                     Grupo=x.IdEvento.ToString(), 
                     Evento=x.TituloEvento, 
                     Inicio=x.InicioEvento 
-                }).Distinct();
+                }).Distinct().ToList();
 
-            var lstEventsInitialize = eventsQuery.
-                Where(x => x.HoraInicio == hourCurrent)
-                .Select(x => x.Id);
+            eventsProcessedYNotified.Add(eventsQuery.
+                Where(x => x.HoraInicio == hourCurrent && x.IdEstado==5)
+                .Select(x => x.Id.ToString()).ToArray());
 
-            return (lstEventsSuscriptors,lstEventsNotification,lstEventsInitialize);
+            eventsProcessedYNotified.Add(eventsQuery.
+                Where(x => x.HoraInicio == hourNotified && x.IdEstado==1)
+                .Select(x => x.Id.ToString()).ToArray());
+
+            return (lstEventsSuscriptors, lstSuscriptionsNotification, eventsProcessedYNotified);
         }
 
         /// <summary>
@@ -229,6 +245,29 @@ namespace BL.Repositories.Implements
         {
             testContext.Database.ExecuteSqlRaw("UPDATE Evento SET IdEstado = 5 WHERE Id = @id",
                 new SqlParameter("@id", idEvento));
+        }
+
+        /// <summary>
+        /// Método para obtener el estado del evento
+        /// </summary>
+        /// <param name="idEvento"></param>
+        public int GetStatusEvent(long idEvento)
+        {
+            string query = "SELECT * FROM Evento WHERE Id = @id";
+            var parameter = new SqlParameter("@id", idEvento);
+            int status=testContext.Eventos.FromSqlRaw(query, parameter).FirstOrDefault()?.IdEstado ?? 0;
+            return status;
+        }
+
+        /// <summary>
+        /// Método para verificar si el evento es organizado por el usuario actual
+        /// </summary>
+        /// <returns></returns>
+        public bool CheckEventOrganizer(OrganizerCheckViewModel organizerCheckViewModel)
+        {
+            return testContext.Eventos
+                .Any(x=>x.IdUsuario==organizerCheckViewModel.IdUsuario 
+                && x.Id==organizerCheckViewModel.IdEvento);
         }
 
         /// <summary>
@@ -245,15 +284,35 @@ namespace BL.Repositories.Implements
         /// Método para obtener los identificadores de cada evento al que está suscrito el usuario
         /// </summary>
         /// <remarks>
-        /// Solo se obtiene la información que sea de la fecha actual, para ser usado en un posible
-        /// ingreso de un grupo de notificaciones, en este caso el grupo vendría a ser el evento
+        /// Solo se obtiene la información que sea de la fecha actual, para notificar cambios de 
+        /// los eventos en los que está suscrito el usuario
+        /// </remarks>
+        /// <param name="idUsuario"></param>
+        /// <returns></returns>
+        public IEnumerable<long> GetSuscriptionsTodayByUser(long idUsuario)
+        {
+            var currentDate = DateHelper.GetCurrentDate();
+            var idsEvents = testContext.Suscripciones.Where(x => x.IdEstado == 1 && x.IdUsuario==idUsuario && x.Evento.FechaInicio==currentDate).Select(x=>x.IdEvento);
+            return idsEvents;
+        }
+
+        /// <summary>
+        /// Método para obtener los identificadores de cada evento que ha organizado el usuario
+        /// </summary>
+        /// <remarks>
+        /// Solo se obtiene la información que sea de la fecha actual, para notificar cambios en 
+        /// los eventos que el usuario ha organizado
         /// </remarks>
         /// <param name="idUsuario"></param>
         /// <returns></returns>
         public IEnumerable<long> GetEventsTodayByUser(long idUsuario)
         {
             var currentDate = DateHelper.GetCurrentDate();
-            var idsEvents = testContext.Suscripciones.Where(x => x.IdEstado == 1 && x.IdUsuario==idUsuario && x.Evento.FechaInicio==currentDate).Select(x=>x.IdEvento);
+            var idsEvents = testContext.Eventos.Where(
+                x => x.IdUsuario == idUsuario && 
+                x.FechaInicio == currentDate && 
+                (x.IdEstado == 1 || x.IdEstado==5))
+                .Select(x => x.Id);
             return idsEvents;
         }
 

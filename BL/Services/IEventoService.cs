@@ -13,10 +13,13 @@ namespace BL.Services
         void UpdateEvent(Evento evento, bool checkImage);
         string GetPathPhoto(long id);
         EventCheckViewModel GetDataEventCheck(long id);
-        (IEnumerable<NotificationViewModel>, IEnumerable<MessageViewModel>, IEnumerable<long>) GetNextEvent();
+        (IEnumerable<NotificationViewModel>, IEnumerable<MessageViewModel>, List<string[]>) GetNextEvent();
         void ChangeEventNotified(long idEvento);
-        IEnumerable<long> GetEventsTodayByUser(long idUsuario);
+        IEnumerable<long> GetSuscriptionsTodayByUser(long idUsuario);
         EventoSuscripcionViewModel? GetEventNotification(long idEvento);
         void ChangeEventProcessed(long idEvento);
+        IEnumerable<long> GetEventsTodayByUser(long idUsuario);
+        int GetStatusEvent(long idEvento);
+        bool CheckEventOrganizer(OrganizerCheckViewModel organizerCheckViewModel);
     }
 }

@@ -8,6 +8,7 @@ import { MessageViewModel } from 'src/app/core/models/view-models/messageViewMod
 import { NotificationViewModel } from 'src/app/core/models/view-models/notificationViewModel';
 import { Helpers } from 'src/app/helpers/helper';
 import { AuthService } from 'src/app/modules/auth/services/auth.service';
+import { EventoService } from 'src/app/modules/evento/services/evento.service';
 import { SuscripcionService } from 'src/app/modules/suscripcion/services/suscripcion.service';
 
 @Component({
@@ -33,16 +34,18 @@ export class MenuComponent implements OnInit, OnDestroy {
   constructor(
     private authService: AuthService,
     private hubService: HubService,
+    private eventService: EventoService,
     private ngZone: NgZone,
     private suscriptionService: SuscripcionService,
     private helper: Helpers,
-    private router: Router
-  ) {
+    private router: Router) {
     this.fullName = authService.getFullName();
     this.connectionHub = this.hubService.getConnectionHub();
   }
 
   ngOnInit(): void {
+    this.notifiedJoinSuscriptionChange();
+    this.notifiedJoinEventChange();
     this.startHubNotification();
     this.getNotifications();
   }
@@ -53,14 +56,27 @@ export class MenuComponent implements OnInit, OnDestroy {
   }
 
   startHubNotification() {
+    let id = this.authService.getIdUserLocalStorage();
     this.connectionHub.start().then(_ => {
-      this.joinGroup();
+      this.joinSuscriptionsGroup();
+      this.joinEventsGroup();
       this.connectionHub.on("Notification", msg => {
         this.suscriptionService.suscriptionChange.emit(true);
-        this.showNotification(msg);
-        this.shakeBells();
-        this.getNotifications();
+        this.eventService.checkEventOrganizer({
+          IdEvento:Number(msg.Grupo),
+          IdUsuario:id
+        }).pipe(
+          takeUntil(this.stop$))
+          .subscribe(res => {
+            if (res === false) {
+              this.showNotification(msg);
+              this.shakeBells();
+              this.getNotifications();
+            }
+          });
       });
+      this.connectionHub.on("Notified", evt => this.eventService.notifiedEventChange.emit(evt));
+      this.connectionHub.on("Processed", evt => this.eventService.processedEventChange.emit(evt));
     });
   }
 
@@ -81,6 +97,22 @@ export class MenuComponent implements OnInit, OnDestroy {
         error => {
           this.helper.manageErrors(error);
         });
+  }
+
+  notifiedJoinSuscriptionChange() {
+    this.suscriptionService.notifiedSuscriptionChange.pipe(
+      takeUntil(this.stop$))
+      .subscribe(res => {
+        res ? this.joinSuscriptionsGroup() : null;
+      });
+  }
+
+  notifiedJoinEventChange() {
+    this.eventService.notifiedJoinEvent.pipe(
+      takeUntil(this.stop$))
+      .subscribe(res => {
+        res ? this.joinEventsGroup() : null;
+      });
   }
 
   removeNotification(idNotif: any) {
@@ -112,7 +144,7 @@ export class MenuComponent implements OnInit, OnDestroy {
     this.suscriptionService.getNotificationEvent({
       IdEvento: notf.IdEvento,
       IdNotificacion: notf.Id,
-      Estado:notf.Estado
+      Estado: notf.Estado
     }).pipe(takeUntil(this.stop$))
       .subscribe(event => {
         event.Limit = 0;
@@ -138,7 +170,27 @@ export class MenuComponent implements OnInit, OnDestroy {
     this.ngZone.run(() => this.message = msg);
   }
 
-  joinGroup() {
+  /*
+    Se obtiene los eventos a los que está suscrito el usuario e inician en la fecha actual, 
+    cada evento sería un grupo al que se ingresa, para recibir notificaciones y posterior
+    a ello realizar alguna operación en base a los cambios de estado del evento
+  */
+  joinSuscriptionsGroup() {
+    const id = Number(this.authService.getIdUserLocalStorage());
+    this.hubService.getSuscriptionsBeforeJoinGroup(id)
+      .pipe(
+        takeUntil(this.stop$),
+        filter(res => res.length > 0),
+        map(res => res.map((x: number) => this.connectionHub.invoke("JoinGroup", x.toString())))
+      ).subscribe();
+  }
+
+  /*
+    Se obtiene los eventos que ha organizado el usuario e inician en la fecha actual, 
+    cada evento sería un grupo al que se ingresa, para recibir notificaciones y posterior
+    a ello realizar alguna operación en base a los cambios de estado del evento
+  */
+  joinEventsGroup() {
     const id = Number(this.authService.getIdUserLocalStorage());
     this.hubService.getEventsBeforeJoinGroup(id)
       .pipe(

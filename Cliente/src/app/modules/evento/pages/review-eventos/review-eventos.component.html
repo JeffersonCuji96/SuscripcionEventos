@@ -19,7 +19,7 @@
                     <td>{{evt.FechaInicio | date: "dd/MM/yyyy"}}</td>
                     <td>{{evt.HoraInicio.substring(0,5)}}</td>
                     <td>{{Suscription===false ? evt.Categoria.Descripcion : evt.Categoria}}</td>
-                    <td>{{evt.IdEstado===1 ? 'Activo' : evt.IdEstado===4 ? 'Finalizado' : evt.IdEstado===5 ? 'Notificado' : ''}}</td>
+                    <td>{{evt.IdEstado===1 ? 'Activo' : evt.IdEstado===4 ? 'Procesado' : evt.IdEstado===5 ? 'Notificado' : ''}}</td>
                     <td>
                         <ng-container *ngIf="Suscription===false; else elseBlock">
                             <i class="fas fa-edit fa-lg text-secondary pointer-custom" (click)="showModalDetailEvent(evt)"></i>
