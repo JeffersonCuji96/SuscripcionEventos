@@ -11,6 +11,7 @@ el historial de las notificaciones.
 ## Demostración
 
 Para revisar la demo del proyecto debe ingresar al sitio web: https://suscripcion-eventos.web.app
+
 Para ver un tutorial del proyecto visitar en youtube: https://youtu.be/IFV9jFgH-5M
 
     • Para iniciar sesión primero debe registrarse con su correo y confirmar su cuenta
